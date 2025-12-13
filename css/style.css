@@ -62,7 +62,9 @@ a:hover{
 }
 
 .outter-box {
-  margin: 400px;
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 100px;
   border: 20px solid rgb(55, 67, 212);
   border-radius: 30px;
 }
