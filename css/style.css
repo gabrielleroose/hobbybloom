@@ -64,13 +64,14 @@ a:hover{
 .outter-box {
   margin: 200px;
   border: 20px solid rgb(55, 67, 212);
-  border-radius: 20px;
+  border-radius: 30px;
+  padding: 10px;
 }
 
 .inner-box {
   background-color: rgb(87, 81, 207);
-  border: 10px solid rbg(55, 67, 212);
-  border-radius: 20px;
+  border: 10px solid rgb(55, 67, 212);
+  border-radius: 10px;
   padding: 20px;
   font-size: 30px;
   text-align: center;
