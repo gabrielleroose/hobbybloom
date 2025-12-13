@@ -5,10 +5,12 @@
 <?php 
 
 ?>
-<div class = "back-box">
+<div class = "outter-box">
+	<div class = "inner-box">
 		<p>test</p> 
 		<p>test</p>
 		<p>test</p>
+	</div>
 </div>
 </body>
 </html>

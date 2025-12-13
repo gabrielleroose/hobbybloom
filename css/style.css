@@ -61,11 +61,13 @@ a:hover{
   text-align: center;
 }
 
-.back-box {
-  margin: 40px;
-  background-color: rgb(48, 77, 171);
-  outline: 20px solid rgb(54, 48, 171);
-  padding 10px;
-  text-align: center;
-  font-size: 30px;
+.outter-box {
+  margin: 200px;
+  border: 5px solid rgb(55, 67, 212);
 }
+
+.inner-box {
+  background-color: rgb(87, 81, 207);
+  padding: 20px;
+}
+
