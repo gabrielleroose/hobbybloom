@@ -4,8 +4,6 @@
         <nav>
             <div class = "navbar">
 
-                <button class="nav-button" id="tbutton">Time</button>
-
                 <a class="nav-link" href="index.html">Home</a>
 
             </div>

@@ -60,3 +60,18 @@ a:hover{
   font-size: 30px;
   text-align: center;
 }
+
+.back-box {
+  background-color: rgb(55, 45, 166);
+  border: 1px solid black;
+  padding 20px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.front-box {
+  background-color: rgb(48, 77, 171);
+  padding 20px;
+  text-align: center;
+  font-size: 30px;
+}
