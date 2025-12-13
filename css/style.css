@@ -69,6 +69,8 @@ a:hover{
 
 .inner-box {
   background-color: rgb(87, 81, 207);
+  border: 20px solid rbg(55, 67, 212);
+  border-radius: 20px;
   padding: 20px;
   font-size: 30px;
   text-align: center;
