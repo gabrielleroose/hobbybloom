@@ -6,7 +6,8 @@
 
 ?>
 <div class = "back-box">
-	<div class = "front-box"
+	<div class = "front-box">
+		test, test.
 	</div>
 </div>
 </body>
