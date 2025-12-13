@@ -65,13 +65,13 @@ a:hover{
   margin-left: 400px;
   margin-right: 400px;
   margin-top: 100px;
-  border: 20px solid rgb(55, 67, 212);
+  border: 20px solid rgb(0, 123, 65);
   border-radius: 30px;
 }
 
 .inner-box {
-  background-color: rgb(87, 81, 207);
-  border: 10px solid rgb(87, 81, 207);
+  background-color: rgb(16, 140, 190);
+  border: 10px solid rgb(16, 140, 190);
   border-radius: 10px;
   padding: 20px;
   font-size: 30px;
