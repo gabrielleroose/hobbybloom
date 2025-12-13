@@ -6,9 +6,9 @@
 
 ?>
 <div class = "back-box">
-		test, 
-		test.
-		test
+		<p>test</p> 
+		<p>test</p>
+		<p>test</p>
 </div>
 </body>
 </html>
