@@ -63,7 +63,6 @@ a:hover{
 
 .back-box {
   background-color: rgb(48, 77, 171);
-  border-width: 5px;
   outline: 5px solid rgb(54, 48, 171);
   outline-offset: 5px;
   padding 20px;
