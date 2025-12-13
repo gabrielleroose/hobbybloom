@@ -62,15 +62,9 @@ a:hover{
 }
 
 .back-box {
-  background-color: rgb(55, 45, 166);
-  border: 1px solid black;
-  padding 20px;
-  text-align: center;
-  font-size: 30px;
-}
-
-.front-box {
   background-color: rgb(48, 77, 171);
+  border-width: 5px;
+  border-color: rgb(55, 45, 166);
   padding 20px;
   text-align: center;
   font-size: 30px;
