@@ -5,7 +5,7 @@
 <?php 
 	include 'base.php'
 ?>
-basic ass text here <<<
+
 
 </body>
 </html>
