@@ -15,28 +15,31 @@
 
 </div>
 
-<div>
-	<p> What is your gender? </p>
-</div>
+<div class = "light-box">
+	<div>
+		<p> What is your gender? </p>
+	</div>
 
-<div> 
-	<p> What is your age? </p>
-</div>
+	<div> 
+		<p> What is your age? </p>
+	</div>
 
-<div>
-	<p> Where are you from? </p>
-</div>
+	<div>
+		<p> Where are you from? </p>
+	</div>
 
-<div>
-	<p> Do you partake in any hobbies? </p>
-</div>
+	<div>
+		<p> Do you partake in any hobbies? </p>
+	</div>
 
-<div>
-	<p> How much time do you want to spend on your hobbies? </p>
-</div>
+	<div>
+		<p> How much time do you want to spend on your hobbies? </p>
+	</div>
 
-<div> 
-	<p> What types of activities do you like to do when you have free time? </p>
+	<div> 
+		<p> What types of activities do you like to do when you have free time? </p>
+	</div>
+
 </div>
 </body>
 </html>
