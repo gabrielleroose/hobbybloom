@@ -11,7 +11,9 @@ a:hover{
     font-weight: bold;
 }
 
-
+.padding {
+	padding: 50px;
+}
 
 .nav-link{
     margin: 40px;
