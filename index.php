@@ -17,27 +17,27 @@
 
 <div class = "other">
 	
-	<div>
+	<div class = "other-inner">
 		<p> What is your gender? test addition </p>
 	</div>
 
-	<div> 
+	<div class = "other-inner"> 
 		<p> What is your age? </p>
 	</div>
 
-	<div>
+	<div class = "other-inner">
 		<p> Where are you from? </p>
 	</div>
 
-	<div>
+	<div class ="other-inner">
 		<p> Do you partake in any hobbies? </p>
 	</div>
 
-	<div>
+	<div class ="other-inner">
 		<p> How much time do you want to spend on your hobbies? </p>
 	</div>
 
-	<div> 
+	<div class = "other-inner"> 
 		<p> What types of activities do you like to do when you have free time? </p>
 	</div>
 
