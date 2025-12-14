@@ -11,13 +11,6 @@ session_start();
                 <button class="nav-button" id="tbutton">Time</button>
 
                 <a class="nav-link" href="index.php">Home</a>
-// below is the google login code, not sure if it works // 
-            <?php if (isset($_SESSION['user'])): ?>
-                <span class="nav-user">
-                    <?= htmlspecialchars($_SESSION['user']['name']) ?>
-                </span>
-                <a class="nav-link" href="logout.php">Logout</a>
-            <?php endif; ?>
 
             </div>
         </nav>
