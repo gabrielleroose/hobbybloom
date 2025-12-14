@@ -1,10 +1,30 @@
+<?php include 'base.php'; ?>
 <!DOCTYPE HTML>
 <html>
 <head> <link href="./css/style.css" rel="stylesheet"> </head>
 <body> 
 <?php 
+if (!isset($_SESSION['user'])): ?>
+    <!-- GOOGLE SIGN-IN -->
+    <div id="g_id_onload"
+         data-client_id="1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
 
-?>
+    <div class="g_id_signin"></div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            fetch("google_login.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: response.credential })
+            })
+            .then(() => window.location.reload());
+        }
+    </script>
+<?php endif; ?>
+
 <div class = "outter-box">
 	<div class = "inner-box">
 		<p>Tell us a little bit about you!</p>
