@@ -16,7 +16,8 @@
 </div>
 
 <div class = "light-box">
-
+	
+	<div>
 		<p> What is your gender? </p>
 	</div>
 
