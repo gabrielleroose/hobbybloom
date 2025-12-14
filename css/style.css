@@ -90,11 +90,7 @@ a:hover{
   margin-left: 200px;
   margin-right: 200px;
   margin-top: 100px;
-  border: 20px solid rgb(38, 67, 135);
-  color: white;
+  border: 20px solid rgb(144, 214, 245);
+  back-ground color: rgb(144, 214, 245);
   border-radius: 30px;
-}
-.test-text {
-  color: red;
-  font-size: 40px;
 }
