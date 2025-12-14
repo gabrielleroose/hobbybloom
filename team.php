@@ -32,7 +32,6 @@
     </p>
   </div>
 
-  <!-- Jack -->
   <div class="team-member">
     <img src="images/Jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
     <p><strong>Jack Bruce</strong><br>
@@ -43,7 +42,6 @@
     </p>
   </div>
 
-  <!-- Chris -->
   <div class="team-member">
     <img src="images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
     <p><strong>Chris Martin</strong><br>
@@ -54,7 +52,6 @@
     </p>
   </div>
 
-  <!-- Gabby -->
   <div class="team-member">
     <img src="images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
     <p><strong>Gabby Roose</strong><br>
