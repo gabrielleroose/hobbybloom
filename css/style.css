@@ -15,6 +15,12 @@ a:hover{
 	padding: 50px;
 }
 
+.input-button {
+	padding-left: 100px;
+	color: black;
+	font-size: 50px;
+}
+
 .nav-link{
     margin: 40px;
     font-size: 20px;
@@ -79,7 +85,7 @@ a:hover{
   margin-top: 100px;
   border: 20px solid rgb(141, 209, 240);
   background-color: rgb(141, 209, 240);
-  color: white;
+  color: black;
   border-radius: 30px;
   font-size: 30px;
   font: arial;
