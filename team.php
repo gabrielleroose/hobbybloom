@@ -14,7 +14,7 @@
     <p>Meet the Team</p>
     <div class="subtext">
       <p>
-        We Informatic majors seeking to make it easier for one to learn new hobby skills. Our group is passionate about developing technology that inspires people, helps remove barriers to entry, and fosters personal development through exploration. Using technical knowledge together with design thinking, research, and business strategy, we offer a multidisciplinary outlook on our project and its mission.
+        We are Informatic majors seeking to make it easier for one to learn new hobby skills. Our group is passionate about developing technology that inspires people, helps remove barriers to entry, and fosters personal development through exploration. Using technical knowledge together with design thinking, research, and business strategy, we offer a multidisciplinary outlook on our project and its mission.
       </p>
     </div>
   </div>
@@ -23,7 +23,7 @@
 <div class="light-box">
 
   <div class="team-member">
-    <img src="Desktop/images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
+    <img src="images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
     <p><strong>Drew Bauman</strong><br>
       <em>Backend Developer & Database Lead</em>
     </p>
@@ -34,7 +34,7 @@
 
   <!-- Jack -->
   <div class="team-member">
-    <img src="Desktop/images/jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
+    <img src="images/Jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
     <p><strong>Jack Bruce</strong><br>
       <em>Project Lead & Full-Stack Developer</em>
     </p>
@@ -45,7 +45,7 @@
 
   <!-- Chris -->
   <div class="team-member">
-    <img src="Desktop/images/chris.jpg" alt="Photo of Chris Martin" class="team-photo">
+    <img src="images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
     <p><strong>Chris Martin</strong><br>
       <em>Research & Front-End Development</em>
     </p>
@@ -56,7 +56,7 @@
 
   <!-- Gabby -->
   <div class="team-member">
-    <img src="Desktop/images/gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
+    <img src="images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
     <p><strong>Gabby Roose</strong><br>
       <em>UX/UI Designer & Styling Lead</em>
     </p>
