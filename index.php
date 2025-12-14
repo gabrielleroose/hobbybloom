@@ -8,7 +8,7 @@
 <div class = "outter-box">
 	<div class = "inner-box">
 		<p>Tell us a little bit about you!</p>
-		<div class = "subtext" </div> 
+		<div class = "subtext"> 
 			<p>This information will be stored alongside your general user data, but not sold.</p>
 		</div>
 	</div>
