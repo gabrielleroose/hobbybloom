@@ -4,6 +4,7 @@
     padding: 10px;
 }
 
+
 a:hover{
     color: blue;
     text-decoration: underline;
@@ -59,4 +60,34 @@ a:hover{
   padding: 20px;
   font-size: 30px;
   text-align: center;
+}
+
+.outter-box {
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 100px;
+  border: 20px solid rgb(38, 67, 135);
+  color: white;
+  border-radius: 30px;
+}
+
+.inner-box {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 30px;
+  font: arial;
+  text-align: center;
+}
+
+.subtext {
+  font-size: 20px;
+  padding: 10px;
+}
+  
+.box{
+  border: 20px solid rgb(144, 214, 245);
+  color: rgb(144, 214, 245);
+  border-radius: 30px;
 }
