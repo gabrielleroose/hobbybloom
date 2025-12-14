@@ -17,8 +17,8 @@
 
 <div>
 	
-	<div class = "test-text">
-		<p> What is your gender? </p>
+	<div>
+		<p class = "test-text"> What is your gender? </p>
 	</div>
 
 	<div> 
