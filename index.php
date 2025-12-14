@@ -15,7 +15,7 @@
 
 </div>
 
-<div class = "light-box">
+<div class = "new">
 	
 	<div>
 		<p> What is your gender? </p>
