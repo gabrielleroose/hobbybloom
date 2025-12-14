@@ -17,7 +17,7 @@
 
 <div>
 	
-	<div class = "other-box">
+	<div class = "test-text">
 		<p> What is your gender? </p>
 	</div>
 
