@@ -87,8 +87,10 @@ a:hover{
 }
   
 .light-box {
-	margin-left: 200 px;
-	margin-right: 200px;
-	margin-top: 50px;
-	background-color: rgb(144, 213, 245); 
+  margin-left: 200 px;
+  margin-right: 200px;
+  margin-top: 50px;
+  background-color: rgb(144, 213, 245);
+  border: 20px solid rgb(144, 213, 245);
+  border-radius: 30px; 
 }
