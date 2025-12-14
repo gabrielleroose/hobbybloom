@@ -15,7 +15,7 @@
 
 </div>
 
-<div class = "other-box">
+<div class = "outter-box">
 	
 	<div>
 		<p> What is your gender? test addition </p>
