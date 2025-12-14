@@ -88,6 +88,7 @@ a:hover{
   
 .new {
     max-width: calc(100% - 400px);
+    border: 20px solid rgb(144, 213, 245);
     margin: 50px auto;
     padding: 20px;
     background-color: rgb(144, 213, 245);
