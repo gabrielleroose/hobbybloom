@@ -1,45 +1,54 @@
-.navbar{
-    text-align: center;
-    background-color: rgb(179, 170, 170);
-    padding: 10px;
+.navbar {
+  text-align: center;
+  background-color: rgb(179, 170, 170);
+  padding: 10px;
 }
 
 
-a:hover{
-    color: blue;
-    text-decoration: underline;
-    font-weight: bold;
+a:hover {
+  color: blue;
+  text-decoration: underline;
+  font-weight: bold;
 }
 
 
 .input-button {
+<<<<<<< HEAD
 	background-color: rgb(141, 209, 240);
 	color: black;
 	font-size: 50px;
 	float: right;
 	border: 1px solid black;
+=======
+  background-color: rgb(141, 209, 240);
+  color: black;
+  font-size: 50px;
+  float: right;
+  border: 1px;
+  border-radius: 1px;
+>>>>>>> 0571bb9 (fixed styling for team images)
 }
 
-.nav-link{
-    margin: 40px;
-    font-size: 20px;
-    color: black;
-    text-decoration: none;
-    font: sans-serif;
-    font-size: 25px;
+.nav-link {
+  margin: 40px;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  font: sans-serif;
+  font-size: 25px;
 }
 
-.nav-button{
-    margin: 40px;
-    font-size: 20px;
-    color: black;
-    border: 1px solid black;
-    border-radius: 12px;
-    padding: 5px 10px;
-    text-decoration: none;
-    font: sans-serif;
-    font-size: 25px;
-    cursor: pointer;
+.nav-button {
+  margin: 40px;
+  font-size: 20px;
+  color: black;
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 5px 10px;
+  text-decoration: none;
+  font: sans-serif;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .grid-container {
@@ -102,16 +111,24 @@ a:hover{
 }
 
 .padding {
-  padding-top: 40px; 
+  padding-top: 40px;
 }
 
 .subtext {
   font-size: 20px;
   padding: 10px;
 }
-  
-.box{
+
+.box {
   border: 20px solid rgb(144, 214, 245);
   color: rgb(144, 214, 245);
   border-radius: 30px;
+}
+
+
+.team-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
 }
