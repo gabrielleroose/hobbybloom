@@ -34,6 +34,7 @@ session_start();
                 <a class="nav-link" href="project.php">About the Project</a>
                 <a class="nav-link" href="chat.php">Chat</a>
                 <a class="nav-link" href="circles.php">Circles</a>
+                <a class="nav-link" href="dashboard.php">Dashboard</a>
 
             </div>
         </nav>
