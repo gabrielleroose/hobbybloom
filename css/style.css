@@ -619,3 +619,31 @@ h2 {
   flex-shrink: 0;
 
 }
+
+
+
+.form{
+  background: #6096ba;
+  width: 75%;
+  margin: 0 auto;
+  padding: 3rem 3rem 5rem;
+  border-radius: 1rem;
+}
+
+.form-label{
+  font-size: var(--text-size-xl);
+  font-weight: 600;
+  color: #010319;
+}
+
+.form-control{
+  background-color: #E7ECEF;
+  border: 1px solid #010319;
+}
+
+
+.form-control::placeholder{
+  color: #010319;
+  font-size: var(--text-size-md);
+}
+
