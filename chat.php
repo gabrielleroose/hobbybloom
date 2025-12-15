@@ -8,6 +8,11 @@
 </head>
 <body>
 
+    <div class="navbar">
+        <a href="index.php" class="nav-link">🏠</a>
+        <a href="chat.php" class="nav-link">💬</a>
+    </div>
+
     <div class="page-container">
 
         <div class="page-header">
@@ -50,7 +55,7 @@
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
                     <div class="chat-name">Martin Randolph</div>
-                    <div class="chat-preview">You: What time is the meeting?</div>
+                    <div class="chat-preview">You: How is sewing going?</div>
                 </div>
                 <div class="chat-time">9:41 AM</div>
             </div>
@@ -59,7 +64,7 @@
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
                     <div class="chat-name">Kieron Dotson</div>
-                    <div class="chat-preview">The project files are ready.</div>
+                    <div class="chat-preview">My sweater is finally done!</div>
                 </div>
                 <div class="chat-time">Yesterday</div>
             </div>
@@ -77,18 +82,12 @@
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
                     <div class="chat-name">Karen W.</div>
-                    <div class="chat-preview">Are we still on for lunch?</div>
+                    <div class="chat-preview">Are we still on for our gardening session?</div>
                 </div>
                 <div class="chat-time">Mon</div>
             </div>
 
         </div>
-    </div>
-
-    <div class="next-button">
-        <a href="index.php" class="nav-link">🏠</a>
-        <a href="chat.php" class="nav-link">💬</a>
-        <a href="profile.php" class="nav-link">👤</a>
     </div>
 
 </body>
