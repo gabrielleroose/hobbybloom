@@ -5,6 +5,8 @@ session_start();
  <link href="./css/style.css" rel="stylesheet">
  <head>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
     <header>
