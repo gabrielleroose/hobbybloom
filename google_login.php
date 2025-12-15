@@ -32,9 +32,9 @@ if (!$payload) {
 
 /* ---------- DB CONNECTION ---------- */
 $pdo = new PDO(
-    "mysql:host=localhost;dbname=your_db;charset=utf8mb4",
-    "db_user",
-    "db_pass",
+    "mysql:host=db.luddy.indiana.edu;dbname=i494f25_team18;charset=utf8mb4",
+    "i494f25_team18",
+    "berms2227penes",
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 );
 
