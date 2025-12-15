@@ -4,8 +4,7 @@ session_start();
 
  <link href="./css/style.css" rel="stylesheet">
  <script src="https://accounts.google.com/gsi/client" async defer></script>
-<!-- this is the google code below  -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 
     <header>
         <nav>
