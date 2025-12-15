@@ -5,13 +5,6 @@
 }
 
 
-a:hover {
-  color: blue;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-
 .input-button {
   background-color: rgb(141, 209, 240);
   color: black;
@@ -37,15 +30,18 @@ a:hover {
 .nav-link {
   margin: 40px;
   font-size: 20px;
-  color: black;
+  color: #ffffff;
   text-decoration: none;
   font: sans-serif;
   font-size: 25px;
+  background: #153853;
 }
 
 .nav-link:hover{
   transform: scale(1.25);
   text-decoration: none;
+  background-color: #ffffff;
+  color: #153853;
 }
 
 
