@@ -30,7 +30,7 @@ session_start();
         <nav>
             <div class = "navbar">
 
-                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="index.php">Home</a>
                 <a class="nav-link" href="team.php">Meet the Team</a>
                 <a class="nav-link" href="project.php">About the Project</a>
 
