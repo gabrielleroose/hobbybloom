@@ -1,27 +1,24 @@
 <?php include 'base.php'; ?>
 
 <?php if (!isset($_SESSION['user'])): ?>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 window.handleCredentialResponse = function(response) {
     console.log("Google credential response:", response);
 
-   fetch('/google-login.php', {
-    method: 'POST',
-    credentials: 'include', // <<< pnt of failure
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ token })
-})
-.then(res => res.json())
-.then(data => {
-    if (data.success) {
-        window.location.reload();
-    }
-});
+    fetch("google_login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: response.credential })
+    })
+    .then(res => {
+        if (res.ok) window.location.reload();
+        else alert("Google login failed on server.");
+    })
+    .catch(err => console.error("Fetch error:", err));
+};
 
 </script>
+
 
 <div id="g_id_onload"
      data-client_id="1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com"
