@@ -63,5 +63,8 @@ if (!isset($_SESSION['user'])): ?>
 
 </div>
 
+</div>
+	<button class = "next-button" type = submit> Next </button> 
+
 </body>
 </html>
