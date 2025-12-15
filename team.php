@@ -32,36 +32,38 @@
     </p>
   </div>
 
-  <div class="team-member">
-    <img src="images/Jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
-    <p><strong>Jack Bruce</strong><br>
-      <em>Project Lead & Full-Stack Developer</em>
-    </p>
-    <p>
-      Jack Bruce is a senior majoring in Informatics, with a minor in Computer Science and a cognate in Cybersecurity. He has mastered HTML, CSS, Python, and SQL and is still expanding his skill set. He has been an important leader, ensuring our project is at the highest level.
-    </p>
-  </div>
+  <div class="other">
+    <div class="team-member">
+      <img src="images/Jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
+      <p><strong>Jack Bruce</strong><br>
+        <em>Project Lead & Full-Stack Developer</em>
+      </p>
+      <p>
+        Jack Bruce is a senior majoring in Informatics, with a minor in Computer Science and a cognate in Cybersecurity. He has mastered HTML, CSS, Python, and SQL and is still expanding his skill set. He has been an important leader, ensuring our project is at the highest level.
+      </p>
+    </div>
 
-  <div class="team-member">
-    <img src="images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
-    <p><strong>Chris Martin</strong><br>
-      <em>Research & Front-End Development</em>
-    </p>
-    <p>
-      Chris Martin is a junior majoring in Informatics, with a cognate and minor in Public Health, but he is graduating early in May of 2026. He is very good at utilizing Python, SQL, HTML, and CSS and has worked very hard doing research on the market. He values providing an application that stands out form existing options and helps people grow through learning new hobbies.
-    </p>
-  </div>
+    <div class="team-member">
+      <img src="images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
+      <p><strong>Chris Martin</strong><br>
+        <em>Research & Front-End Development</em>
+      </p>
+      <p>
+        Chris Martin is a junior majoring in Informatics, with a cognate and minor in Public Health, but he is graduating early in May of 2026. He is very good at utilizing Python, SQL, HTML, and CSS and has worked very hard doing research on the market. He values providing an application that stands out form existing options and helps people grow through learning new hobbies.
+      </p>
+    </div>
 
-  <div class="team-member">
-    <img src="images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
-    <p><strong>Gabby Roose</strong><br>
-      <em>UX/UI Designer & Styling Lead</em>
-    </p>
-    <p>
-      Gabby Roose is a senior majoring in Informatics with a specialization in Business and minors in Human-Centered Computing, Web Design & Development, and Marketing within the Kelley School of Business. She has been very helpful in producing high quality work due to her mastery in styling and CSS. Additionally, her experience with coding has ensured our team's success throughout this semester. 
-    </p>
-  </div>
+    <div class="team-member">
+      <img src="images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
+      <p><strong>Gabby Roose</strong><br>
+        <em>UX/UI Designer & Styling Lead</em>
+      </p>
+      <p>
+        Gabby Roose is a senior majoring in Informatics with a specialization in Business and minors in Human-Centered Computing, Web Design & Development, and Marketing within the Kelley School of Business. She has been very helpful in producing high quality work due to her mastery in styling and CSS. Additionally, her experience with coding has ensured our team's success throughout this semester. 
+      </p>
+    </div>
 
+  </div>
 </div>
 
 </body>
