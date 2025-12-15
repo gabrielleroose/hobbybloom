@@ -33,6 +33,7 @@ session_start();
                 <a class="nav-link" href="team.php">Meet the Team</a>
                 <a class="nav-link" href="project.php">About the Project</a>
                 <a class="nav-link" href="chat.php">Chat</a>
+                <a class="nav-link" href="circles.php">Circles</a>
 
             </div>
         </nav>

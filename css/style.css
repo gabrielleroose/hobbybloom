@@ -166,7 +166,6 @@ a:hover {
   color: #ccc;
 }
 
-/* Horizontal Scroll Section */
 .horizontal-scroll {
   display: flex;
   overflow-x: auto;
@@ -238,4 +237,81 @@ a:hover {
   font-size: 12px;
   color: #999;
   white-space: nowrap;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-icon-link {
+  font-size: 30px;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-family: sans-serif;
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: normal;
+}
+
+.suggested-item {
+  min-width: 120px;
+  height: 100px;
+  background-color: #1f5077;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.feed-card {
+  margin-top: 10px;
+  padding-bottom: 40px;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  position: absolute;
+  z-index: 2;
+  padding: 10px;
+}
+
+.feed-avatar {
+  width: 30px;
+  height: 30px;
+  background-color: #333;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.feed-username {
+  font-size: 18px;
+  font-family: sans-serif;
+  color: black;
+}
+
+.feed-image-placeholder {
+  width: 100%;
+  height: 250px;
+  background-color: #b0b0b0;
+  position: relative;
+  border: 1px solid #999;
+}
+
+.feed-image-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), #333, transparent calc(50% + 1px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1px), #333, transparent calc(50% + 1px));
+  opacity: 0.3;
 }
