@@ -19,6 +19,7 @@ a:hover {
 	font-size: 50px;
 	float: right;
 	border: 1px solid black;
+<<<<<<< HEAD
 =======
   background-color: rgb(141, 209, 240);
   color: black;
@@ -27,6 +28,9 @@ a:hover {
   border: 1px;
   border-radius: 1px;
 >>>>>>> 0571bb9 (fixed styling for team images)
+=======
+	border-radius: 1px;
+>>>>>>> f1ab3c5 (adding in input buttons for each line of text)
 }
 
 .nav-link {
