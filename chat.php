@@ -22,27 +22,27 @@
         <div class="horizontal-scroll">
             <div class="story-circle">
                 <div class="circle-img"></div>
-                <div class="circle-name">You</div>
+                <div class="circle-name">Sewing</div>
             </div>
             
             <div class="story-circle">
                 <div class="circle-img"></div>
-                <div class="circle-name">Martin</div>
+                <div class="circle-name">Cooking</div>
             </div>
 
             <div class="story-circle">
                 <div class="circle-img"></div>
-                <div class="circle-name">Kieron</div>
+                <div class="circle-name">Baking</div>
             </div>
             
             <div class="story-circle">
                 <div class="circle-img"></div>
-                <div class="circle-name">Jamie</div>
+                <div class="circle-name">Gardneing</div>
             </div>
             
              <div class="story-circle">
                 <div class="circle-img"></div>
-                <div class="circle-name">Karen</div>
+                <div class="circle-name">Crocheting</div>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
             <div class="chat-item">
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
-                    <div class="chat-name">Martin Randolph</div>
+                    <div class="chat-name">Chris Martin</div>
                     <div class="chat-preview">You: How is sewing going?</div>
                 </div>
                 <div class="chat-time">9:41 AM</div>
@@ -60,7 +60,7 @@
             <div class="chat-item">
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
-                    <div class="chat-name">Kieron Dotson</div>
+                    <div class="chat-name">Gabby Roose</div>
                     <div class="chat-preview">My sweater is finally done!</div>
                 </div>
                 <div class="chat-time">Yesterday</div>
@@ -69,7 +69,7 @@
             <div class="chat-item">
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
-                    <div class="chat-name">Jamie P.</div>
+                    <div class="chat-name">Jack Bruce</div>
                     <div class="chat-preview">Thanks again!</div>
                 </div>
                 <div class="chat-time">Tue</div>
@@ -78,7 +78,7 @@
              <div class="chat-item">
                 <div class="chat-avatar"></div>
                 <div class="chat-info">
-                    <div class="chat-name">Karen W.</div>
+                    <div class="chat-name">Drew Bauman</div>
                     <div class="chat-preview">Are we still on for our gardening session?</div>
                 </div>
                 <div class="chat-time">Mon</div>
