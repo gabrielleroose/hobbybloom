@@ -12,8 +12,8 @@ a:hover{
 }
 
 .padding {
-	position: relative;
-	left: 200px;
+	display: flex;
+	gap: 100px;
 }
 
 .input-button {
