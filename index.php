@@ -1,6 +1,7 @@
 <?php include 'base.php'; ?>
 
 <?php if (!isset($_SESSION['user'])): ?>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 window.handleCredentialResponse = function(response) {
     console.log("Google credential response:", response);
