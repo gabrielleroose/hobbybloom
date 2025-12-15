@@ -43,6 +43,12 @@ a:hover {
   font-size: 25px;
 }
 
+.nav-link:hover{
+  transform: scale(1.25);
+  text-decoration: none;
+}
+
+
 .nav-button {
   margin: 40px;
   font-size: 20px;
