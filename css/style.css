@@ -19,16 +19,18 @@
 }
 
 .next-button {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  height: 10%;
+  /* position: fixed; */
+  /* bottom: 0;
+  right: 0; */
+  height: 80px;
   width: 100%;
   background: #777;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   font-size: 40px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .nav-link {

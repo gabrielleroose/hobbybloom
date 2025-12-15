@@ -81,7 +81,9 @@ window.handleCredentialResponse = function(response) {
 </div>
 
 </div>
-	<button class = "next-button" type = submit> Next </button> 
+	<a href="dashboard.php" class="next-button">Next</a>
+</div>
+
 
 </body>
 </html>
