@@ -32,13 +32,13 @@ session_start();
             <div class = "navbar">
 
                 <a class="nav-link" href="index.php">Getting Started</a>
-                <a class="nav-link" href="team.php">Meet the Team</a>
-                <a class="nav-link" href="project.php">About the Project</a>
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
                 <a class="nav-link" href="activity.php">Activity</a>
                 <a class="nav-link" href="module.php">Modules</a>
                 <a class="nav-link" href="circles.php">Circles</a>
                 <a class="nav-link" href="chat.php">Chat</a>
+                <a class="nav-link" href="team.php">Meet the Team</a>
+                <a class="nav-link" href="project.php">About the Project</a>
 
             </div>
         </nav>
