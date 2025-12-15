@@ -1,7 +1,10 @@
 .navbar {
-  text-align: center;
   background-color: rgb(179, 170, 170);
   padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 
@@ -28,13 +31,15 @@
 }
 
 .nav-link {
-  margin: 40px;
+  padding: 10px 20px;
+  margin: 0;
   font-size: 20px;
   color: #ffffff;
   text-decoration: none;
   font: sans-serif;
   font-size: 25px;
   background: #153853;
+  border-radius: 1rem;
 }
 
 .nav-link:hover{
