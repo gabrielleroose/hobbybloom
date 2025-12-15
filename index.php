@@ -6,17 +6,20 @@
 window.handleCredentialResponse = function(response) {
     console.log("Google credential response:", response);
 
-    fetch("google_login.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: response.credential })
-    })
-    .then(res => {
-        if (res.ok) window.location.reload();
-        else alert("Google login failed on server.");
-    })
-    .catch(err => console.error("Fetch error:", err));
-};
+   fetch('/google-login.php', {
+    method: 'POST',
+    credentials: 'include', // <<< pnt of failure
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token })
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        window.location.reload();
+    }
+});
 
 </script>
 
