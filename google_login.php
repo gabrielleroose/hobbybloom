@@ -1,4 +1,14 @@
 <?php
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'secure' => true,      // https
+    'httponly' => true,
+    'samesite' => 'None'
+]);
+
+session_start();
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
