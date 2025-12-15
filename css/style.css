@@ -12,8 +12,8 @@ a:hover{
 }
 
 .padding {
-	padding: 25px 25px 25px 25px;
-	margin-left: 100px;
+	position: relative;
+	left: 200px;
 }
 
 .input-button {
