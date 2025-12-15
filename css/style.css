@@ -17,7 +17,7 @@ a:hover{
 	color: black;
 	font-size: 50px;
 	float: right;
-	margin-right: 200px;
+	padding-right: 200px;
 }
 
 .nav-link{
