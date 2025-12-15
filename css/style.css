@@ -13,9 +13,10 @@ a:hover{
 
 
 .input-button {
+	background-color: rgb(141, 209, 240)
 	color: black;
 	font-size: 50px;
-	margin-left: 100px;
+	text-align: right;
 }
 
 .nav-link{

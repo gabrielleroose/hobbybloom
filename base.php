@@ -9,11 +9,6 @@ session_start();
     <header>
         <nav>
             <div class = "navbar">
-
-                <button class="nav-button" id="tbutton">Time</button>
-
-                <a class="nav-link" href="index.php">Home</a>
-
                 <!-- GOOGLE AUTH UI -->
 <?php if (isset($_SESSION['user'])): ?>
     <span class="nav-user">
@@ -34,7 +29,9 @@ session_start();
         <nav>
             <div class = "navbar">
 
-                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="index.php">Home</a>
+                <a class="nav-link" href="team.php">Meet the Team</a>
+                <a class="nav-link" href="project.php">About the Project</a>
 
             </div>
         </nav>
