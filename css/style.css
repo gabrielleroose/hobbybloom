@@ -1,3 +1,7 @@
+body {
+  background-color: red !important;
+}
+
 .navbar {
   text-align: center;
   background-color: rgb(179, 170, 170);
