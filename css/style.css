@@ -15,6 +15,7 @@ a:hover{
 .input-button {
 	color: black;
 	font-size: 50px;
+	margin-left: 100px;
 }
 
 .nav-link{
@@ -98,6 +99,9 @@ a:hover{
   text-align: center;
 }
 
+.padding {
+  padding-top: 40px; 
+}
 
 .subtext {
   font-size: 20px;
