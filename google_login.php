@@ -1,34 +1,84 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
+require 'vendor/autoload.php';
+
+use Google\Client as Google_Client;
+
+/* ---------- READ TOKEN ---------- */
 $data = json_decode(file_get_contents("php://input"), true);
 $token = $data['token'] ?? null;
 
 if (!$token) {
     http_response_code(400);
-    exit('No token provided');
+    echo json_encode(['error' => 'No token provided']);
+    exit;
 }
 
-// Decode the JWT payload (simplified, DOES NOT check signature!)
-// For local testing only
-$parts = explode('.', $token);
-if (count($parts) !== 3) {
+/* ---------- VERIFY GOOGLE TOKEN ---------- */
+$client = new Google_Client([
+    'client_id' => 'YOUR_WEB_CLIENT_ID'
+]);
+
+$payload = $client->verifyIdToken($token);
+
+if (!$payload) {
     http_response_code(401);
-    exit('Invalid token format');
+    echo json_encode(['error' => 'Invalid Google token']);
+    exit;
 }
 
-$payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
+/* ---------- DB CONNECTION ---------- */
+$pdo = new PDO(
+    "mysql:host=localhost;dbname=your_db;charset=utf8mb4",
+    "db_user",
+    "db_pass",
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
 
-if ($payload && isset($payload['sub'])) {
-    $_SESSION['user'] = [
-        'google_id' => $payload['sub'],
-        'email' => $payload['email'],
-        'name' => $payload['name']
-    ];
-    http_response_code(200);
-    echo "Login successful!";
+/* ---------- FIND OR CREATE USER ---------- */
+$stmt = $pdo->prepare("SELECT id FROM users WHERE google_id = ?");
+$stmt->execute([$payload['sub']]);
+$user = $stmt->fetch();
+
+if (!$user) {
+    $stmt = $pdo->prepare("
+        INSERT INTO users (google_id, email, name)
+        VALUES (?, ?, ?)
+    ");
+    $stmt->execute([
+        $payload['sub'],
+        $payload['email'],
+        $payload['name']
+    ]);
+
+    $userId = $pdo->lastInsertId();
 } else {
-    http_response_code(401);
-    exit('Invalid token');
+    $userId = $user['id'];
 }
 
+/* ---------- LOG LOGIN EVENT ---------- */
+$stmt = $pdo->prepare("
+    INSERT INTO login_events (user_id, ip_address, user_agent)
+    VALUES (?, ?, ?)
+");
+$stmt->execute([
+    $userId,
+    $_SERVER['REMOTE_ADDR'] ?? null,
+    $_SERVER['HTTP_USER_AGENT'] ?? null
+]);
+
+/* ---------- SESSION ---------- */
+session_regenerate_id(true);
+
+$_SESSION['user'] = [
+    'id'        => $userId,
+    'google_id' => $payload['sub'],
+    'email'     => $payload['email'],
+    'name'      => $payload['name']
+];
+
+http_response_code(200);
+echo json_encode(['status' => 'logged_in']);
