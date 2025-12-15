@@ -560,3 +560,44 @@ h2 {
   color: #999;
   line-height: 1.5;
 }
+
+
+.dash-inner {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 50px;
+  font: arial;
+  text-align: center;
+}
+.dash-inner2 {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 30px;
+  font: arial;
+  text-align: center;
+}
+.dash-outter {
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 100px;
+  border: 10px solid rgb(38, 67, 135);
+  color: white;
+  border-radius: 20px;
+}
+
+.dash-heading{
+  font-size: 30px;
+  padding-left: 60px;
+}
+.dash-item {
+  max-width: 800px;
+  height: 200px;
+  background-color: #1f5077;
+  border-radius: 10px;
+  flex-shrink: 0;
+
+}
