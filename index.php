@@ -38,7 +38,7 @@ if (!isset($_SESSION['user'])): ?>
 <div class = "other">
 	
 	<div class = "padding">
-		<p> <span>What is your gender? test addition</span> <button class = "input-button" type = "submit"> input </button> </p>
+		<p> What is your gender? test addition <button class = "input-button" type = "submit"> input </button> </p>
 	</div class = "padding">
 
 	<div class = "padding"> 
