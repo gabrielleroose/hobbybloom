@@ -100,33 +100,6 @@ window.handleCredentialResponse = function(response) {
      </form>
     </section>
 
-<div class = "other">
-	
-	<div>
-		<p> What is your gender? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-	<div> 
-		<p> What is your age? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-	<div>
-		<p> Where are you from? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-	<div>
-		<p> Do you partake in any hobbies? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-	<div>
-		<p> How much time do you want to spend on your hobbies? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-	<div> 
-		<p> What types of activities do you like to do when you have free time? <button class = "input-button" type = "submit"> input </button> </p>
-	</div>
-
-</div>
 
 </div>
 	<a href="dashboard.php" class="next-button">Next</a>
