@@ -28,7 +28,7 @@
   </div>
 </div>
 
-<div class="light-box">
+<div class = "other">
   <h2>Project Features & Benefits</h2>
   <ul>
     <li>Hobby modules for learning and feedback</li>

@@ -54,30 +54,33 @@ window.handleCredentialResponse = function(response) {
 <div class = "other">
 	
 	<div>
-		<p> What is your gender? test addition <button class = "input-button" type = "submit"> input </button> </p>
+		<p> What is your gender? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 	<div> 
-		<p> What is your age? </p>
+		<p> What is your age? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 	<div>
-		<p> Where are you from? </p>
+		<p> Where are you from? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 	<div>
-		<p> Do you partake in any hobbies? </p>
+		<p> Do you partake in any hobbies? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 	<div>
-		<p> How much time do you want to spend on your hobbies? </p>
+		<p> How much time do you want to spend on your hobbies? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 	<div> 
-		<p> What types of activities do you like to do when you have free time? </p>
+		<p> What types of activities do you like to do when you have free time? <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
 </div>
+
+</div>
+	<button class = "next-button" type = submit> Next </button> 
 
 </body>
 </html>
