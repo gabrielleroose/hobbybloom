@@ -22,17 +22,16 @@
 
 <div class="light-box">
 
-  <div class="team-member">
-    <img src="images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
-    <p><strong>Drew Bauman</strong><br>
-      <em>Backend Developer & Database Lead</em>
-    </p>
-    <p>
-      Drew Bauman is a senior graduating in May of 2026 from the Luddy School of Informatics, Computing, and Engineering. He is very knowledgeable on PHP and MySQL, which is very helpful for this project. He also brings important time management, accounting, and leadership skills through his focus on the Kelley School of Business. 
-    </p>
-  </div>
-
-  <div class="other">
+ <div class="other">
+    <div class="team-member">
+      <img src="images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
+      <p><strong>Drew Bauman</strong><br>
+        <em>Backend Developer & Database Lead</em>
+      </p>
+      <p>
+        Drew Bauman is a senior graduating in May of 2026 from the Luddy School of Informatics, Computing, and Engineering. He is very knowledgeable on PHP and MySQL, which is very helpful for this project. He also brings important time management, accounting, and leadership skills through his focus on the Kelley School of Business. 
+      </p>
+    </div>
     <div class="team-member">
       <img src="images/Jack.jpg" alt="Photo of Jack Bruce" class="team-photo">
       <p><strong>Jack Bruce</strong><br>
