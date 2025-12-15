@@ -37,27 +37,27 @@ if (!isset($_SESSION['user'])): ?>
 
 <div class = "other">
 	
-	<div class = "padding">
+	<div>
 		<p> What is your gender? test addition <button class = "input-button" type = "submit"> input </button> </p>
 	</div>
 
-	<div class = "padding"> 
+	<div> 
 		<p> What is your age? </p>
 	</div>
 
-	<div class = "padding">
+	<div>
 		<p> Where are you from? </p>
 	</div>
 
-	<div class = "padding">
+	<div>
 		<p> Do you partake in any hobbies? </p>
 	</div>
 
-	<div class = "padding">
+	<div>
 		<p> How much time do you want to spend on your hobbies? </p>
 	</div>
 
-	<div class = "padding"> 
+	<div> 
 		<p> What types of activities do you like to do when you have free time? </p>
 	</div>
 
