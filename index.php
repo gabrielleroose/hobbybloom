@@ -1,29 +1,45 @@
 <?php include 'base.php'; ?>
+
+<?php if (!isset($_SESSION['user'])): ?>
+<script>
+window.handleCredentialResponse = function(response) {
+    console.log("Google credential response:", response);
+
+    fetch("google_login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: response.credential })
+    })
+    .then(res => {
+        if (res.ok) window.location.reload();
+        else alert("Google login failed on server.");
+    })
+    .catch(err => console.error("Fetch error:", err));
+};
+
+</script>
+
+<div id="g_id_onload"
+     data-client_id="1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="sign_in_with"
+     data-shape="rectangular"
+     data-logo_alignment="left">
+</div>
+
+
+<?php endif; ?>
 <!DOCTYPE HTML>
 <html>
 <head> <link href="./css/style.css" rel="stylesheet"> </head>
 <body> 
-<?php 
-if (!isset($_SESSION['user'])): ?>
-    <!-- GOOGLE SIGN-IN -->
-    <div id="g_id_onload"
-         data-client_id="1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-
-    <div class="g_id_signin"></div>
-
-    <script>
-        function handleCredentialResponse(response) {
-            fetch("google_login.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: response.credential })
-            })
-            .then(() => window.location.reload());
-        }
-    </script>
-<?php endif; ?>
 
 <div class = "outter-box">
 	<div class = "inner-box">

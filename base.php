@@ -3,8 +3,9 @@ session_start();
 ?>
 
  <link href="./css/style.css" rel="stylesheet">
- <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+ <head>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
 
     <header>
         <nav>
@@ -21,7 +22,6 @@ session_start();
             </div>
         </nav>
     </header>
-<script src="./js/site.js"></script>
 
  <link href="./css/style.css" rel="stylesheet">
 
@@ -36,4 +36,4 @@ session_start();
             </div>
         </nav>
     </header>
-<script src="./js/site.js"></script>
+
