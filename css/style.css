@@ -30,6 +30,8 @@ a:hover {
   font: arial;
   float: bottom;
   padding-top: 40px;
+  position: absolute;
+  bottom: 0;
 }
 
 .nav-link {
