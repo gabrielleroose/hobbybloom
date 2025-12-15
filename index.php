@@ -39,7 +39,7 @@ if (!isset($_SESSION['user'])): ?>
 	
 	<div class = "padding">
 		<p> What is your gender? test addition <button class = "input-button" type = "submit"> input </button> </p>
-	</div class = "padding">
+	</div>
 
 	<div class = "padding"> 
 		<p> What is your age? </p>
