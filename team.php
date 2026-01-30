@@ -33,7 +33,7 @@
       </p>
     </div>
     <div class="team-member">
-      <img src="images/jack_new.jpg" alt="Photo of Jack Bruce" class="team-photo">
+      <img src="images/jack_new.jpg?v=2" alt="Photo of Jack Bruce" class="team-photo">
       <p><strong>Jack Bruce</strong><br>
         <em>Project Lead & Full-Stack Developer</em>
       </p>
