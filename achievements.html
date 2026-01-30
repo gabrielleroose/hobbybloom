@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<nav id="sidebar"></nav>
+<link href="./css/style.css" rel="stylesheet">
+<nav id="sidebar">
 <ul>
-    <li class="submenu">
-        <button class="dropdown-btn"></button> <!--dropdown menu btn for interactive sidebar. note nesting order of ul and li tags. ul > li > ul > li-->
-        <ul>
-            <li><a href="#">Testcase</a></li>
-        </ul>
+    <li class="active"> 
+        <a href="achievements.html">Menu</a>
     </li>
-</ul>
 
+    <li><span class="logo">generic logo</span></li>
+
+    <li>
+        <button class="dropdown-btn">
+            <span>Create</span>
+        </button> <!--dropdown menu btn for interactive sidebar. note nesting order of ul and li tags.-->
+
+        <ul class="sub-menu">
+            
+            <li>
+                <a href="#">Share</a>
+            </li>
+
+            <li>
+                <a href="#">See progress</a>
+            </li>
+
+        </ul>
+
+    </li>
+
+</ul>
+</nav>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
