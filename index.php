@@ -38,84 +38,8 @@ window.handleCredentialResponse = function(response) {
 <html>
 <head> 
     <link href="./css/style.css" rel="stylesheet"> 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     
-    <style>
-        .step-container {
-            transition: opacity 0.3s ease;
-        }
-        
-        .d-none-custom {
-            display: none !important;
-        }
-
-        .info-box {
-            background-color: #2c6ca3;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .info-box h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .info-box p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin: 0;
-        }
-
-        .hobby-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .hobby-btn {
-            background-color: #b0d4e9;
-            border: 1px solid #7eaec9;
-            border-radius: 8px;
-            padding: 15px 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .hobby-btn:hover {
-            background-color: #9bc5dd;
-        }
-
-        .hobby-btn.selected {
-            background-color: #2c6ca3;
-            color: white;
-            border-color: #1a4f7a;
-        }
-
-        .next-arrow-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #333;
-            cursor: pointer;
-            display: block;
-            margin: 0 auto;
-            padding: 10px 30px;
-            background-color: #e0e0e0;
-            border-radius: 50px;
-        }
-        
-        .next-arrow-btn:hover {
-            background-color: #ccc;
-        }
-    </style>
 </head>
 <body> 
 
