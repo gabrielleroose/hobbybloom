@@ -66,12 +66,11 @@ window.handleCredentialResponse = function(response) {
             <label for="age" class="form-label">What is your age?</label>
             <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="2" maxlength="50" required></input>
         </div>
-     
-        <div class="mb-3">
-            <label for="from" class="form-label">Where are you from?</label>
-            <textarea class="form-control" name="from" id="from" placeholder="Hometown" required></textarea>
-        </div>
 
+       <div class="mb-3">
+            <label for="age" class="form-label">Where are you from?</label>
+            <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required></input>
+        </div>
 		<div class="mb-3">
             <label for="hobbies" class="form-label">Do you partake in any hobbies?</label>
             <input type="text" class="form-control" id="hobbies" name="hobbies" placeholder="Your hobbies" minlength="2" maxlength="50" required></input>
