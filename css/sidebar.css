@@ -19,13 +19,15 @@ html {
     
 }
 
+/* min-height 100 view height, max-height 100 dynamic veight height. */
 body{
     min-height: 100vh;
-    max-height: 100dvh;
+    max-height: 100dvh; 
     background-color: var(--bckgrnd-clr);
     display: grid;
     grid-template-columns: auto 1fr;
 }
+
 
 #sidebar {
     box-sizing: border-box;
@@ -35,4 +37,29 @@ body{
     background-color: var(--bar-hdr-clr);
     border-right: 1px solid black;
 }
+
+/* styles the ul tag of the sidebar. removes bullet points and other
+markers which denote a list */
+#sidebar ul {
+    list-style: none 
+}
+
+/* flex helps define how content fits existing space  */
+#sidebar>ul>li:first-child{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    .logo{
+        font-weight: 600;
+    }
+
+}
+
+#sidebar ul li.active a{
+    color: var(--inpt-btn-clr);
+    svg{
+        fill: var(--inpt-btn-clr);
+    }
+}
+
 
