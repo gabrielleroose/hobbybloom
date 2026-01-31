@@ -54,19 +54,17 @@ window.handleCredentialResponse = function(response) {
 
 
 <section class="form">
-        <h2>Contact Me</h2>
+        <h2>All About You</h2>
 
       <form action="https://formspree.io/f/xeoyddao" method="post">
 
         <div class="mb-3">
             <label for="gender" class="form-label">What is your gender?</label>
             <input type="text" class="form-control" name="gender" id="gender" placeholder="Your Gender" minlength=2 maxlength=50 required>
-            <div class="invalid-feedback">Name must be between 1 and 50 characters</div>
         </div>
         <div class="mb-3">
             <label for="age" class="form-label">What is your age?</label>
             <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="2" maxlength="50" required></input>
-            <div class="invalid-feedback">Text must be less than 50 characters</div>
         </div>
      
         <div class="mb-3">
@@ -77,19 +75,16 @@ window.handleCredentialResponse = function(response) {
 		<div class="mb-3">
             <label for="hobbies" class="form-label">Do you partake in any hobbies?</label>
             <input type="text" class="form-control" id="hobbies" name="hobbies" placeholder="Your hobbies" minlength="2" maxlength="50" required></input>
-            <div class="invalid-feedback">Text must be less than 50 characters</div>
         </div>
 
 		<div class="mb-3">
             <label for="time" class="form-label">How much time do you want to spend on your hobbies?</label>
             <input type="text" class="form-control" id="time" name="time" placeholder="Time spent" minlength="2" maxlength="50" required></input>
-            <div class="invalid-feedback">Text must be less than 50 characters</div>
         </div>
 
 		<div class="mb-3">
             <label for="activities" class="form-label">What types of activities do you like to do when you have free time?</label>
             <input type="text" class="form-control" id="activities" name="activities" placeholder="Activities in free time" minlength="2" maxlength="50" required></input>
-            <div class="invalid-feedback">Text must be less than 50 characters</div>
         </div>
         
       
