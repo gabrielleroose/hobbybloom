@@ -26,6 +26,7 @@ session_start();
     </header>
 
  <link href="./css/style.css" rel="stylesheet">
+ <link href="./css/nav.css" rel="stylesheet">
 
     <header>
         <nav>
@@ -42,5 +43,30 @@ session_start();
 
             </div>
         </nav>
+
+        <nav>
+            <div class="branding">
+                <!-- Logomaker: https://www.squarespace.com/ -->
+                <img class="logo" src="images/Gabrielle-Roose-logo.png" alt="logo" />
+                <p class="menu-button">
+                <span class="material-symbols-outlined">menu</span>
+                </p>
+            </div>
+
+            <div class = "menu">
+                <div class="menu-box">
+
+                    <a class="menu-item" href="dashboard.php">Dashboard</a>
+                    <a class="menu-item" href="activity.php">Activity</a>
+                    <a class="menu-item" href="module.php">Modules</a>
+                    <a class="menu-item" href="circles.php">Circles</a>
+                    <a class="menu-item" href="chat.php">Chat</a>
+                </div>
+
+            </div>
+        </nav>
+
+
+
     </header>
 
