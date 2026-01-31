@@ -99,3 +99,20 @@ cursor: pointer;
 
 
 
+/* NOTE: THE TWO BELOW CLASSES WILL BE USED TO HELP THE DROPDOWN TRANSITION: NOTE THE GRID-TEMPLATE-ROW TAGS */
+/* note: grid only handles one child element. */
+#sidebar .sub-menu{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 300ms ease-in-out;
+    
+    > div{
+        overflow: hidden;
+    }
+}                                
+
+#sidebar .sub-menu.show{
+    grid-template-rows: 1fr;
+}
+
+
