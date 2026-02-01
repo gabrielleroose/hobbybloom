@@ -92,8 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
-            <option value="Begginer">Begginer</option>
-            <option value="Intermidate" selected>Intermidate</option>
+            <option value="Begginer" selected>Begginer</option>
+            <option value="Intermidate">Intermidate</option>
             <option value="Expert">Expert</option>
         </select>
         <br><br>
@@ -101,7 +101,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Estimated time of completion:</label>
     <!-- maybe do a set time format if possible -->
-    <input type="text" name="name" required><br><br>
+    <label for="estimate">Estimated time (minutes):</label>
+<input type="number" id="estimate" min="1" required>
+<p id="formattedOutput"></p>
+
 
 
     <button type="submit">Create Module</button>
@@ -130,6 +133,29 @@ function generateVideoInputs() {
     }
 }
 </script>
+
+
+<script>
+document.getElementById("estimate").addEventListener("input", function () {
+  const minutes = parseInt(this.value, 10);
+  const output = document.getElementById("formattedOutput");
+
+  if (isNaN(minutes) || minutes <= 0) {
+    output.textContent = "";
+    return;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  let formatted = "";
+  if (hours > 0) formatted += `${hours} hour${hours !== 1 ? "s" : ""} `;
+  if (remainingMinutes > 0) formatted += `${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}`;
+
+  output.textContent = `Estimated time: ${formatted}`;
+});
+</script>
+
 
 need:  ( module name )
        ( Module Description )
