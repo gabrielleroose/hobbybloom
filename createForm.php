@@ -75,13 +75,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Description:</label><br>
     <textarea name="description" rows="4" cols="40"></textarea><br><br>
 
-    <label>Number of lessons:</label><br><br>
+    <label>Number of lessons:</label><br>
+    <input 
+    type="number" 
+    id="videoCount" 
+    min="0" 
+    max="10" 
+    onchange="generateVideoInputs()"
+>
+
+<div id="videoInputs"></div><br>
     <!-- figure out how to add a working number system that the system can count to make spots for each lesson -->
 
     <label>Notes:</label><br>
     <textarea name="description" rows="4" cols="40"></textarea><br><br>
 
-    <label>Recomended experince level</label><br><br>
+    <label>Recomended experince level:</label><br>
+        <select id="xpLevel" name="xpLevel">
+            <option value="Begginer">Begginer</option>
+            <option value="Intermidate" selected>Intermidate</option>
+            <option value="Expert">Expert</option>
+        </select>
+        <br><br>
     <!-- add drop down with levels -->
 
     <label>Estimated time of completion:</label>
@@ -95,6 +110,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </body>
 </html>
 
+<script>
+function generateVideoInputs() {
+    const count = document.getElementById("videoCount").value;
+    const container = document.getElementById("videoInputs");
+
+    // Clear existing inputs
+    container.innerHTML = "";
+
+    for (let i = 1; i <= count; i++) {
+        const input = document.createElement("input");
+        input.type = "url";
+        input.name = "videos[]";
+        input.placeholder = "Video " + i + " link";
+        input.required = true;
+
+        container.appendChild(input);
+        container.appendChild(document.createElement("br"));
+    }
+}
+</script>
 
 need:  ( module name )
        ( Module Description )
