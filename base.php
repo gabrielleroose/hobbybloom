@@ -38,9 +38,9 @@ session_start();
         <div class="branding">
             <!-- Logomaker: https://www.squarespace.com/ -->
             <img class="logo" src="#" alt="logo" />
-            <p class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </p>
+            <button class="menu-button" type="button">
+            <span class="material-symbols-outlined">menu</span>
+            </button>
         </div>
 
         <div class="menu">
@@ -57,6 +57,10 @@ session_start();
         </div>
     </nav>
 </header>
+
+<main>
+  <!-- main content here -->
+</main>
 
 
 
