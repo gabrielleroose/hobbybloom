@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circles</title>
-    <link href="./css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 </head>
+
 <body>
 
     <?php include 'base.php'; ?>
@@ -46,10 +48,11 @@
                 <div class="feed-avatar"></div> <span class="feed-username">User2347</span>
             </div>
             <div class="feed-image-placeholder">
-                </div>
+            </div>
         </div>
 
     </div>
 
 </body>
+
 </html>

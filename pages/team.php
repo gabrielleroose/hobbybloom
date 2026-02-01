@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>About Us</title>
-  <link href="./css/style.css" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
 
  <div class="other">
     <div class="team-member">
-      <img src="images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
+      <img src="../images/Drew.jpg" alt="Photo of Drew Bauman" class="team-photo">
       <p><strong>Drew Bauman</strong><br>
         <em>Backend Developer & Database Lead</em>
       </p>
@@ -33,7 +33,7 @@
       </p>
     </div>
     <div class="team-member">
-      <img src="images/jack_new.jpg?v=2" alt="Photo of Jack Bruce" class="team-photo">
+      <img src="../images/jack_new.jpg?v=2" alt="Photo of Jack Bruce" class="team-photo">
       <p><strong>Jack Bruce</strong><br>
         <em>Project Lead & Full-Stack Developer</em>
       </p>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="team-member">
-      <img src="images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
+      <img src="../images/Chris.jpg" alt="Photo of Chris Martin" class="team-photo">
       <p><strong>Chris Martin</strong><br>
         <em>Research & Front-End Development</em>
       </p>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="team-member">
-      <img src="images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
+      <img src="../images/Gabby.jpg" alt="Photo of Gabby Roose" class="team-photo">
       <p><strong>Gabby Roose</strong><br>
         <em>UX/UI Designer & Styling Lead</em>
       </p>
