@@ -37,7 +37,7 @@ window.handleCredentialResponse = function(response) {
 <!DOCTYPE HTML>
 <html>
 <head> 
-    <link href="./css/style.css" rel="stylesheet"> 
+    <link href="../css/style.css" rel="stylesheet"> 
 
     
 </head>
