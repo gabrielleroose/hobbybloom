@@ -1,17 +1,27 @@
 <?php
 session_start();
 ?>
-
-<link href="./css/style.css" rel="stylesheet">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Login Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- CSS styles -->
+    
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/nav.css">    
+   
 </head>
 
+
+<body>
+    
+
 <header>
-    <nav>
         <div class="navbar">
             <!-- GOOGLE AUTH UI -->
             <?php if (isset($_SESSION['user'])): ?>
@@ -23,14 +33,8 @@ session_start();
 
 
         </div>
-    </nav>
-</header>
 
-<link href="./css/style.css" rel="stylesheet">
-<link href="./css/nav.css" rel="stylesheet">
-
-<header>
-    <nav>
+        <nav>
         <div class="branding">
             <!-- Logomaker: https://www.squarespace.com/ -->
             <img class="logo" src="#" alt="logo" />
@@ -52,8 +56,9 @@ session_start();
 
         </div>
     </nav>
-
 </header>
+
+
 
 <footer class="footer mt-auto py-3">
     <div class="footer-container">
@@ -64,3 +69,6 @@ session_start();
     </div>
 
 </footer>
+
+</body>
+</html>
