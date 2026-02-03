@@ -149,8 +149,9 @@ footer{
  rgba(164, 250, 162, 1) 0%,
  rgba(58, 161, 56, 1) 55%,
  rgba(21, 105, 20, 1) 100%);
-  padding: 3rem 0rem;
+  padding: 3rem 0rem 1.5rem;
   border-radius: 1rem;
+  border: .25px solid #156914;
 
 }
 
@@ -166,4 +167,15 @@ footer{
   justify-content: center;
   align-items: center;
   gap: 20px;
+}
+
+.footer-container-logo{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  line-height: .1rem;
+
 }
