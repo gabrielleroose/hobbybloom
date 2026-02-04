@@ -23,7 +23,7 @@ $password = "berms2227penes";
 $database = "i494f25_team18";
 $charset = "utf8mb4";
 
-$dsn = "mysqli:host=$host;dbname=$database;charset=$charset";
+$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
 
 // use of PDO's for security, mysqli extension largely outdated.
 
@@ -31,20 +31,22 @@ try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
     } catch (PDOException $e) {
-        die("database connection failed: " . e->getMessage());
+        die("database connection failed: " . $e->getMessage());
     }
 
 $id="SELECT id from users";
 $stmt = $pdo->prepare($id);
 $stmt->execute();
 
-$idRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$idRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $id = $idRow['id'];
 
 $sql = "SELECT id, username, email FROM users WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $id]);
+
+$users = $stmt->fetchALL(pdo::FETCH_ASSOC);
 
 
 foreach($users as $user) {
@@ -59,8 +61,6 @@ foreach($users as $user) {
 
 
 <!-- END CONN PHP -->
-
-
 
     <nav id="sidebar">
         <ul>
