@@ -10,6 +10,58 @@
     <script type="text/javascript" src="app.js" defer></script>
 </head>
 <body>
+
+
+<!-- BEGIN CONN PHP -->
+
+
+<?php
+
+$host = "db.luddy.indiana.edu";
+$user = "i494f25_team18";
+$password = "berms2227penes";
+$database = "i494f25_team18";
+$charset = "utf8mb4";
+
+$dsn = "mysqli:host=$host;dbname=$database;charset=$charset";
+
+// use of PDO's for security, mysqli extension largely outdated.
+
+try {
+    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+    } catch (PDOException $e) {
+        die("database connection failed: " . e->getMessage());
+    }
+
+$id="SELECT id from users";
+$stmt = $pdo->prepare($id);
+$stmt->execute();
+
+$idRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$id = $idRow['id'];
+
+$sql = "SELECT id, username, email FROM users WHERE id = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['id' => $id]);
+
+
+foreach($users as $user) {
+    echo "ID: " . $user['id'] . "|";
+    echo "username: " . $user['username'] . "|";
+    echo "email: " . $user['email'] . "<br>";
+    
+}
+
+?>
+
+
+
+<!-- END CONN PHP -->
+
+
+
     <nav id="sidebar">
         <ul>
             <li>
