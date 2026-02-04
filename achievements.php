@@ -46,7 +46,7 @@ $sql = "SELECT id, username, email FROM users WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $id]);
 
-$users = $stmt->fetchALL(pdo::FETCH_ASSOC);
+$users = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 
 foreach($users as $user) {
