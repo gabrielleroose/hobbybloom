@@ -34,17 +34,9 @@ try {
         die("database connection failed: " . $e->getMessage());
     }
 
-$id="SELECT id from users";
-$stmt = $pdo->prepare($id);
-$stmt->execute();
-
-$idRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$id = $idRow['id'];
-
-$sql = "SELECT id, username, email FROM users WHERE id = :id";
+$sql = "SELECT id, username, email FROM users";
 $stmt = $pdo->prepare($sql);
-$stmt->execute(['id' => $id]);
+$stmt->execute();
 
 $users = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
