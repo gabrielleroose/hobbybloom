@@ -47,7 +47,7 @@ nav {
 }
 
 .menu-item {
-  color: navy;
+  color: black;
   padding: 1rem 0.5rem 1rem 1rem;
   text-decoration: none;
   display: none;
@@ -56,7 +56,8 @@ nav {
 }
 
 .menu-item:hover {
-  color: #e7ecef;
+  /* color: #e7ecef; */
+  color: rgb(56, 86, 68);
   transform: translateX(5px);
 }
 
@@ -131,11 +132,11 @@ nav {
   }
 }
 
-/* FOOTER STYLES */
+/* ********************* FOOTER STYLES ************************ */
 
 .footer-link {
   text-align: center;
-  color: navy;
+  color: black;
   font-size: var(--text-size-md);
   text-decoration: none;
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
@@ -157,7 +158,7 @@ footer{
 }
 
 .footer-link:hover {
-    color: #e7ecef;
+    color: rgb(56, 86, 68);
     transform: scale(1.2);
   }
 
