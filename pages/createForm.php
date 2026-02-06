@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Chnage below to real data base info
+// Change below to real data base info once we have it
 $host = "localhost";
 $dbname = "your_database_name";
 $username = "db_user";
@@ -15,11 +15,16 @@ if (!isset($_SESSION['user_id'])) {
 $success = false;
 $error = "";
 
-// form submission handling below
+// form submission handling below 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $name = trim($_POST["name"]);
     $description = trim($_POST["description"]);
+    $NumOfLessons = $_POST["videoCount"] ?? 0;
+    $notes = $_POST["notes"] ?? "";
+    $xpLevel = $_POST["xpLevel"] ?? "";
+    $compTime = $_POST["estimate"] ?? 0;
+
 
     if (empty($name)) {
         $error = "Module name is required.";
@@ -32,14 +37,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             );
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $sql = "INSERT INTO module (name, description, created_by)
-                    VALUES (:name, :description, :created_by)";
+            $sql = "INSERT INTO module
+            (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
+            VALUES
+            (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
+
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ":name" => $name,
                 ":description" => $description,
-                ":created_by" => $_SESSION['user_id']
+                ":created_by" => $_SESSION['user_id'],
+                ":Number_of_lessons" => $NumOfLessons,
+                ":notes" => $notes,
+                ":xpLevel" => $xpLevel,
+                ":compTime" => $compTime,
             ]);
 
             $success = true;
@@ -85,10 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 >
 
 <div id="videoInputs"></div><br>
-    <!-- figure out how to add a working number system that the system can count to make spots for each lesson -->
+    
 
     <label>Notes:</label><br>
-    <textarea name="description" rows="4" cols="40"></textarea><br><br>
+    <textarea name="notes" rows="4" cols="40"></textarea><br><br>
 
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
@@ -97,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <option value="Expert">Expert</option>
         </select>
         <br><br>
-    <!-- add drop down with levels -->
+    
 
     <label>Estimated time of completion:</label>
     <!-- maybe do a set time format if possible -->
