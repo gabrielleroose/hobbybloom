@@ -12,7 +12,7 @@
 <body>
 
 
-<!-- BEGIN CONN PHP -->
+<!-- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP ---- BEGIN CONN PHP -->
 
 
 <?php
@@ -25,7 +25,7 @@ $charset = "utf8mb4";
 
 $dsn = "mysql:host=$host;dbname=$database;charset=$charset";
 
-// use of PDO's for security, mysqli extension largely outdated.
+// use of PDO's for security, mysqli extensions largely outdated.
 
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
@@ -51,8 +51,7 @@ foreach($users as $user) {
 ?>
 
 
-
-<!-- END CONN PHP -->
+<!-- --END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ---->
 
     <nav id="sidebar">
         <ul>
