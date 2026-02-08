@@ -53,7 +53,7 @@ foreach($users as $user) {
 
 <!-- --END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ----END CONN PHP ---->
 
-    <nav id="sidebar">
+    <aside id="sidebar">
         <ul>
             <li>
                 <span class="logo"> Hobby Bloom</span>
@@ -62,7 +62,7 @@ foreach($users as $user) {
                 </button>
             </li>
             <li class="active"> 
-                <a href="achievements.html">Menu</a>
+                <a href="achievements.php">Menu</a>
             </li>
 
             <li><span class="logo">generic logo</span></li>
@@ -92,7 +92,13 @@ foreach($users as $user) {
 
         </ul>
 
-    </nav> 
+    </aside>
+    
+    <main>
+
+
+
+    </main>
 </body>
 
 </html>
