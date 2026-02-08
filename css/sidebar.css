@@ -40,6 +40,9 @@ body{
     position: sticky;
     top: 0;
     align-self: start;
+
+    overflow: hidden;
+    text-wrap: nowrap;
 }
 
 /* styles the ul tag of the sidebar. removes bullet points and other
@@ -66,6 +69,11 @@ markers which denote a list */
     }
 }
 
+#sidebar.close{
+    padding: 5x;
+    width: 60px;
+}
+
 #sidebar a, #sidebar .dropdown-btn, #sidebar .logo{
     border-radius: .5em;
     padding: .85em;
@@ -74,6 +82,20 @@ markers which denote a list */
     display: flex;
     align-items: center;
 
+}
+
+#toggle-btn{
+    margin-left: auto;
+    padding: 1em;
+    border: none;
+    border-radius: .5em;
+    background: none;
+    cursor: pointer;
+
+    svg{
+        transition: rotate 150ms ease;
+        background-color: var(--inpt-btn-clr)
+    }
 }
 
 .dropdown-btn{
@@ -121,6 +143,10 @@ dropdown-btn svg {
 
 .rotate svg:last-child{
 rotate: 180deg;
+}
+
+#sidebar .sub-menu a {
+    padding-left: 2em;
 }
 
 
