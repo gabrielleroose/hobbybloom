@@ -41,3 +41,12 @@ if ($payload && isset($payload['sub'])) {
     exit('Invalid token');
 }
 ?>
+
+
+
+
+
+this will let us connect the callander with a button
+<a href="connect_calendar.php">
+    Connect Google Calendar
+</a>
