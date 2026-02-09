@@ -1,71 +1,56 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS user_profiles;
+DROP TABLE IF EXISTS feed;
+DROP TABLE IF EXISTS log;
+DROP TABLE IF EXISTS circle;
+DROP TABLE IF EXISTS module;
+DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS users;
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE users (
- id INT NOT NULL AUTO_INCREMENT,
- username VARCHAR(32) NOT NULL,
- password VARCHAR(32) NOT NULL,
- age INT NOT NULL,
- email VARCHAR(255) NOT NULL,
- phone VARCHAR(20) NOT NULL,
- type TINYINT(1) NOT NULL DEFAULT 0,
- PRIMARY KEY (id) ) 
-ENGINE=InnoDB;
-
-
-CREATE TABLE tag (
- id INT NOT NULL AUTO_INCREMENT,
- name VARCHAR(40) NOT NULL,
- cid INT NOT NULL,
- PRIMARY KEY (id),
- FOREIGN KEY (cid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    id INT NOT NULL AUTO_INCREMENT,
+    google_id VARCHAR(255) UNIQUE,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255),
+    age INT,
+    phone VARCHAR(20),
+    type TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE user_profiles (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    gender VARCHAR(50),
+    hometown VARCHAR(100),
+    hobbies TEXT, 
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
-CREATE TABLE `module` (
+CREATE TABLE tag (
     id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(40) NOT NULL,
     cid INT NOT NULL,
-    tid INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE module (
+    id INT NOT NULL AUTO_INCREMENT,
+    cid INT NOT NULL, 
     name VARCHAR(100) NOT NULL,
     description VARCHAR(500),
     rating INT DEFAULT 0,
     exp_level VARCHAR(20) NOT NULL,
     num_lessons INT NOT NULL,
-    est_comp_time INT NOT NULL CHECK (est_comp_time % 15 = 0),	   
+    est_comp_time INT NOT NULL,
+    notes TEXT,
     PRIMARY KEY (id),
-    FOREIGN KEY (cid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-  FOREIGN KEY (tid) REFERENCES tag(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-        CHECK (exp_level IN ('beginner', 'intermediate', 'expert'))
-        ) ENGINE=InnoDB;
-
-CREATE TABLE circle (
-    circle_id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(40) NOT NULL,
-    uid INT NOT NULL,
-    PRIMARY KEY (circle_id),
-    FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
-CREATE TABLE log (
-    mid INT NOT NULL,
-    uid INT NOT NULL,
-    last_visited DATE,
-    times_visited INT NOT NULL DEFAULT 0,
-    feedback VARCHAR(500),
-    PRIMARY KEY (mid, uid),
-    FOREIGN KEY (mid) REFERENCES `module`(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
 
 CREATE TABLE feed (
     uid INT NOT NULL,
@@ -78,10 +63,6 @@ CREATE TABLE feed (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
-
-
-
 
 /*  Drew Module tables - need to run by team
 CREATE TABLE module (
