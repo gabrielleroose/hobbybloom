@@ -52,17 +52,40 @@ CREATE TABLE module (
     FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE log (
+    id INT NOT NULL AUTO_INCREMENT,
+    mid INT NOT NULL,
+    uid INT NOT NULL,
+    last_visited DATE,
+    times_visited INT NOT NULL DEFAULT 0,
+    complete INT NOT NULL DEFAULT 0,
+    feedback VARCHAR(500),
+    PRIMARY KEY (id),
+    FOREIGN KEY (mid) REFERENCES `module`(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
 CREATE TABLE feed (
     uid INT NOT NULL,
     mid INT NOT NULL,
+    lid INT NOT NULL,
     PRIMARY KEY (uid, mid),
     FOREIGN KEY (uid) REFERENCES users(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (mid) REFERENCES `module`(id)
+    FOREIGN KEY (mid) REFERENCES module(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+   FOREIGN KEY (lid) REFERENCES log(id)
+       ON DELETE CASCADE
+       ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
 
 /*  Drew Module tables - need to run by team
 CREATE TABLE module (
