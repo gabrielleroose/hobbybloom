@@ -7,20 +7,32 @@ function toggleSidebar(){
 sidebar.classList.toggle('close')
 toggleButton.classList.toggle('rotate')
 
-Array.from(sidebar.getElementsByClassName('show')).forEach(ul => 
-    {
-        ul.classList.remove('show')
-        ul.previousElementSibling.classList.remove('rotate')
-    })
+closeAllSubmenus()
 }
 
 function toggleSubMenu(button){
+    if(!nextElementSiblings.classList.contains('show'))
+        {
+            closeAllSubmenus()
+        }
+
     button.nextElementSibling.classList.toggle('show')
     button.classlist.toggle('rotate')
 
-    if(sidebar.classList.contains('close')){
-    sidebar.classList.toggle('close')
-    toggleButton.classlist.toggle('rotate')
+    if(sidebar.classList.contains('close'))
+        {
+            sidebar.classList.toggle('close')
+            toggleButton.classlist.toggle('rotate')
 
-    }
+        }
+}
+
+function closeAllSubmenus(){
+    
+    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => 
+        {
+            ul.classList.remove('show')
+            ul.previousElementSibling.classList.remove('rotate')
+        }
+    )
 }

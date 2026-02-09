@@ -150,3 +150,78 @@ rotate: 180deg;
 }
 
 
+/* SMARTPHONE COMPATABILITY */
+
+@media(max-width: 800px){
+    body{
+        grid-template-columns: 1fr;
+    }
+
+    main{
+        padding: 2em 1em 60px 1em;
+    }
+    
+    .container{
+        border: none;
+        padding: 0;
+    }
+
+    #sidebar{
+        height: 60px;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid lightgreen;
+        padding: 0;
+        position: fixed;
+        top: unset;
+        bottom: 0;
+
+        >ul{
+            padding: 0;
+            display: grid;
+            grid-auto-columns: 60px;
+            grid-auto-flow: column;
+            align-items: center;
+            overflow-x: scroll;
+        }
+
+        ul li{
+            height: 100%
+        }
+
+        ul a, ul .dropdown-btn {
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            border-radius: 0;
+            justify-content: center;
+        }
+
+        ul li .sub-menu.show{
+            position: fixed;
+            bottom: 60px;
+            left: 0px;
+            box-sizing: border-box;
+            height: 60px;
+            width: 100%;
+            border-top: 1px solid lightseagreen;
+            display: flex;
+            justify-content: center;
+        }
+
+        >div{
+            overflow-x: auto;
+        }
+
+        li{
+            display: inline-flex;
+        }
+        a{
+            box-sizing: border-box;
+            padding: 1em;
+            width: auto;
+            justify-content: center;
+        }
+
+    }
+}
