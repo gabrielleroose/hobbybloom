@@ -69,8 +69,13 @@ window.handleCredentialResponse = function(response) {
             </div>
 
             <div class="mb-3">
-                <label for="from" class="form-label">Where are you from?</label>
-                <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required>
+                <label for="from" class="form-label">What country are you located in?</label>
+                <input type="text" class="form-control" id="from" name="from" placeholder="Country" minlength="2" maxlength="50" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="from" class="form-label">What state are you from?</label>
+                <input type="text" class="form-control" id="from" name="from" placeholder="State" minlength="2" maxlength="50" required>
             </div>
 
             <div class="mt-4 text-center">
