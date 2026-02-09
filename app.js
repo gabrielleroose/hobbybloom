@@ -11,7 +11,7 @@ closeAllSubmenus()
 }
 
 function toggleSubMenu(button){
-    if(!nextElementSiblings.classList.contains('show'))
+    if(!button.nextElementSibling.classList.contains('show'))
         {
             closeAllSubmenus()
         }
