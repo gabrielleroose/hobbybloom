@@ -21,6 +21,17 @@ CREATE TABLE users (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE circle (
+    circle_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(40) NOT NULL,
+    uid INT NOT NULL,
+    description TEXT,
+    PRIMARY KEY (circle_id),
+    FOREIGN KEY (uid) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE user_profiles (
     profile_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
