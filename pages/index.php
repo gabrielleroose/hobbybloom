@@ -56,7 +56,7 @@ window.handleCredentialResponse = function(response) {
     <section class="form">
         <h2>All About You</h2>
         
-        <form id="userForm" action="https://formspree.io/f/xeoyddao" method="post">
+        <form id="userForm" action="save_onboarding.php" method="post">
             
             <div class="mb-3">
                 <label for="gender" class="form-label">What is your gender?</label>
@@ -139,7 +139,7 @@ window.handleCredentialResponse = function(response) {
 
         document.getElementById('selected_hobbies_input').value = hobbies.join(', ');
         
-        window.location.href = "dashboard.php";
+        document.getElementById('userForm').submit();
     }
 </script>
 
