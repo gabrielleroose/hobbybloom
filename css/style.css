@@ -781,6 +781,10 @@ h2 {
   margin-left: 4rem;
 }
 
+.dashboard-circles{
+  margin: 4rem 0 0 3rem;
+}
+
 .story-circle {
   text-align: center;
   min-width: 70px;
@@ -803,8 +807,12 @@ h2 {
   display: flex;
   overflow-x: auto;
   gap: 15px;
-  padding-bottom: 15px;
   scrollbar-width: none;
+  background-color: #1f5077;
+  padding: 1rem;
+  border-radius: 1rem;
+  max-width: 80%;
+
 }
 
 .horizontal-scroll::-webkit-scrollbar {

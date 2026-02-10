@@ -108,112 +108,115 @@ if (isset($_SESSION['user']['id'])) {
             <?php endif; ?>
         </div>
 
-        <h2>Your Circles</h2>
-        <div class="horizontal-scroll">
-            
-            <?php if (in_array("Cooking", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #ff9999;"></div>
-                <p>Cooking</p>
-            </div>
-            <?php endif; ?>
+        <div class="dashboard-circles">
 
-            <?php if (in_array("Knitting", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #e6e6fa;"></div>
-                <p>Knitting</p>
-            </div>
-            <?php endif; ?>
+            <h2>Your Circles</h2>
+            <div class="horizontal-scroll">
+                
+                <?php if (in_array("Cooking", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #ff9999;"></div>
+                    <p>Cooking</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Lego", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #ffd700;"></div>
-                <p>Lego</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Knitting", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #e6e6fa;"></div>
+                    <p>Knitting</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Sewing", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #ffb6c1;"></div>
-                <p>Sewing</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Lego", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #ffd700;"></div>
+                    <p>Lego</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Painting", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #ffdab9;"></div>
-                <p>Painting</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Sewing", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #ffb6c1;"></div>
+                    <p>Sewing</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Hiking", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #90ee90;"></div>
-                <p>Hiking</p>
-            </div>
-            <?php endif; ?>
-            
-            <?php if (in_array("Reading", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #a8d0e6;"></div>
-                <p>Reading</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Painting", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #ffdab9;"></div>
+                    <p>Painting</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Gardening", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #3cb371;"></div>
-                <p>Gardening</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Hiking", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #90ee90;"></div>
+                    <p>Hiking</p>
+                </div>
+                <?php endif; ?>
+                
+                <?php if (in_array("Reading", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #a8d0e6;"></div>
+                    <p>Reading</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Baking", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #f4a460;"></div>
-                <p>Baking</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Gardening", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #3cb371;"></div>
+                    <p>Gardening</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Meditation", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #e0ffff;"></div>
-                <p>Meditation</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Baking", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #f4a460;"></div>
+                    <p>Baking</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Music", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #dda0dd;"></div>
-                <p>Music</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Meditation", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #e0ffff;"></div>
+                    <p>Meditation</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Movies", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #cd5c5c;"></div>
-                <p>Movies</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Music", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #dda0dd;"></div>
+                    <p>Music</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Gaming", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #9370db;"></div>
-                <p>Gaming</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Movies", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #cd5c5c;"></div>
+                    <p>Movies</p>
+                </div>
+                <?php endif; ?>
 
-            <?php if (in_array("Yoga", $myHobbies)): ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #ffdead;"></div>
-                <p>Yoga</p>
-            </div>
-            <?php endif; ?>
+                <?php if (in_array("Gaming", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #9370db;"></div>
+                    <p>Gaming</p>
+                </div>
+                <?php endif; ?>
 
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #cccccc;"></div>
-                <p>General</p>
+                <?php if (in_array("Yoga", $myHobbies)): ?>
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #ffdead;"></div>
+                    <p>Yoga</p>
+                </div>
+                <?php endif; ?>
+
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #cccccc;"></div>
+                    <p>General</p>
+                </div>
+                
             </div>
-            
         </div>
 
     </main>
