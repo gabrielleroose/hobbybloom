@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>About the Project</title>
   <link href="../css/style.css" rel="stylesheet">
+  <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
 
@@ -39,6 +40,8 @@
     <li>Personalized recommendations and adaptive learning paths</li>
   </ul>
 </div>
+
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 
 </body>
 </html>

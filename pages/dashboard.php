@@ -20,6 +20,8 @@ if (isset($_SESSION['user']['id'])) {
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -148,6 +150,6 @@ if (isset($_SESSION['user']['id'])) {
         
     </div>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 </body>
 </html>
