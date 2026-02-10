@@ -2,7 +2,7 @@
 require_once 'db.php';
 
 if (!isset($_SESSION['user']['id'])) {
-    header("Location: index.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $age = $_POST['age'];
     $gender = $_POST['gender'];
     $hometown = $_POST['from']; 
+    $bio = $_POST['bio'] ?? '';
     $hobbies = $_POST['selected_hobbies'];
 
     try {
@@ -22,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $check->execute([$userId]);
         
         if ($check->fetch()) {
-            $sql = "UPDATE user_profiles SET gender=?, hometown=?, hobbies=? WHERE user_id=?";
+            $sql = "UPDATE user_profiles SET gender=?, hometown=?, bio=?, hobbies=? WHERE user_id=?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$gender, $hometown, $hobbies, $userId]);
+            $stmt->execute([$gender, $hometown, $bio, $hobbies, $userId]);
         } else {
-            $sql = "INSERT INTO user_profiles (user_id, gender, hometown, hobbies) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO user_profiles (user_id, gender, hometown, bio, hobbies) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$userId, $gender, $hometown, $hobbies]);
+            $stmt->execute([$userId, $gender, $hometown, $bio, $hobbies]);
         }
 
         header("Location: dashboard.php");
