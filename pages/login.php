@@ -45,11 +45,12 @@ if (isset($_SESSION['user'])) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: response.credential })
         })
-        .then(res => {
-            if (res.ok) {
-                window.location.href = "index.php";
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = data.redirect;
             } else {
-                alert("Login failed. Please try again.");
+                alert("Login failed: " + (data.message || "Unknown error"));
             }
         })
         .catch(err => console.error("Fetch error:", err));
