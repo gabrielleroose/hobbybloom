@@ -29,7 +29,7 @@ require_once 'db.php';
                 <span class="nav-user" style="color: white; margin-left: auto; padding-right: 10px;">
                     <?= htmlspecialchars($_SESSION['user']['name']) ?>
                 </span>
-                <a class="nav-link" href="logout.php">Logout</a>
+                <!-- <a class="nav-link" href="logout.php">Logout</a> -->
             <?php endif; ?>
 
 
@@ -53,6 +53,8 @@ require_once 'db.php';
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="chat.php">Chat</a>
                 <a class="menu-item" href="account.php">Account</a>
+                <a class="menu-item" href="logout.php">Logout</a>
+
             </div>
 
         </div>
