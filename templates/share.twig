@@ -1,14 +1,32 @@
-<h1>Welcome!</h1>
 
-{% if modules is not empty %}
-    <ul>
-    {% for module in modules %}
-        <li>
-            <strong>{{ module.name }}</strong><br>
-            {{ module.description }}
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No modules completed yet.</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>share</title>
+    
+<link rel="stylesheet" href="{{ asset('/../css/style.css') }}">
+</head>
+<body>
+    <h1>Welcome!</h1>
+
+    <section>
+        <div class="s-outter-layer">
+            {% if modules is not empty %}
+                <ul>
+                <h2>{% for module in modules %}</h2>
+                    <li clas="s-content">
+                        <strong>{{ module.name }}</strong><br>
+                        {{ module.description }}
+                    </li>
+                {% endfor %}
+
+                </ul>
+            {% else %}
+                <p>No modules completed yet.</p>
+        {% endif %}"
+        </div>
+    </section>
+    
+</body>
+</html>

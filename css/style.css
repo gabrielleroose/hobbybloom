@@ -723,3 +723,19 @@ h2 {
 .next-arrow-btn:hover {
   background-color: #ccc;
 }
+
+/* SHARE.TWIG/.PHP STYLING  */
+
+
+.s-outter-layer{ 
+display: grid;
+place-items: center;
+height: 100vh;
+background-color: #57C79E;
+
+
+}
+.s-outter-layer ul, li {
+  list-style: none;
+  line-height: 1.2em;
+}
