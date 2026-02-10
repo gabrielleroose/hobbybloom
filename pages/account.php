@@ -14,8 +14,7 @@
 
     <h1>My Account</h1>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
-
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 
 </body>
 </html>
