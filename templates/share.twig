@@ -1,0 +1,14 @@
+<h1>Welcome!</h1>
+
+{% if modules is not empty %}
+    <ul>
+    {% for module in modules %}
+        <li>
+            <strong>{{ module.name }}</strong><br>
+            {{ module.description }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No modules completed yet.</p>
+{% endif %}

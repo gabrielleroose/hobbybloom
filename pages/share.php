@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/twig.php';
 
@@ -12,6 +13,23 @@ if (!$googleId) {
     header('Location: index.php');
     exit;
 }
+
+$host = "db.luddy.indiana.edu";
+$user = "i494f25_team18";
+$password = "berms2227penes";
+$database = "i494f25_team18";
+$charset = "utf8mb4";
+
+$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
+
+// use of PDO's for security, mysqli extensions largely outdated.
+
+try {
+    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+    } catch (PDOException $e) {
+        die("database connection failed: " . $e->getMessage());
+    }
 
 //basic PHP SQL syntax. remember, use of PDO's for security. 
 
@@ -50,9 +68,14 @@ foreach ($mid_ids as $mid_id) {
             'description' => $module['description']
         ];
     }
-
-    
 }
+
+
+
+    echo $twig->render('share.twig', [
+    'modules' => $modules
+]);
+
 
 
 
