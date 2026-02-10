@@ -44,6 +44,11 @@ if (!isset($_SESSION['user'])) {
                 <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required>
             </div>
 
+            <div class="mb-3">
+                <label for="bio" class="form-label">Fun Fact / Bio</label>
+                <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us a little about yourself..." maxlength="500"></textarea>
+            </div>
+
             <div class="mt-4 text-center">
                 <button type="button" class="btn btn-primary btn-lg" onclick="goToStep2()">Next</button>
             </div>
@@ -89,9 +94,10 @@ if (!isset($_SESSION['user'])) {
     function goToStep2() {
         const gender = document.getElementById('gender').value;
         const age = document.getElementById('age').value;
+        const from = document.getElementById('from').value;
         
-        if(gender === "" || age === "") {
-            alert("Please fill out the form first.");
+        if(gender === "" || age === "" || from === "") {
+            alert("Please fill out all required fields.");
             return;
         }
 
