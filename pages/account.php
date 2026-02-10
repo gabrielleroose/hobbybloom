@@ -13,6 +13,8 @@
 
     <h1>My Account</h1>
 
+    <?php include 'includes/footer.php'; ?>
+
 
 </body>
 </html>

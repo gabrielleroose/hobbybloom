@@ -1,13 +1,34 @@
-.navbar {
-  background-color: rgb(179, 170, 170);
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 10px;
+:root {
+  --text-size-xs: 0.64rem;
+  --text-size-sm: 0.8rem;
+  --text-size-md: 1rem;
+  --text-size-lg: 1.25rem;
+  --text-size-xl: 1.56rem;
+  --text-size-2xl: 1.95rem;
+  --text-size-3xl: 2.44rem;
+  --text-size-4xl: 3.05rem;
+  --text-size-5xl: 3.81rem;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  margin-top: auto;
+}
 
 .input-button {
   background-color: rgb(141, 209, 240);
@@ -15,7 +36,7 @@
   font-size: 50px;
   float: right;
   border: 1px solid black;
-  border-radius: 1px
+  border-radius: 1px;
 }
 
 .next-button {
@@ -35,43 +56,9 @@
   margin-top: 2rem;
 }
 
-.next-button:hover{
+.next-button:hover {
   transform: scale(1.1);
   color: #a8d0e6;
-
-}
-
-.nav-link {
-  padding: 10px 20px;
-  margin: 0;
-  font-size: 20px;
-  color: #ffffff;
-  text-decoration: none;
-  font: sans-serif;
-  font-size: 25px;
-  background: #153853;
-  border-radius: 1rem;
-}
-
-.nav-link:hover{
-  transform: scale(1.1);
-  text-decoration: none;
-  background-color: #ffffff;
-  color: #153853;
-}
-
-
-.nav-button {
-  margin: 40px;
-  font-size: 20px;
-  color: black;
-  border: 1px solid black;
-  border-radius: 12px;
-  padding: 5px 10px;
-  text-decoration: none;
-  font: sans-serif;
-  font-size: 25px;
-  cursor: pointer;
 }
 
 .grid-container {
@@ -79,7 +66,6 @@
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
   background-color: #8d9397;
-
 }
 
 .grid-table {
@@ -89,7 +75,6 @@
   margin-top: 100px;
   margin-left: 500px;
   margin-right: 500px;
-
 }
 
 .grid-item {
@@ -147,7 +132,6 @@
   color: rgb(144, 214, 245);
   border-radius: 30px;
 }
-
 
 .team-photo {
   width: 150px;
@@ -322,15 +306,24 @@ h2 {
 }
 
 .feed-image-placeholder::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    linear-gradient(to top right, transparent calc(50% - 1px), #333, transparent calc(50% + 1px)),
-    linear-gradient(to bottom right, transparent calc(50% - 1px), #333, transparent calc(50% + 1px));
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      #333,
+      transparent calc(50% + 1px)
+    ),
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1px),
+      #333,
+      transparent calc(50% + 1px)
+    );
   opacity: 0.3;
 }
 
@@ -543,15 +536,24 @@ h2 {
 }
 
 .calendar-box::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    linear-gradient(to top right, transparent calc(50% - 1px), #ffffff, transparent calc(50% + 1px)),
-    linear-gradient(to bottom right, transparent calc(50% - 1px), #ffffff, transparent calc(50% + 1px));
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      #ffffff,
+      transparent calc(50% + 1px)
+    ),
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 1px),
+      #ffffff,
+      transparent calc(50% + 1px)
+    );
   opacity: 0.5;
 }
 
@@ -578,7 +580,6 @@ h2 {
   color: #999;
   line-height: 1.5;
 }
-
 
 .dash-inner {
   background-color: rgb(69, 112, 214);
@@ -607,7 +608,7 @@ h2 {
   border-radius: 20px;
 }
 
-.dash-heading{
+.dash-heading {
   font-size: 30px;
   padding-left: 60px;
 }
@@ -617,12 +618,9 @@ h2 {
   background-color: #1f5077;
   border-radius: 10px;
   flex-shrink: 0;
-
 }
 
-
-
-.form{
+.form {
   background: #6096ba;
   width: 75%;
   margin: 0 auto;
@@ -630,19 +628,18 @@ h2 {
   border-radius: 1rem;
 }
 
-.form-label{
+.form-label {
   font-size: var(--text-size-xl);
   font-weight: 600;
   color: #010319;
 }
 
-.form-control{
-  background-color: #E7ECEF;
+.form-control {
+  background-color: #e7ecef;
   border: 1px solid #010319;
 }
 
-
-.form-control::placeholder{
+.form-control::placeholder {
   color: #010319;
   font-size: var(--text-size-md);
 }
@@ -724,6 +721,7 @@ h2 {
   background-color: #ccc;
 }
 
+
 /* SHARE.TWIG/.PHP STYLING  */
 
 
@@ -788,4 +786,3 @@ h2 {
   font-size: 16px;
   color: #ddd;
 }
-

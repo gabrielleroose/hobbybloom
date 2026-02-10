@@ -23,6 +23,13 @@ if (isset($_SESSION['user']['id'])) {
 </head>
 
 <body>
+
+    <div class="my-dashboard">
+        <p>Hello, {name}</p>
+
+    </div>
+
+
     <div class="dash-outter">
         <div class="dash-inner"><p>My Dashboard</p></div>
         <div class="dash-inner2"><p>Streak - 4 Days</p></div>
@@ -140,5 +147,7 @@ if (isset($_SESSION['user']['id'])) {
         </div>
         
     </div>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>
