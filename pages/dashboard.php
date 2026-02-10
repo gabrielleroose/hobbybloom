@@ -52,6 +52,25 @@ if (isset($_SESSION['user']['id'])) {
         $myHobbies = explode(', ', $res['hobbies']);
     }
 }
+
+$currentModule = null;
+
+if (isset($_SESSION['user']['id'])) {
+    $stmt = $conn->prepare("
+        SELECT m.name
+        FROM log l
+        JOIN module m ON l.mid = m.id
+        WHERE l.uid = ?
+          AND l.complete = 0
+        ORDER BY l.last_visited DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$_SESSION['user']['id']]);
+    $currentModule = $stmt->fetchColumn();
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -75,13 +94,19 @@ if (isset($_SESSION['user']['id'])) {
 
         <div class="dash-outter">
             <div class="dash-inner"><p>My Dashboard</p></div>
-            <div class="dash-inner2"><p>Streak - 4 Days</p></div>
+            <div class="dash-inner2"><p>🔥 Streak - <?= $streak ?> Day<?= $streak === 1 ? '' : 's' ?></p></div>
         </div>
         
         <div class="dash-heading"><p>Jump Back In!</p></div>
-        <div class="dash-item"></div>
-        <div><p></p></div>
-        <div class="dash-item"></div>
+        <div class="dash-item">
+            <?php if ($currentModule): ?>
+            <p>📘 Continue: <strong><?= htmlspecialchars($currentModule) ?></strong></p>
+            <a href="module.php" class="resume-btn">Resume Module</a>
+            <?php else: ?>
+                <p class="dash-item-text">✨You're all caught up! Start a new module.</p>
+                <a href="module.php" class="resume-btn">Browse Modules</a>
+            <?php endif; ?>
+        </div>
 
         <h2>Your Circles</h2>
         <div class="horizontal-scroll">

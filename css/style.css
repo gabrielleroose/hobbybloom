@@ -765,6 +765,20 @@ h2 {
   background-color: #1f5077;
   border-radius: 10px;
   flex-shrink: 0;
+  margin-left: 3rem;
+}
+
+.dash-item-text{
+  color: white;
+  padding: 2rem 0 2rem 2rem;
+  font-size: var(--text-size-lg);
+}
+
+.resume-btn{
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1em;
+  margin-left: 4rem;
 }
 
 .story-circle {

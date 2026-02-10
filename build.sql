@@ -39,6 +39,8 @@ CREATE TABLE user_profiles (
     hometown VARCHAR(100),
     bio TEXT,
     hobbies TEXT,
+    last_login DATE,
+    login_streak INT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
