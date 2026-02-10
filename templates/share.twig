@@ -1,12 +1,8 @@
+{% extends "base.twig" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>share</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+{% block title %}Share{% endblock %}
+
+{% block content %}
     <section>
         <div class="s-outter-layer">
             <div class="s-inner-layer">
@@ -18,7 +14,7 @@
 
                         {% for module in modules %} <!--begin first for loop-->
                             <li class="s-content">
-                               <strong>{{ module.name }}</strong><br>
+                               <h2>\<strong>{{ module.name }}</strong></h2><br>
                                 {{ module.description }}
                             </li>
                         {% endfor %} <!--end first for loop-->
