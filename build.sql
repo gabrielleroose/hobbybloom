@@ -64,7 +64,7 @@ CREATE TABLE module (
 ) ENGINE=InnoDB;
 
 CREATE TABLE log (
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     mid INT NOT NULL,
     uid INT NOT NULL,
     last_visited DATE,
