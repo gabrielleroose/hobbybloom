@@ -11,6 +11,7 @@ if (!isset($_SESSION['user'])) {
 <html>
 <head> 
     <link href="../css/style.css" rel="stylesheet"> 
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body> 
 
@@ -89,6 +90,8 @@ if (!isset($_SESSION['user'])) {
         </button>
     </div>
 </div>
+
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 
 <script>
     function goToStep2() {
