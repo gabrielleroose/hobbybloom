@@ -168,36 +168,6 @@ footer {
   color: #ccc;
 }
 
-.horizontal-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 15px;
-  padding-bottom: 15px;
-  scrollbar-width: none;
-}
-
-.horizontal-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.story-circle {
-  text-align: center;
-  min-width: 70px;
-}
-
-.circle-img {
-  width: 60px;
-  height: 60px;
-  background-color: #a8d0e6;
-  border-radius: 50%;
-  margin: 0 auto 5px auto;
-}
-
-.circle-name {
-  font-size: 12px;
-  color: #333;
-}
-
 .chat-list {
   margin-top: 20px;
   display: flex;
@@ -581,44 +551,6 @@ h2 {
   line-height: 1.5;
 }
 
-.dash-inner {
-  background-color: rgb(69, 112, 214);
-  border: 10px solid rgb(69, 112, 214);
-  border-radius: 10px;
-  padding: 5px;
-  font-size: 50px;
-  font: arial;
-  text-align: center;
-}
-.dash-inner2 {
-  background-color: rgb(69, 112, 214);
-  border: 10px solid rgb(69, 112, 214);
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 30px;
-  font: arial;
-  text-align: center;
-}
-.dash-outter {
-  margin-left: 200px;
-  margin-right: 200px;
-  margin-top: 100px;
-  border: 10px solid rgb(38, 67, 135);
-  color: white;
-  border-radius: 20px;
-}
-
-.dash-heading {
-  font-size: 30px;
-  padding-left: 60px;
-}
-.dash-item {
-  max-width: 800px;
-  height: 200px;
-  background-color: #1f5077;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
 
 .form {
   background: #6096ba;
@@ -785,4 +717,82 @@ h2 {
   text-align: center;
   font-size: 16px;
   color: #ddd;
+}
+
+
+/* ********************* DASHBOARD STYLES ********************* */
+
+.my-dashboard{
+  padding-left: 4rem;
+  font-size: var(--text-size-2xl);
+  font-style: italic;
+}
+
+.dash-inner {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  font-size: 50px;
+  margin: 0px;
+  font: arial;
+  text-align: left;
+}
+.dash-inner2 {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 30px;
+  font: arial;
+  text-align: center;
+}
+.dash-outter {
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 100px;
+  border: 10px solid rgb(38, 67, 135);
+  color: white;
+  border-radius: 20px;
+}
+
+.dash-heading {
+  font-size: 30px;
+  padding-left: 60px;
+}
+.dash-item {
+  max-width: 800px;
+  height: 200px;
+  background-color: #1f5077;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.story-circle {
+  text-align: center;
+  min-width: 70px;
+}
+
+.circle-img {
+  width: 60px;
+  height: 60px;
+  background-color: #a8d0e6;
+  border-radius: 50%;
+  margin: 0 auto 5px auto;
+}
+
+.circle-name {
+  font-size: 12px;
+  color: #333;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding-bottom: 15px;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }

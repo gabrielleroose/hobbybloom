@@ -1,6 +1,46 @@
 <?php 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/pages/base.php';
 
+$streak = 1;
+
+if (isset($_SESSION['user']['id'])) {
+    $stmt = $conn->prepare("
+        SELECT last_login, login_streak 
+        FROM user_profiles 
+        WHERE user_id = ?
+    ");
+    $stmt->execute([$_SESSION['user']['id']]);
+    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($userData) {
+        $lastLogin = $userData['last_login'];
+        $currentStreak = (int)$userData['login_streak'];
+
+        $today = new DateTime();
+        $lastLoginDate = new DateTime($lastLogin);
+        $diff = $lastLoginDate->diff($today)->days;
+
+        if ($diff === 1) {
+            // logged in yesterday → streak continues
+            $streak = $currentStreak + 1;
+        } elseif ($diff === 0) {
+            // already logged in today
+            $streak = $currentStreak;
+        } else {
+            // missed a day → reset
+            $streak = 1;
+        }
+
+        // update DB
+        $update = $conn->prepare("
+            UPDATE user_profiles
+            SET last_login = CURDATE(), login_streak = ?
+            WHERE user_id = ?
+        ");
+        $update->execute([$streak, $_SESSION['user']['id']]);
+    }
+}
+
 $myHobbies = [];
 if (isset($_SESSION['user']['id'])) {
     $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
