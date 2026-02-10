@@ -727,15 +727,65 @@ h2 {
 /* SHARE.TWIG/.PHP STYLING  */
 
 
-.s-outter-layer{ 
-display: grid;
-place-items: center;
-height: 100vh;
-background-color: #57C79E;
-
-
+.s-outter-layer {
+  max-width: 900px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: #8d9397; /* matches grid / neutral backgrounds */
+  border-radius: 20px;
 }
-.s-outter-layer ul, li {
+
+/* INNER CARD */
+.s-inner-layer {
+  background-color: #1f5077;
+  color: white;
+  border-radius: 15px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* HEADER */
+.share-header {
+  font-size: 28px;
+  font-weight: normal;
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+
+/* LIST RESET */
+.s-inner-layer ul {
   list-style: none;
-  line-height: 1.2em;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
+
+/* INDIVIDUAL MODULE CARD */
+.s-content {
+  background-color: white;
+  color: #333;
+  border-radius: 10px;
+  padding: 15px 20px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* MODULE TITLE */
+.s-content strong {
+  display: block;
+  font-size: 18px;
+  color: #153853;
+  margin-bottom: 5px;
+}
+
+/* EMPTY STATE */
+.s-inner-layer p {
+  text-align: center;
+  font-size: 16px;
+  color: #ddd;
+}
+
