@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link href="../css/style.css" rel="stylesheet"> 
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
 
@@ -87,7 +88,7 @@
         </div>
     </div>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 
 </body>
 </html>

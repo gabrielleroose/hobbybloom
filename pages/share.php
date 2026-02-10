@@ -83,17 +83,3 @@ foreach ($mid_ids as $mid_id) {
     'modules' => $modules
 ]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
