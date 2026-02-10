@@ -18,10 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
+    initialView: 'dayGridMonth',
+    events: 'load_events.php',
 
-        events: 'load_events.php'
-    });
+    dateClick: function(info) {
+
+        let title = prompt("Event Title:");
+
+        if(title){
+
+            fetch('add_event.php', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    title: title,
+                    date: info.dateStr
+                })
+            })
+            .then(() => calendar.refetchEvents());
+        }
+    }
+});
+
 
     calendar.render();
 });
