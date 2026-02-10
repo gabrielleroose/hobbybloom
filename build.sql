@@ -100,6 +100,16 @@ CREATE TABLE feed (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    start DATETIME NOT NULL,
+    end DATETIME NOT NULL,
+    created_by INT,
+    FOREIGN KEY (created_by) REFERENCES users(id)
+);
+
+
 /*  Drew Module tables - need to run by team
 CREATE TABLE module (
     id INT AUTO_INCREMENT PRIMARY KEY,
