@@ -1,45 +1,16 @@
-<?php include 'base.php'; ?>
+<?php 
+require_once 'base.php'; 
 
-<?php if (!isset($_SESSION['user'])): ?>
-<script>
-window.handleCredentialResponse = function(response) {
-    console.log("Google credential response:", response);
-
-    fetch("google_login.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: response.credential })
-    })
-    .then(res => {
-        if (res.ok) window.location.reload();
-        else alert("Google login failed on server.");
-    })
-    .catch(err => console.error("Fetch error:", err));
-};
-</script>
-
-<div id="g_id_onload"
-     data-client_id="1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com"
-     data-callback="handleCredentialResponse"
-     data-auto_prompt="false">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-size="large"
-     data-theme="outline"
-     data-text="sign_in_with"
-     data-shape="rectangular"
-     data-logo_alignment="left">
-</div>
-<?php endif; ?>
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 <!DOCTYPE HTML>
 <html>
 <head> 
     <link href="../css/style.css" rel="stylesheet"> 
-
-    
 </head>
 <body> 
 
@@ -48,7 +19,7 @@ window.handleCredentialResponse = function(response) {
         <div class="inner-box">
             <p class="lead fw-bold">Tell us a little bit about you!</p>
             <div class="subtext text-muted"> 
-                <p>This information will be stored alongside your general user data, but not sold.</p>
+                <p>This information will be stored alongside your general user data.</p>
             </div>
         </div>
     </div>
@@ -65,17 +36,12 @@ window.handleCredentialResponse = function(response) {
             
             <div class="mb-3">
                 <label for="age" class="form-label">What is your age?</label>
-                <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="2" maxlength="50" required>
+                <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="1" maxlength="3" required>
             </div>
 
             <div class="mb-3">
-                <label for="from" class="form-label">What country are you located in?</label>
-                <input type="text" class="form-control" id="from" name="from" placeholder="Country" minlength="2" maxlength="50" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="from" class="form-label">What state are you from?</label>
-                <input type="text" class="form-control" id="from" name="from" placeholder="State" minlength="2" maxlength="50" required>
+                <label for="from" class="form-label">Where are you from?</label>
+                <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required>
             </div>
 
             <div class="mt-4 text-center">
@@ -122,7 +88,9 @@ window.handleCredentialResponse = function(response) {
 <script>
     function goToStep2() {
         const gender = document.getElementById('gender').value;
-        if(gender === "") {
+        const age = document.getElementById('age').value;
+        
+        if(gender === "" || age === "") {
             alert("Please fill out the form first.");
             return;
         }
@@ -143,7 +111,6 @@ window.handleCredentialResponse = function(response) {
         });
 
         document.getElementById('selected_hobbies_input').value = hobbies.join(', ');
-        
         document.getElementById('userForm').submit();
     }
 </script>
