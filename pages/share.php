@@ -63,7 +63,7 @@ $mid_ids = $mid_rows ? array_column($mid_rows, 'mid') : [];
 $modules = []; // array to store all modules
 
 foreach ($mid_ids as $mid_id) {
-    $sql = "SELECT name, description FROM module WHERE mid = :mid";
+    $sql = "SELECT name, description FROM module WHERE id = :mid";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['mid' => $mid_id]);
 
