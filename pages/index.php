@@ -91,7 +91,7 @@ if (!isset($_SESSION['user'])) {
     </div>
 </div>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
     function goToStep2() {
