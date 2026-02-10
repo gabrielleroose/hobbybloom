@@ -48,6 +48,8 @@ if ($payload && isset($payload['sub'])) {
             'name' => $name
         ];
 
+        $_SESSION['google_id'] = $googleId;
+
         echo json_encode([
             'status' => 'success', 
             'redirect' => $redirectLocation
