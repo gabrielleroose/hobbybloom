@@ -5,7 +5,7 @@ session_start();
 $client = new Google_Client();
 $client->setAuthConfig('credentials.json');
 
-$client->setRedirectUri('http://localhost/yourproject/calendar_callback.php');
+$client->setRedirectUri('http://localhost/calendar_callback.php');
 
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 

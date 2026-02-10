@@ -7,7 +7,7 @@ $client->setAuthConfig('credentials.json');
 
 $client->addScope(Google_Service_Calendar::CALENDAR);
 
-$client->setRedirectUri('http://localhost/yourproject/calendar_callback.php');
+$client->setRedirectUri('http://localhost/calendar_callback.php');
 
 header('Location: ' . $client->createAuthUrl());
 exit();
