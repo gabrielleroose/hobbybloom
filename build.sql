@@ -37,7 +37,8 @@ CREATE TABLE user_profiles (
     user_id INT NOT NULL,
     gender VARCHAR(50),
     hometown VARCHAR(100),
-    hobbies TEXT, 
+    bio TEXT,
+    hobbies TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
