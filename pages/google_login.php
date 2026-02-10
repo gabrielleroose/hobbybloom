@@ -1,12 +1,13 @@
 <?php
 require_once 'base.php'; 
+header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents("php://input"), true);
 $token = $data['token'] ?? null;
 
 if (!$token) {
-    http_response_code(400); 
-    exit('No token provided');
+    echo json_encode(['status' => 'error', 'message' => 'No token provided']);
+    exit;
 }
 
 $parts = explode('.', $token);
@@ -17,36 +18,46 @@ if ($payload && isset($payload['sub'])) {
     $email = $payload['email'];
     $name = $payload['name'];
 
-    $stmt = $conn->prepare("SELECT id FROM users WHERE google_id = ?");
-    $stmt->execute([$googleId]);
-    $existingUser = $stmt->fetch();
+    try {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE google_id = ?");
+        $stmt->execute([$googleId]);
+        $existingUser = $stmt->fetch();
 
-    if ($existingUser) {
-        $userId = $existingUser['id'];
-    } else {
-        $stmt = $conn->prepare("INSERT INTO users (google_id, email, username) VALUES (?, ?, ?)");
-        $stmt->execute([$googleId, $email, $name]);
-        $userId = $conn->lastInsertId();
+        if ($existingUser) {
+            $userId = $existingUser['id'];
+            
+
+            $stmtProfile = $conn->prepare("SELECT profile_id FROM user_profiles WHERE user_id = ?");
+            $stmtProfile->execute([$userId]);
+            $hasProfile = $stmtProfile->fetch();
+
+            $redirectLocation = $hasProfile ? 'dashboard.php' : 'index.php';
+
+        } else {
+            $stmt = $conn->prepare("INSERT INTO users (google_id, email, username) VALUES (?, ?, ?)");
+            $stmt->execute([$googleId, $email, $name]);
+            $userId = $conn->lastInsertId();
+            
+            $redirectLocation = 'index.php';
+        }
+
+
+        $_SESSION['user'] = [
+            'id' => $userId, 
+            'email' => $email,
+            'name' => $name
+        ];
+
+        echo json_encode([
+            'status' => 'success', 
+            'redirect' => $redirectLocation
+        ]);
+
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error']);
     }
 
-    $_SESSION['user'] = [
-        'id' => $userId, 
-        'email' => $email,
-        'name' => $name
-    ];
-
-    echo "Login successful!";
 } else {
-    http_response_code(401); 
-    exit('Invalid token');
+    echo json_encode(['status' => 'error', 'message' => 'Invalid token']);
 }
 ?>
-
-
-
-
-
-this will let us connect the callander with a button
-<a href="connect_calendar.php">
-    Connect Google Calendar
-</a>
