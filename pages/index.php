@@ -16,7 +16,7 @@ if (!isset($_SESSION['user'])) {
 <body> 
 
 <div id="step-1" class="container mt-5">
-    <div class="outter-box mb-4">
+    <div class="outter-box">
         <div class="inner-box">
             <p class="lead fw-bold">Tell us a little bit about you!</p>
             <div class="subtext text-muted"> 
@@ -26,32 +26,32 @@ if (!isset($_SESSION['user'])) {
     </div>
 
     <section class="form">
-        <h2>All About You</h2>
+        <h2 class="form-title">All About You</h2>
         
         <form id="userForm" action="save_onboarding.php" method="post">
             
-            <div class="mb-3">
+            <div class="index-form-input">
                 <label for="gender" class="form-label">What is your gender?</label>
                 <input type="text" class="form-control" name="gender" id="gender" placeholder="Your Gender" minlength=2 maxlength=50 required>
             </div>
             
-            <div class="mb-3">
+            <div class="index-form-input">
                 <label for="age" class="form-label">What is your age?</label>
                 <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="1" maxlength="3" required>
             </div>
 
-            <div class="mb-3">
+            <div class="index-form-input">
                 <label for="from" class="form-label">Where are you from?</label>
                 <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required>
             </div>
 
-            <div class="mb-3">
+            <div class="index-form-input">
                 <label for="bio" class="form-label">Fun Fact / Bio</label>
                 <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us a little about yourself..." maxlength="500"></textarea>
             </div>
 
             <div class="mt-4 text-center">
-                <button type="button" class="btn btn-primary btn-lg" onclick="goToStep2()">Next</button>
+                <button type="button" class="index-next-button" onclick="goToStep2()">Next</button>
             </div>
             
             <input type="hidden" name="selected_hobbies" id="selected_hobbies_input">
