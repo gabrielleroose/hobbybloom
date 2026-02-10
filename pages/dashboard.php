@@ -2,7 +2,8 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once $_SERVER['DOCUMENT_ROOT'] . '/pages/base.php';
+session_start();
+require_once __DIR__ . '/../config/db.php';
 
 $streak = 1;
 
@@ -20,8 +21,12 @@ if (isset($_SESSION['user']['id'])) {
         $currentStreak = (int)$userData['login_streak'];
 
         $today = new DateTime();
-        $lastLoginDate = new DateTime($lastLogin);
-        $diff = $lastLoginDate->diff($today)->days;
+        if ($lastLogin) {
+            $lastLoginDate = new DateTime($lastLogin);
+            $diff = $lastLoginDate->diff($today)->days;
+        } else {
+            $diff = 999; // first login → reset streak
+        }
 
         if ($diff === 1) {
             // logged in yesterday → streak continues
@@ -224,6 +229,6 @@ if (isset($_SESSION['user']['id'])) {
 
     </main>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>
