@@ -53,7 +53,9 @@ require_once 'db.php';
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="chat.php">Chat</a>
                 <a class="menu-item" href="account.php">Account</a>
+                <a class="menu-item" href="share.php">Share</a>
                 <a class="menu-item" href="logout.php">Logout</a>
+
 
             </div>
 
