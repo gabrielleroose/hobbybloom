@@ -55,6 +55,7 @@ CREATE TABLE module (
     cid INT NOT NULL, 
     name VARCHAR(100) NOT NULL,
     description VARCHAR(500),
+    img_path VARCHAR(255),
     rating INT DEFAULT 0,
     exp_level VARCHAR(20) NOT NULL,
     num_lessons INT NOT NULL,
