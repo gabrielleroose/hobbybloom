@@ -1,0 +1,31 @@
+{% extends "base.twig" %}
+
+{% block title %}Share{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="s-outter-layer">
+            <div class="s-inner-layer">
+
+                <h1 class="share-header">Welcome!</h1>
+
+                {% if modules is not empty %} <!--begin first if stmt-->
+                    <ul>
+
+                        {% for module in modules %} <!--begin first for loop-->
+                            <li class="s-content">
+                               <h2><strong>{{ module.name }}</strong></h2><br>
+                                {{ module.description }}
+                            </li>
+                        {% endfor %} <!--end first for loop-->
+
+                    </ul>
+                {% else %}
+                    <p>No modules completed yet.</p>
+                {% endif %} <!--end first if stmt-->
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

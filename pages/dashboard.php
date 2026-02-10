@@ -8,6 +8,7 @@ if (isset($_SESSION['user']['id'])) {
     $res = $stmt->fetch();
     
     if ($res && $res['hobbies']) {
+        // Explode turns the string "Cooking, Lego" into an array ["Cooking", "Lego"]
         $myHobbies = explode(', ', $res['hobbies']);
     }
 }
@@ -22,6 +23,13 @@ if (isset($_SESSION['user']['id'])) {
 </head>
 
 <body>
+
+    <div class="my-dashboard">
+        <p>Hello, {name}</p>
+
+    </div>
+
+
     <div class="dash-outter">
         <div class="dash-inner"><p>My Dashboard</p></div>
         <div class="dash-inner2"><p>Streak - 4 Days</p></div>
@@ -42,10 +50,38 @@ if (isset($_SESSION['user']['id'])) {
         </div>
         <?php endif; ?>
 
+        <?php if (in_array("Knitting", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #e6e6fa;"></div>
+            <p>Knitting</p>
+        </div>
+        <?php endif; ?>
+
         <?php if (in_array("Lego", $myHobbies)): ?>
         <div class="story-circle">
             <div class="circle-img" style="background-color: #ffd700;"></div>
             <p>Lego</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Sewing", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #ffb6c1;"></div>
+            <p>Sewing</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Painting", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #ffdab9;"></div>
+            <p>Painting</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Hiking", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #90ee90;"></div>
+            <p>Hiking</p>
         </div>
         <?php endif; ?>
         
@@ -56,11 +92,62 @@ if (isset($_SESSION['user']['id'])) {
         </div>
         <?php endif; ?>
 
+        <?php if (in_array("Gardening", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #3cb371;"></div>
+            <p>Gardening</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Baking", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #f4a460;"></div>
+            <p>Baking</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Meditation", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #e0ffff;"></div>
+            <p>Meditation</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Music", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #dda0dd;"></div>
+            <p>Music</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Movies", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #cd5c5c;"></div>
+            <p>Movies</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Gaming", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #9370db;"></div>
+            <p>Gaming</p>
+        </div>
+        <?php endif; ?>
+
+        <?php if (in_array("Yoga", $myHobbies)): ?>
+        <div class="story-circle">
+            <div class="circle-img" style="background-color: #ffdead;"></div>
+            <p>Yoga</p>
+        </div>
+        <?php endif; ?>
+
         <div class="story-circle">
             <div class="circle-img" style="background-color: #cccccc;"></div>
             <p>General</p>
         </div>
         
     </div>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>
