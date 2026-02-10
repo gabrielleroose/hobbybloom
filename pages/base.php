@@ -2,12 +2,16 @@
 require_once 'db.php';
 ?>
 
-<link href="../css/style.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base PHP</title>
+    <link href="../css/style.css" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+<body>
 
 <header>
     <nav>
@@ -30,3 +34,8 @@ require_once 'db.php';
         </div>
     </nav>
 </header>
+    
+</body>
+</html>
+
+
