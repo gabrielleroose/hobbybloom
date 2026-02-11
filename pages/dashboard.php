@@ -100,9 +100,11 @@ if (isset($_SESSION['user']['id'])) {
         </div>
 
 
-        <div class="dash-outter">
-            <div class="dash-inner"><p>My Dashboard</p></div>
-            <div class="dash-inner2"><p>🔥 Streak - <?= $streak ?> Day<?= $streak === 1 ? '' : 's' ?></p></div>
+        <div class="dash-display">
+            <!-- <div class="dash-inner"> -->
+                <p>My Dashboard</p>
+                <p class="streak">🔥<?= $streak ?> Day Streak<?= $streak === 1 ? '' : '' ?></p>
+            <!-- </div> -->
         </div>
         
         <div class="dash-heading"><p>Jump Back In!</p></div>
