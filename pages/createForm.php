@@ -1,3 +1,5 @@
+
+
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1);
@@ -5,21 +7,19 @@ ini_set('display_errors', 1);
 require_once 'db.php';
 
 
-
-require_once 'db.php';
-
 $success = false;
 $error = "";
 
 
 // form submission handling below 
+//strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $name = trim($_POST["name"]);
     $description = trim($_POST["description"]);
     $NumOfLessons = $_POST["videoCount"] ?? 0;
     $notes = $_POST["notes"] ?? "";
-    $xpLevel = $_POST["xpLevel"] ?? "";
+    $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
     $compTime = $_POST["estimate"] ?? 0;
 
 
@@ -52,8 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
 
-
     $module_id = $pdo->lastInsertId();
+
+    
+        
 
     if (!empty($_POST['videos'])) {
 
@@ -95,8 +97,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'base.php'; ?>
 <?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
@@ -122,11 +128,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     id="videoCount"
     name="videoCount"
     min="0"
-    max="10"
-    onchange="generateVideoInputs()"
->
+    max="5"
+    onchange="generateVideoInputs()">
 
+<div>
+    <label>Number of lessons:</label><br>
+    <input 
+    type="number"
+    id="stage_num"
+    name="stage_num"
+    min="0"
+    max="5"
+    >
+</div>
+    
+<div id="stagesContainer"></div>
+
+
+    
 >
+<div id="stagesContainer"></div>
 
 <div id="videoInputs"></div><br>
     
@@ -136,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
-            <option value="Begginer" selected>Begginer</option>
+            <option value="Beginner" selected>Beginner</option>
             <option value="Intermidate">Intermidate</option>
             <option value="Expert">Expert</option>
         </select>
@@ -154,6 +175,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     required
     >
 
+    <input
+    type="number"
+    id="estimate"
+    name="estimate"
+    min="1"
+    required
+    >
+
 <p id="formattedOutput"></p>
 
 
@@ -163,6 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 </body>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
 
 <script>
@@ -170,7 +200,7 @@ function generateVideoInputs() {
     const count = document.getElementById("videoCount").value;
     const container = document.getElementById("videoInputs");
 
-    // Clear existing inputs
+    // clear existing inputs
     container.innerHTML = "";
 
     for (let i = 1; i <= count; i++) {
@@ -208,6 +238,51 @@ document.getElementById("estimate").addEventListener("input", function () {
 });
 </script>
 
+<script>
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
+    document.addEventListener("DOMContentLoaded", function () {
 
+    const stageSelect = document.getElementById("stage_num");
+    const stagesContainer = document.getElementById("stagesContainer");
+    
+
+    stageSelect.addEventListener("input", function () {
+    const stageCount = this.valueAsNumber;
+
+    stagesContainer.innerHTML = ""; //wipes data on change. 
+
+    if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
+    stagesContainer.innerHTML = "";
+    return;
+    }
+
+    for (let i = 1; i <= stageCount; i++) {
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
+
+      stageDiv.innerHTML = ` 
+        <h3>Stage ${i}</h3>
+        <input type="text" name="stageTitle_${i}" required />
+      `;
+
+      stagesContainer.appendChild(stageDiv);
+      
+    }
+  });
+});
+
+
+    
+
+</script>
+
+
+need:  ( module name )
+       ( Module Description )
+        ( Creator )
+        ( number of lessons - way to upload videos -
+            the actual lessons )
+        ( notes section )
+        ( difficult level )
+        ( estimated time )
 
         
