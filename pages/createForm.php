@@ -1,28 +1,25 @@
+
+
 <?php
-session_start();
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', 1);
 
-// Change below to real data base info once we have it
-$host = "localhost";
-$dbname = "your_database_name";
-$username = "db_user";
-$password = "db_password";
+require_once 'db.php';
 
-
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1; // made up login for test
-}
 
 $success = false;
 $error = "";
 
+
 // form submission handling below 
+//strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $name = trim($_POST["name"]);
     $description = trim($_POST["description"]);
     $NumOfLessons = $_POST["videoCount"] ?? 0;
     $notes = $_POST["notes"] ?? "";
-    $xpLevel = $_POST["xpLevel"] ?? "";
+    $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
     $compTime = $_POST["estimate"] ?? 0;
 
 
@@ -54,6 +51,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ":compTime" => $compTime,
             ]);
 
+
+    $module_id = $pdo->lastInsertId();
+
+    
+        
+
+    if (!empty($_POST['videos'])) {
+
+        $videoSQL = "
+            INSERT INTO module_videos
+            (module_id, video_url, lesson_number)
+            VALUES (?, ?, ?)
+        ";
+
+        $videoStmt = $pdo->prepare($videoSQL);
+
+        foreach ($_POST['videos'] as $index => $url) {
+
+            $url = trim($url);
+            if ($url !== "") {
+                $videoStmt->execute([
+                    $module_id,
+                    $url,
+                    $index + 1
+                ]);
+            }
+        }
+    }
+
+
             $success = true;
 
         } catch (PDOException $e) {
@@ -67,8 +94,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Create Module</title>
+    <meta charset="UTF-8">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
 
@@ -89,12 +120,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Number of lessons:</label><br>
     <input 
-    type="number" 
-    id="videoCount" 
-    min="0" 
-    max="10" 
-    onchange="generateVideoInputs()"
+    type="number"
+    id="videoCount"
+    name="videoCount"
+    min="0"
+    max="5"
+    onchange="generateVideoInputs()">
+
+<div>
+    <label>Number of lessons:</label><br>
+    <input 
+    type="number"
+    id="stage_num"
+    name="stage_num"
+    min="0"
+    max="5"
+    >
+</div>
+    
+<div id="stagesContainer"></div>
+
+
+    
 >
+<div id="stagesContainer"></div>
 
 <div id="videoInputs"></div><br>
     
@@ -104,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
-            <option value="Begginer" selected>Begginer</option>
+            <option value="Beginner" selected>Beginner</option>
             <option value="Intermidate">Intermidate</option>
             <option value="Expert">Expert</option>
         </select>
@@ -114,7 +163,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Estimated time of completion:</label>
     <!-- maybe do a set time format if possible -->
     <label for="estimate">Estimated time (minutes):</label>
-<input type="number" id="estimate" min="1" required>
+    <input
+    type="number"
+    id="estimate"
+    name="estimate"
+    min="1"
+    required
+    >
+
 <p id="formattedOutput"></p>
 
 
@@ -123,6 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </form>
 
 </body>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
 
 <script>
@@ -130,7 +187,7 @@ function generateVideoInputs() {
     const count = document.getElementById("videoCount").value;
     const container = document.getElementById("videoInputs");
 
-    // Clear existing inputs
+    // clear existing inputs
     container.innerHTML = "";
 
     for (let i = 1; i <= count; i++) {
@@ -166,6 +223,43 @@ document.getElementById("estimate").addEventListener("input", function () {
 
   output.textContent = `Estimated time: ${formatted}`;
 });
+</script>
+
+<script>
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const stageSelect = document.getElementById("stage_num");
+    const stagesContainer = document.getElementById("stagesContainer");
+    
+
+    stageSelect.addEventListener("input", function () {
+    const stageCount = this.valueAsNumber;
+
+    stagesContainer.innerHTML = ""; //wipes data on change. 
+
+    if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
+    stagesContainer.innerHTML = "";
+    return;
+    }
+
+    for (let i = 1; i <= stageCount; i++) {
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
+
+      stageDiv.innerHTML = ` 
+        <h3>Stage ${i}</h3>
+        <input type="text" name="stageTitle_${i}" required />
+      `;
+
+      stagesContainer.appendChild(stageDiv);
+      
+    }
+  });
+});
+
+
+    
+
 </script>
 
 
