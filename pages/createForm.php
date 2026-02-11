@@ -1,19 +1,7 @@
+
 <?php
-session_start();
+require_once 'db.php';
 
-// Change below to real data base info once we have it
-$host = "localhost";
-$dbname = "your_database_name";
-$username = "db_user";
-$password = "db_password";
-
-
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1; // made up login for test
-}
-
-$success = false;
-$error = "";
 
 // form submission handling below 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -169,11 +157,3 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 
-need:  ( module name )
-       ( Module Description )
-        ( Creator )
-        ( number of lessons - way to upload videos -
-            the actual lessons )
-        ( notes section )
-        ( difficult level )
-        ( estimated time )
