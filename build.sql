@@ -133,3 +133,14 @@ CREATE TABLE module_videos (
 );
 
 */ -- also may need to create another table to track who is enrolled in the module
+
+
+-- MODULE STAGE TABLE ADDED TO HELP KEPT 
+CREATE TABLE module_stage (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+mid INT NOT NULL,
+stage_num INT NOT NULL DEFAULT 1,
+title varchar(100),
+UNIQUE (mid, stage_num),
+FOREIGN KEY (mid) REFERENCES module(id)
+) ENGINE=InnoDB;
