@@ -157,3 +157,13 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 
+need:  ( module name )
+       ( Module Description )
+        ( Creator )
+        ( number of lessons - way to upload videos -
+            the actual lessons )
+        ( notes section )
+        ( difficult level )
+        ( estimated time )
+
+        

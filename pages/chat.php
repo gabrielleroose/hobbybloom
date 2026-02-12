@@ -88,7 +88,6 @@
         </div>
     </div>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
-
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

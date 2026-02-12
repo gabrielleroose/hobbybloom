@@ -11,6 +11,42 @@
 
     <?php include 'base.php'; ?>
 
+<!-- general structure of module.twig content for generated content w/ example (wait for Wednesday meeting for normalized css conversation?).
+    may also have to create a couple more div containers, or change tags, in order to accurately style in accordance w/ wireframe
+
+
+<div class = classfor-maincontainer>
+
+    <div class="current-stage">
+
+        content, according to module wireframe: 
+        stage number (1, 2, or 3)
+        
+        video                 brief description
+
+    </div>
+
+    <div class="classfor-next-steps">
+        videos of next steps side-by-side, maybe just present single next step and its description?
+    </div>
+
+    <div class="classfor-creator-profile">
+        "creator name"          view profile button (settings implementation?)
+
+        pfp and username
+    </div>
+
+
+    <div class="classfor-questions>
+    display for questions here. discuss on wednesday whether or not we want this to be called questions or comments.
+    </div>
+
+</div>
+    -->
+
+
+
+
     <div class="page-container">
 
         <div class="module-page-header">
@@ -69,7 +105,6 @@
 
     </div>
 
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
-
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

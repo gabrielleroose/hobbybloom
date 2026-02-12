@@ -8,8 +8,11 @@
             <div class="s-inner-layer">
 
                 <h1 class="share-header">Welcome!</h1>
+                <!--BEGIN FIRST IF STMT. note how modules is imported from share.php via 
+                        "echo $twig->render('share.twig', ['modules' => $modules]);"
+                --> 
 
-                {% if modules is not empty %} <!--begin first if stmt-->
+                {% if modules is not empty %} 
                     <ul>
 
                         {% for module in modules %} <!--begin first for loop-->

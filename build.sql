@@ -39,6 +39,8 @@ CREATE TABLE user_profiles (
     hometown VARCHAR(100),
     bio TEXT,
     hobbies TEXT,
+    last_login DATE,
+    login_streak INT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -121,3 +123,44 @@ CREATE TABLE module_videos (
 );
 
 */ -- also may need to create another table to track who is enrolled in the module
+
+
+-- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
+CREATE TABLE module_stage (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+mid INT NOT NULL,
+stage_num INT NOT NULL DEFAULT 1,
+title varchar(100),
+UNIQUE (mid, stage_num),
+FOREIGN KEY (mid) REFERENCES module(id)
+) ENGINE=InnoDB;
+
+-- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
+CREATE TABLE module_stage_questions (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+msid INT NOT NULL,
+question_text varchar(255),
+is_correct INT NOT NULL DEFAULT 0,
+order_num INT NOT NULL,
+FOREIGN KEY (msid) REFERENCES module_stage(id)
+) ENGINE=InnoDB;
+
+
+
+-- MODULE STAGE PROGRESS TABLE TO KEEP TRACK OF USER PROGRESS.
+CREATE TABLE module_stage_progress (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+uid INT NOT NULL,
+mid INT NOT NULL,
+msid INT NOT NULL,
+FOREIGN KEY (uid) REFERENCES users(id),
+FOREIGN KEY (mid) REFERENCES module(id), 
+FOREIGN KEY (msid) REFERENCES module_stage(id)
+
+) ENGINE=InnoDB;
+
+
+
+
+
+
