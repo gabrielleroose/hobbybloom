@@ -9,7 +9,59 @@
 </head>
 <body>
 
-    <?php include 'base.php'; ?>
+    <?php 
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1); //debugging/error messages
+        error_reporting(E_ALL);
+        
+        session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistantly across pages.
+        require_once __DIR__ . '/../vendor/autoload.php';
+
+        require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
+
+        require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
+        include 'base.php';
+
+        $googleId = $_SESSION['google_id'] ?? null;
+
+        if (!$googleId) {                   //checking if google id present, sending back to index.php if not.
+        header('Location: index.php');
+        exit;
+}
+
+
+    try {
+        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+    } catch (PDOException $e) {
+        die("database connection failed: " . $e->getMessage());
+    }
+
+
+
+
+    //SELECTS USER ID WHERE GOOGLEID FROM SESSION MATCHES GOOGLE_ID IN USERS TABLE
+    $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+    $stmt = $pdo->prepare($user_id_sql);
+    $stmt->execute(['gid' => $googleId]);
+    $userid_row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $userid = $userid_row ? $userid_row['id'] : null; //NOTE: $userid may be used for all queries hereon out.
+
+
+    //HELPS DISPLAY LOGGED-IN USER'S CREATED MODULES. SELECTS MODULE ID WHERE CURRENT USER ID IS EQUAL TO THAT OF THE CREATOR OF THE MODULE. HELPS DISPLAY USER-CREATED MODULES.
+    $user_mid_sql = "SELECT id FROM module WHERE :userid = cid";
+    $stmt = $pdo->prepare($user_mid_sql);
+    $stmt->execute(['userid' => $userid]);
+    $user_created_modules_id_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $user_created_modules_id = $user_created_modules_id_row ? array_column($user_created_modules_id_row, 'id') : []; //array_column function structure in this context: (array gained from query, column name from SQL table column from which you're fetching : failsafe answer)
+    //output for above variable is an array of all logged in user's created module id's; each module id is one that was created by the user
+
+    // $current_module_stage = "SELECT id FROM module_stage WHERE mid = ""; NOTE: WE NEED TO CREATE A PAGE WHICH DISPLAYS ALL CREATED MODULES
+    
+
+    //!!!NOTE: WE NEED TO ADD A MODULES_DISPLAY.TWIG FILE SO THAT WE CAN PROPERLY PASS THROUGH THE SELECTED MID!!!
+            
+     ?>
 
 <!-- general structure of module.twig content for generated content w/ example (wait for Wednesday meeting for normalized css conversation?).
     may also have to create a couple more div containers, or change tags, in order to accurately style in accordance w/ wireframe
