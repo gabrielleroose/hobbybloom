@@ -21,13 +21,6 @@ if (!$googleId) {
     exit;
 }
 
-$host = "db.luddy.indiana.edu";
-$user = "i494f25_team18";
-$password = "berms2227penes";
-$database = "i494f25_team18";
-$charset = "utf8mb4";
-
-$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
 
 // use of PDO's for security, mysqli extensions largely outdated.
 
