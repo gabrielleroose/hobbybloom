@@ -26,6 +26,9 @@ nav {
   display: flex;
   flex-direction: column;
   padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5rem;
 }
 
 .menu {
@@ -87,7 +90,6 @@ nav {
   /* justify-content: center; */
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   justify-content: space-between;
-  margin-top: 1rem;
   /* position: absolute; */
   /* right: 1rem; */
   /* margin-top: 1rem; */
