@@ -1,3 +1,27 @@
+<?php
+require_once 'db.php';
+
+$module_id = (int)($_GET['id'] ?? 0);
+
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM modules
+    WHERE id = :id
+");
+$stmt->execute([":id"=>$module_id]);
+$module = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM module_videos
+    WHERE module_id = :id
+    ORDER BY lesson_number
+");
+$stmt->execute([":id"=>$module_id]);
+$videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,34 +74,30 @@
     <div class="page-container">
 
         <div class="module-page-header">
-            <h1>Beginner Cooking</h1>
+            <h1><?= htmlspecialchars($module['name']) ?></h1>
             <button class="header-search-btn">Search</button>
         </div>
 
         <div class="main-step-card">
-            <div class="step-title">Step 4: Prepare the Dough</div>
-            <div class="step-body">
-                <div class="video-thumbnail big">
-                    <div class="play-icon">▶</div>
-                </div>
-                <p class="step-text">
-                    In this lesson, you will learn how to prepare the dough for your homemade pizza!
-                </p>
-            </div>
+        <div class="step-title">
+            Step <?= $current['lesson_number'] ?>
         </div>
+        <?php if (!empty($videos)): ?>
+        <iframe
+            width="560"
+            height="315"
+            src="<?= htmlspecialchars($videos[0]['video_url']) ?>"
+            allowfullscreen>
+        </iframe>
+        <?php endif; ?>
 
-        <h3 class="section-title">Next Steps:</h3>
-        <div class="horizontal-scroll">
+        
+        <?php foreach(array_slice($videos,1) as $video): ?>
             <div class="video-thumbnail small">
-                <div class="play-icon">▶</div>
+                Lesson <?= $video['lesson_number'] ?>
             </div>
-            <div class="video-thumbnail small">
-                <div class="play-icon">▶</div>
-            </div>
-            <div class="video-thumbnail small">
-                <div class="play-icon">▶</div>
-            </div>
-        </div>
+        <?php endforeach; ?>
+
 
         <h3 class="section-title">Get to Know “Creator Name”!</h3>
         <div class="info-card">
