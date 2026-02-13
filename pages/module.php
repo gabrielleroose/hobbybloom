@@ -1,11 +1,9 @@
 <?php
 require_once 'db.php';
 
-
-
 $module_id = (int)($_GET['id'] ?? 0);
 
-$stmt = $conn->prepare("
+$stmt = $pdo->prepare("
     SELECT *
     FROM modules
     WHERE id = :id
@@ -13,7 +11,7 @@ $stmt = $conn->prepare("
 $stmt->execute([":id"=>$module_id]);
 $module = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("
+$stmt = $pdo->prepare("
     SELECT *
     FROM module_videos
     WHERE module_id = :id
@@ -21,9 +19,6 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute([":id"=>$module_id]);
 $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-include 'base.php';
 ?>
 
 
