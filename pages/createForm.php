@@ -52,10 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
 
-    $module_id = $pdo->lastInsertId();
 
-    
-        
+    $module_id = $pdo->lastInsertId();
 
     if (!empty($_POST['videos'])) {
 
@@ -120,6 +118,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Number of lessons:</label><br>
     <input 
+    type="number"
+    id="videoCount"
+    name="videoCount"
+    min="0"
+    max="10"
+    onchange="generateVideoInputs()"
+>
+
+>
     type="number"
     id="videoCount"
     name="videoCount"
@@ -262,14 +269,43 @@ document.getElementById("estimate").addEventListener("input", function () {
 
 </script>
 
+<script>
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
+    document.addEventListener("DOMContentLoaded", function () {
 
-need:  ( module name )
-       ( Module Description )
-        ( Creator )
-        ( number of lessons - way to upload videos -
-            the actual lessons )
-        ( notes section )
-        ( difficult level )
-        ( estimated time )
+    const stageSelect = document.getElementById("stage_num");
+    const stagesContainer = document.getElementById("stagesContainer");
+    
+
+    stageSelect.addEventListener("input", function () {
+    const stageCount = this.valueAsNumber;
+
+    stagesContainer.innerHTML = ""; //wipes data on change. 
+
+    if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
+    stagesContainer.innerHTML = "";
+    return;
+    }
+
+    for (let i = 1; i <= stageCount; i++) {
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
+
+      stageDiv.innerHTML = ` 
+        <h3>Stage ${i}</h3>
+        <input type="text" name="stageTitle_${i}" required />
+      `;
+
+      stagesContainer.appendChild(stageDiv);
+      
+    }
+  });
+});
+
+
+    
+
+</script>
+
+
 
         
