@@ -7,6 +7,8 @@
     <link href="../css/style.css" rel="stylesheet"> 
     <link href="../css/nav.css" rel="stylesheet">
 
+    <?php include 'base.php'; ?>
+
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 </head>
@@ -15,7 +17,7 @@
 
 <div id="calendar"></div>
 
-<?php include 'base.php'; ?>
+
 
 
 <script>
@@ -52,4 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
