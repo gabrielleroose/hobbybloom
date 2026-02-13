@@ -102,27 +102,14 @@ CREATE TABLE feed (
 ) ENGINE=InnoDB;
 
 
-/*  Drew Module tables - need to run by team
-CREATE TABLE module (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    description TEXT,
-    number_of_lessons INT,
-    notes TEXT,
-    xpLevel VARCHAR(50),
-    compTime INT,
-    created_by INT
-);
-
+-- holds the videos for modules --
 CREATE TABLE module_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     module_id INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
-    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
+    FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE
 );
-
-*/ -- also may need to create another table to track who is enrolled in the module
 
 
 -- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
