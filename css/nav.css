@@ -42,6 +42,11 @@ nav {
   align-items: center;
 }
 
+.branding p {
+  margin: 0; 
+  /* padding: 1rem 0; Control the vertical space manually here */
+}
+
 .bloom{
   color: #156914;
 }
@@ -53,7 +58,8 @@ nav {
 }
 
 .menu-item {
-  color: black;
+  /* color: #156914; */
+  color: navy;
   padding: 1rem 0.5rem 1rem 1rem;
   text-decoration: none;
   /* display: none; */
@@ -67,7 +73,8 @@ nav {
 
 .menu-item:hover {
   /* color: #e7ecef; */
-  color: rgb(56, 86, 68);
+  /* color: navy; */
+  color: #156914;
   /* transform: translateX(5px); */
   transform: scale(1.2);
 }
@@ -79,6 +86,7 @@ nav {
   /* justify-content: center; */
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   justify-content: space-between;
+  margin-top: 1rem;
   /* position: absolute; */
   /* right: 1rem; */
   /* margin-top: 1rem; */
