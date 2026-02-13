@@ -83,8 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Create Module</title>
+    <meta charset="UTF-8">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
 
@@ -149,6 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </form>
 
 </body>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
 
 <script>
