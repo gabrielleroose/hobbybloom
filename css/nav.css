@@ -159,7 +159,7 @@ nav {
 
 .footer-link {
   text-align: center;
-  color: black;
+  color: #e7ecef;
   font-size: var(--text-size-md);
   text-decoration: none;
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
@@ -168,20 +168,23 @@ nav {
 footer{
     width: 100%;
     /* CSS Gradient from: https://cssgradient.io/  */
-  background: #a4faa2;
+  /* background: #a4faa2;
   background: linear-gradient(90deg,
  rgba(164, 250, 162, 1) 0%,
  rgba(58, 161, 56, 1) 55%,
- rgba(21, 105, 20, 1) 100%);
-  padding: 3rem 0rem 1.5rem;
-  border-radius: 1rem;
+ rgba(21, 105, 20, 1) 100%); */
+  color: #e7ecef;
+  background-color: #1E5077;
+  padding: 2rem 0rem .5rem 0rem;
+  /* border-radius: 1rem; */
   border: .25px solid #156914;
   margin-top: 5rem;
 
 }
 
 .footer-link:hover {
-    color: rgb(56, 86, 68);
+    /* color: rgb(56, 86, 68); */
+    color: lightblue;
     transform: scale(1.2);
   }
 
@@ -190,17 +193,19 @@ footer{
   width: 100%;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
   gap: 20px;
+  color: #e7ecef;
 }
 
 .footer-container-logo{
   display: flex;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
   line-height: .1rem;
+  gap: 10px;
+  font-size: var(--text-size-sm);
 
 }
