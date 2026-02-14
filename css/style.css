@@ -812,6 +812,16 @@ h2 {
   padding: 1rem;
   border-radius: 1em;
   margin-left: 4rem;
+  color: #1E5077;
+  text-decoration: none;
+  font-size: var(--text-size-md);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.resume-btn:hover {
+  /* color: rgb(56, 86, 68); */
+  color: lightblue;
+  transform: scale(1.2);
 }
 
 .dashboard-circles{
@@ -822,6 +832,7 @@ h2 {
 .story-circle {
   text-align: center;
   min-width: 70px;
+  color: #e7ecef;
 }
 
 .circle-img {
