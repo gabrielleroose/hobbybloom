@@ -22,8 +22,7 @@
 
     </div>
     <div class="footer-container-logo">
-        <p>HobbyBloom</p>
-        <p>2026 - Indiana University</p>
+        <p>HobbyBloom &copy;2026 Indiana University</p>
 
     </div>
 
