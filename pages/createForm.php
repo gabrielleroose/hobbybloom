@@ -1,17 +1,11 @@
 
 
+
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1);
 
-error_reporting(E_ALL & ~E_NOTICE);
-ini_set('display_errors', 1);
-
 require_once 'db.php';
-
-
-$success = false;
-$error = "";
 
 
 $success = false;
@@ -269,6 +263,9 @@ document.getElementById("estimate").addEventListener("input", function () {
 
 </script>
 
+
+
+        
 
 
         
