@@ -12,7 +12,6 @@ DROP TABLE IF EXISTS module_stage_questions_user_answers;
 DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS users;
-
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users (
@@ -163,6 +162,7 @@ CREATE TABLE feed (
 CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     msid INT NOT NULL,
+    sid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
     FOREIGN KEY (msid) REFERENCES module_stage(id) 
@@ -289,6 +289,7 @@ INSERT INTO module_stage_questions (id, msid, question_text, order_num)
 VALUES
 (1, 1, 'Which clause retrieves data from a table?', 1),
 (2, 3, 'What improves query lookup speed?', 1);
+
 
 
 -- MODULE_STAGE_VIDEOS
