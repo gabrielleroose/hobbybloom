@@ -110,10 +110,10 @@ CREATE TABLE feed (
 -- holds the videos for modules --
 CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    module_id INT NOT NULL,
+    sid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
-    FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE
+    FOREIGN KEY (sid) REFERENCES module_stage(id) ON DELETE CASCADE
 );
 
 
@@ -165,7 +165,10 @@ VALUES
 (1, 2, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
 (2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
 
-
+INSERT INTO module 
+(id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
+VALUES
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
 -- MODULE_STAGE
 INSERT INTO module_stage (id, mid, stage_num, title)
 VALUES
@@ -180,6 +183,7 @@ INSERT INTO module_stage_questions (id, msid, question_text, is_correct, order_n
 VALUES
 (1, 1, 'Which clause retrieves data from a table?', 1, 1),
 (2, 3, 'What improves query lookup speed?', 1, 1);
+
 
 -- MODULE_STAGE_VIDEOS
 INSERT INTO module_stage_videos (id, sid, video_url, lesson_number)
