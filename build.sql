@@ -4,8 +4,13 @@ DROP TABLE IF EXISTS feed;
 DROP TABLE IF EXISTS log;
 DROP TABLE IF EXISTS circle;
 DROP TABLE IF EXISTS module;
+DROP TABLE IF EXISTS module_stage;
+DROP TABLE IF EXISTS module_stage_progress;
+DROP TABLE IF EXISTS module_stage_questions;
+DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS users;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users (
@@ -137,7 +142,7 @@ CREATE TABLE feed (
 
 
 -- holds the videos for modules --
-CREATE TABLE module_videos (
+CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     module_id INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
@@ -179,6 +184,43 @@ FOREIGN KEY (mid) REFERENCES module(id),
 FOREIGN KEY (msid) REFERENCES module_stage(id)
 
 ) ENGINE=InnoDB;
+
+
+
+-- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- 
+
+
+
+
+-- MODULE
+INSERT INTO module 
+(id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
+VALUES
+(1, 2, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
+
+
+-- MODULE_STAGE
+INSERT INTO module_stage (id, mid, stage_num, title)
+VALUES
+(1, 1, 1, 'SELECT Statements'),
+(2, 1, 2, 'Filtering Data'),
+(3, 2, 1, 'Indexing Basics'),
+(4, 2, 2, 'Execution Plans'),
+(5, 2, 3, 'Query Refactoring');
+
+-- MODULE_STAGE_QUESTIONS 
+INSERT INTO module_stage_questions (id, msid, question_text, is_correct, order_num)
+VALUES
+(1, 1, 'Which clause retrieves data from a table?', 1, 1),
+(2, 3, 'What improves query lookup speed?', 1, 1);
+
+-- MODULE_STAGE_VIDEOS
+INSERT INTO module_stage_videos (id, sid, video_url, lesson_number)
+VALUES
+(1, 1, 'https://example.com/sql-select', 1),
+(2, 3, 'https://example.com/indexing-basics', 1);
+
 
 
 
