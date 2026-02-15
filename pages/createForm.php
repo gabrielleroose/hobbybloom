@@ -272,6 +272,7 @@ document.getElementById("estimate").addEventListener("input", function () {
       `;
 
       stagesContainer.appendChild(stageDiv);
+      
     }
   });
 });
