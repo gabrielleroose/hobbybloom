@@ -10,9 +10,6 @@ ini_set('display_errors', 1);
 require_once 'db.php';
 
 
-
-require_once 'db.php';
-
 $success = false;
 $error = "";
 
@@ -62,8 +59,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
 
-
     $module_id = $pdo->lastInsertId();
+
+    
+        
 
     if (!empty($_POST['videos'])) {
 
@@ -132,15 +131,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     id="videoCount"
     name="videoCount"
     min="0"
-    max="10"
-    onchange="generateVideoInputs()"
->
-
->
-    type="number"
-    id="videoCount"
-    name="videoCount"
-    min="0"
     max="5"
     onchange="generateVideoInputs()">
 
@@ -170,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
-            <option value="Beginner" selected>Beginner</option>
+            <option value="Begginer" selected>Beginner</option>
             <option value="Intermidate">Intermidate</option>
             <option value="Expert">Expert</option>
         </select>
@@ -269,44 +259,6 @@ document.getElementById("estimate").addEventListener("input", function () {
       `;
 
       stagesContainer.appendChild(stageDiv);
-      
-    }
-  });
-});
-
-
-    
-
-</script>
-
-<script>
-    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
-    document.addEventListener("DOMContentLoaded", function () {
-
-    const stageSelect = document.getElementById("stage_num");
-    const stagesContainer = document.getElementById("stagesContainer");
-    
-
-    stageSelect.addEventListener("input", function () {
-    const stageCount = this.valueAsNumber;
-
-    stagesContainer.innerHTML = ""; //wipes data on change. 
-
-    if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
-    stagesContainer.innerHTML = "";
-    return;
-    }
-
-    for (let i = 1; i <= stageCount; i++) {
-      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
-
-      stageDiv.innerHTML = ` 
-        <h3>Stage ${i}</h3>
-        <input type="text" name="stageTitle_${i}" required />
-      `;
-
-      stagesContainer.appendChild(stageDiv);
-      
     }
   });
 });
