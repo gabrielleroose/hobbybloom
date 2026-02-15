@@ -160,13 +160,11 @@ CREATE TABLE feed (
 
 
 -- holds the videos for modules --
-CREATE TABLE module_videos (
+CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    module_id INT NOT NULL,
+    msid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
-    FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE
-);
     FOREIGN KEY (msid) REFERENCES module_stage(id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE
