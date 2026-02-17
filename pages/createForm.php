@@ -245,7 +245,7 @@ document.getElementById("estimate").addEventListener("input", function () {
     }
 
     for (let i = 1; i <= stageCount; i++) {
-      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount;
 
       stageDiv.innerHTML = ` 
         <h3>Stage ${i}</h3>
