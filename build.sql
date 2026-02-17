@@ -7,6 +7,8 @@ DROP TABLE IF EXISTS module;
 DROP TABLE IF EXISTS module_stage;
 DROP TABLE IF EXISTS module_stage_progress;
 DROP TABLE IF EXISTS module_stage_questions;
+DROP TABLE IF EXISTS module_stage_questions_answers;
+DROP TABLE IF EXISTS module_stage_questions_user_answers;
 DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS users;
@@ -46,7 +48,9 @@ CREATE TABLE user_profiles (
     hobbies TEXT,
     last_login DATE,
     login_streak INT DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE tag (
@@ -54,7 +58,9 @@ CREATE TABLE tag (
     name VARCHAR(40) NOT NULL,
     cid INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (cid) REFERENCES users(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module (
@@ -69,7 +75,9 @@ CREATE TABLE module (
     est_comp_time INT NOT NULL,
     notes TEXT,
     PRIMARY KEY (id),
-    FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (cid) REFERENCES users(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
@@ -80,6 +88,8 @@ stage_num INT NOT NULL DEFAULT 1,
 title varchar(100),
 UNIQUE (mid, stage_num),
 FOREIGN KEY (mid) REFERENCES module(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
 ) ENGINE=InnoDB;
 
 -- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
@@ -90,6 +100,8 @@ question_text varchar(255),
 is_correct INT NOT NULL DEFAULT 0,
 order_num INT NOT NULL,
 FOREIGN KEY (msid) REFERENCES module_stage(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 
@@ -100,9 +112,15 @@ id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 uid INT NOT NULL,
 mid INT NOT NULL,
 msid INT NOT NULL,
-FOREIGN KEY (uid) REFERENCES users(id),
-FOREIGN KEY (mid) REFERENCES module(id), 
+FOREIGN KEY (uid) REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
+FOREIGN KEY (mid) REFERENCES module(id),
+ON DELETE CASCADE
+ON UPDATE CASCADE, 
 FOREIGN KEY (msid) REFERENCES module_stage(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 
 ) ENGINE=InnoDB;
 
@@ -144,11 +162,13 @@ CREATE TABLE feed (
 -- holds the videos for modules --
 CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sid INT NOT NULL,
+    msid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
-    FOREIGN KEY (sid) REFERENCES module_stage(id) ON DELETE CASCADE
-);
+    FOREIGN KEY (msid) REFERENCES module_stage(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
 
 -- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
@@ -160,6 +180,8 @@ stage_num INT NOT NULL DEFAULT 1,
 title varchar(100),
 UNIQUE (mid, stage_num),
 FOREIGN KEY (mid) REFERENCES module(id)
+ON DELETE CASCADE 
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
@@ -167,10 +189,37 @@ CREATE TABLE module_stage_questions (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 msid INT NOT NULL,
 question_text varchar(255),
-is_correct INT NOT NULL DEFAULT 0,
 order_num INT NOT NULL,
 FOREIGN KEY (msid) REFERENCES module_stage(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+
+-- MODULE_STAGE_QUESTIONS_ANSWERS
+CREATE TABLE module_stage_questions_answers (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+msqid INT NOT NULL,
+answer varchar(255),
+is_correct INT NOT NULL DEFAULT 0,
+ans_num INT NOT NULL,
+FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
+) ENGINE=InnoDB;
+
+-- MODULE_STAGE_QUESTION_USER_ANSWERS
+CREATE TABLE module_stage_questions_user_answers (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY_KEY,
+    uid INT NOT NULL, 
+    msqaid INT NOT NULL,
+    FOREIGN KEY (uid) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+
+) ENGINE=InnoDB;
+
 
 
 
@@ -180,10 +229,15 @@ id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 uid INT NOT NULL,
 mid INT NOT NULL,
 msid INT NOT NULL,
-FOREIGN KEY (uid) REFERENCES users(id),
-FOREIGN KEY (mid) REFERENCES module(id), 
+FOREIGN KEY (uid) REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
+FOREIGN KEY (mid) REFERENCES module(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
 FOREIGN KEY (msid) REFERENCES module_stage(id)
-
+ON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 
@@ -197,7 +251,7 @@ FOREIGN KEY (msid) REFERENCES module_stage(id)
 INSERT INTO module 
 (id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
 VALUES
-(1, 2, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
+(1, 1, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
 (2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
 
 INSERT INTO module 
@@ -214,17 +268,62 @@ VALUES
 (5, 2, 3, 'Query Refactoring');
 
 -- MODULE_STAGE_QUESTIONS 
-INSERT INTO module_stage_questions (id, msid, question_text, is_correct, order_num)
+INSERT INTO module_stage_questions (id, msid, question_text, order_num)
 VALUES
-(1, 1, 'Which clause retrieves data from a table?', 1, 1),
-(2, 3, 'What improves query lookup speed?', 1, 1);
+(1, 1, 'Which clause retrieves data from a table?', 1),
+(2, 3, 'What improves query lookup speed?', 1);
 
 
 -- MODULE_STAGE_VIDEOS
-INSERT INTO module_stage_videos (id, sid, video_url, lesson_number)
+INSERT INTO module_stage_videos (id, msid, video_url, lesson_number)
 VALUES
 (1, 1, 'https://example.com/sql-select', 1),
 (2, 3, 'https://example.com/indexing-basics', 1);
+
+-- -- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
+-- CREATE TABLE module_stage_questions (
+-- id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- msid INT NOT NULL,
+-- question_text varchar(255),
+-- order_num INT NOT NULL,
+-- FOREIGN KEY (msid) REFERENCES module_stage(id)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE
+-- ) ENGINE=InnoDB;
+
+
+-- -- MODULE_STAGE_QUESTIONS_ANSWERS
+-- CREATE TABLE module_stage_questions_answers (
+-- id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- msqid INT NOT NULL,
+-- answer varchar(255),
+-- is_correct INT NOT NULL DEFAULT 0,
+-- ans_num INT NOT NULL,
+-- FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
+-- ) ENGINE=InnoDB;
+
+-- -- MODULE_STAGE_QUESTION_USER_ANSWERS
+-- CREATE TABLE module_stage_questions_user_answers (
+--     id INT NOT NULL AUTO_INCREMENT PRIMARY_KEY,
+--     uid INT NOT NULL, 
+--     msqaid INT NOT NULL,
+--     FOREIGN KEY (uid) REFERENCES users(id)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE,
+--     FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE
+
+-- ) ENGINE=InnoDB;
+
+
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num)
+VALUES
+(1, 'SELECT', 1, 1),
+(1, 'DROP', 0, 2),
+(1, 'CREATE', 0, 3),
+(1, 'GRAB', 0, 4);
 
 
 
