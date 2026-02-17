@@ -251,7 +251,8 @@ CREATE TABLE events (
 
     FOREIGN KEY (created_by) REFERENCES users(id)
         ON DELETE SET NULL
-        ON UPDATE CASCADE
+        ON UPDATE CASCADEON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 
@@ -287,7 +288,6 @@ INSERT INTO module_stage_questions (id, msid, question_text, order_num)
 VALUES
 (1, 1, 'Which clause retrieves data from a table?', 1),
 (2, 3, 'What improves query lookup speed?', 1);
-
 
 
 -- MODULE_STAGE_VIDEOS
