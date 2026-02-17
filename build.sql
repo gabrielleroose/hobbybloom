@@ -162,7 +162,6 @@ CREATE TABLE feed (
 CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     msid INT NOT NULL,
-    sid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
     FOREIGN KEY (msid) REFERENCES module_stage(id) 
@@ -172,7 +171,6 @@ CREATE TABLE module_stage_videos (
 
 
 -- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
-
 CREATE TABLE module_stage (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 mid INT NOT NULL,
