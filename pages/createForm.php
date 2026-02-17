@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Description:</label><br>
     <textarea name="description" rows="4" cols="40"></textarea><br><br>
 
-    <label>Number of lessons:</label><br>
+    <label>Number of videos:</label><br>
     <input 
     type="number"
     id="videoCount"
@@ -146,8 +146,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div id="stagesContainer"></div>
 
 
-    
->
 <div id="stagesContainer"></div>
 
 <div id="videoInputs"></div><br>
