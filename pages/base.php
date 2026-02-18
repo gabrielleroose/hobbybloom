@@ -55,7 +55,7 @@ require_once 'db.php';
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="chat.php">Chat</a>
                 <a class="menu-item wide-view" href="account.php">Account</a>
-                <!-- <a class="menu-item" href="calendar.php">Calendar</a> -->
+                <a class="menu-item" href="calendar.php">Calendar</a>
                 <a class="menu-item wide-view" href="share.php">Share</a>
                 <a class="menu-item wide-view" href="logout.php">Logout</a>
 
