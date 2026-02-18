@@ -4,6 +4,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/base.php';
 
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
 $streak = 1;
 if (isset($_SESSION['user']['id'])) {
     $stmt = $conn->prepare("SELECT last_login, login_streak FROM user_profiles WHERE user_id = ?");
