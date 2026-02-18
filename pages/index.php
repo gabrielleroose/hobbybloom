@@ -26,28 +26,31 @@ if (!isset($_SESSION['user'])) {
     </div>
 
     <section class="form">
-        <h2 class="form-title">All About You</h2>
+        <h2 class="form-title">Let's Build Your Profile</h2>
         
         <form id="userForm" action="save_onboarding.php" method="post">
             
             <div class="index-form-input">
-                <label for="gender" class="form-label">What is your gender?</label>
-                <input type="text" class="form-control" name="gender" id="gender" placeholder="Your Gender" minlength=2 maxlength=50 required>
+                <label for="gender" class="form-label">How do you identify? (Pronouns)</label>
+                <input type="text" class="form-control" name="gender" id="gender" placeholder="e.g. He/Him, She/Her, They/Them" minlength=2 maxlength=50 required>
             </div>
             
             <div class="index-form-input">
-                <label for="age" class="form-label">What is your age?</label>
-                <input type="text" class="form-control" id="age" name="age" placeholder="Your age" minlength="1" maxlength="3" required>
+                <label for="age" class="form-label">How old are you?</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="21" min="13" max="100" required>
             </div>
 
             <div class="index-form-input">
-                <label for="from" class="form-label">Where are you from?</label>
-                <input type="text" class="form-control" id="from" name="from" placeholder="Hometown" minlength="2" maxlength="50" required>
+                <label for="from" class="form-label">Where are you located?</label>
+                <div class="subtext text-muted" style="margin-top: -10px; margin-bottom: 5px; font-size: 0.8rem;">
+                    (So we can show you local Circles)
+                </div>
+                <input type="text" class="form-control" id="from" name="from" placeholder="e.g. Bloomington Campus" minlength="2" maxlength="50" required>
             </div>
 
             <div class="index-form-input">
-                <label for="bio" class="form-label">Fun Fact / Bio</label>
-                <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us a little about yourself..." maxlength="500"></textarea>
+                <label for="bio" class="form-label">What is one hobby you've always wanted to try?</label>
+                <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="e.g. I've always wanted to learn to play guitar, but I don't know where to start!" maxlength="500"></textarea>
             </div>
 
             <div class="mt-4 text-center">
