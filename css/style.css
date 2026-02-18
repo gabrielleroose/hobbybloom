@@ -93,6 +93,26 @@ footer {
   border: 20px solid rgb(38, 67, 135);
   color: white;
   border-radius: 30px;
+  margin-bottom: 3rem;
+}
+
+.index-next-button{
+  background-color: #153853;
+  color: white;
+  font-size: var(--text-size-lg);
+  margin-left: 50rem;
+  padding: .5rem;
+}
+
+.index-form-input{
+  padding-bottom: 1rem;
+}
+
+.form-title{
+  color: white;
+  font-size: var(--text-size-2xl);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .other {
@@ -166,36 +186,6 @@ footer {
 
 .search-bar::placeholder {
   color: #ccc;
-}
-
-.horizontal-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 15px;
-  padding-bottom: 15px;
-  scrollbar-width: none;
-}
-
-.horizontal-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.story-circle {
-  text-align: center;
-  min-width: 70px;
-}
-
-.circle-img {
-  width: 60px;
-  height: 60px;
-  background-color: #a8d0e6;
-  border-radius: 50%;
-  margin: 0 auto 5px auto;
-}
-
-.circle-name {
-  font-size: 12px;
-  color: #333;
 }
 
 .chat-list {
@@ -581,44 +571,6 @@ h2 {
   line-height: 1.5;
 }
 
-.dash-inner {
-  background-color: rgb(69, 112, 214);
-  border: 10px solid rgb(69, 112, 214);
-  border-radius: 10px;
-  padding: 5px;
-  font-size: 50px;
-  font: arial;
-  text-align: center;
-}
-.dash-inner2 {
-  background-color: rgb(69, 112, 214);
-  border: 10px solid rgb(69, 112, 214);
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 30px;
-  font: arial;
-  text-align: center;
-}
-.dash-outter {
-  margin-left: 200px;
-  margin-right: 200px;
-  margin-top: 100px;
-  border: 10px solid rgb(38, 67, 135);
-  color: white;
-  border-radius: 20px;
-}
-
-.dash-heading {
-  font-size: 30px;
-  padding-left: 60px;
-}
-.dash-item {
-  max-width: 800px;
-  height: 200px;
-  background-color: #1f5077;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
 
 .form {
   background: #6096ba;
@@ -635,12 +587,16 @@ h2 {
 }
 
 .form-control {
-  background-color: #e7ecef;
+  background-color: white;
   border: 1px solid #010319;
+  border-radius: .5rem;
+  padding: .5rem;
+  margin-left: 1rem;
+  text-align: center;
 }
 
 .form-control::placeholder {
-  color: #010319;
+  color: lightgrey;
   font-size: var(--text-size-md);
 }
 
@@ -785,4 +741,125 @@ h2 {
   text-align: center;
   font-size: 16px;
   color: #ddd;
+}
+
+
+/* ********************* DASHBOARD STYLES ********************* */
+
+.main-dashboard{
+  background-color: #F1F2F5;
+  border-radius: 1rem;
+  /* box-shadow: 1px 1px #434343; */
+  width: 100%;
+  max-width: 1350px; 
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.my-dashboard{
+  padding-left: 4rem;
+  font-size: var(--text-size-2xl);
+  font-style: italic;
+}
+
+.dash-display {
+  margin: 0 auto;
+  width: 60%;
+  background-color: #1E5077;
+  border-radius: 20px;
+  color: white;
+  padding-left: 3rem;
+  font-size: var(--text-size-3xl);
+}
+
+.dash-inner {
+  background-color: rgb(69, 112, 214);
+  border: 10px solid rgb(69, 112, 214);
+  border-radius: 10px;
+  font-size: 50px;
+  margin: 0px;
+  font: arial;
+  text-align: left;
+}
+
+.streak{
+  font-size: var(--text-size-2xl);
+  font-style: italic;
+}
+
+.dash-heading {
+  font-size: 30px;
+  padding-left: 60px;
+}
+.dash-item {
+  max-width: 800px;
+  height: 200px;
+  background-color: #1f5077;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-left: 3rem;
+}
+
+.dash-item-text{
+  color: white;
+  padding: 2rem 0 2rem 2rem;
+  font-size: var(--text-size-lg);
+}
+
+.resume-btn{
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1em;
+  margin-left: 4rem;
+  color: #1E5077;
+  text-decoration: none;
+  font-size: var(--text-size-md);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.resume-btn:hover {
+  /* color: rgb(56, 86, 68); */
+  color: lightblue;
+  transform: scale(1.2);
+}
+
+.dashboard-circles{
+  margin: 4rem 0 0 3rem;
+  padding-bottom: 2rem;
+}
+
+.story-circle {
+  text-align: center;
+  min-width: 70px;
+  color: #e7ecef;
+}
+
+.circle-img {
+  width: 60px;
+  height: 60px;
+  background-color: #a8d0e6;
+  border-radius: 50%;
+  margin: 0 auto 5px auto;
+}
+
+.circle-name {
+  font-size: 12px;
+  color: #333;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  scrollbar-width: none;
+  background-color: #1f5077;
+  padding: 1rem;
+  border-radius: 1rem;
+  max-width: 80%;
+
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }

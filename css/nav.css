@@ -23,21 +23,33 @@ nav {
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5rem;
 }
 
 .menu {
   /* border: 3px dashed fuchsia; */
-  border-top: 2px solid lightgray;
-  margin-bottom: 2rem;
+  border-bottom: 2px solid lightgray;
 }
 
 .branding {
-  /* flex */
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: navy;
+  font-size: var(--text-size-3xl);
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0 1rem 0 1rem;
+  margin-top: 1rem;
+}
+
+.branding p {
+  margin: 0; 
+  /* padding: 1rem 0; Control the vertical space manually here */
+}
+
+.bloom{
+  color: #156914;
 }
 
 .menu-button {
@@ -47,38 +59,45 @@ nav {
 }
 
 .menu-item {
-  color: black;
+  /* color: #156914; */
+  color: navy;
   padding: 1rem 0.5rem 1rem 1rem;
   text-decoration: none;
-  display: none;
+  /* display: none; */
   font-size: var(--text-size-md);
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
 }
 
+.wide-view{
+  display: none;
+}
+
 .menu-item:hover {
   /* color: #e7ecef; */
-  color: rgb(56, 86, 68);
-  transform: translateX(5px);
+  /* color: navy; */
+  color: #156914;
+  /* transform: translateX(5px); */
+  transform: scale(1.2);
 }
 
 .menu-box {
   /* border: 3px solid yellow; */
-  border-radius: 1rem;
-  /* flex */
   display: flex;
-  flex-direction: column;
-  position: absolute;
-  right: 1rem;
-  width: 140px;
-
+  flex-direction: row;
+  /* justify-content: center; */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  justify-content: space-between;
   margin-top: 1rem;
+  /* position: absolute; */
+  /* right: 1rem; */
+  /* margin-top: 1rem; */
 
   /* CSS Gradient from: https://cssgradient.io/  */
-  background: #a4faa2;
+  /* background: #a4faa2;
   background: linear-gradient(90deg,
  rgba(164, 250, 162, 1) 0%,
  rgba(58, 161, 56, 1) 55%,
- rgba(21, 105, 20, 1) 100%);
+ rgba(21, 105, 20, 1) 100%); */
 }
 
 .show {
@@ -123,6 +142,10 @@ nav {
     font-size: var(--text-size-md);
   }
 
+  .wide-view{
+    display: block;
+  }
+
   .menu-item:hover {
     transform: scale(1.2);
   }
@@ -136,7 +159,7 @@ nav {
 
 .footer-link {
   text-align: center;
-  color: black;
+  color: #e7ecef;
   font-size: var(--text-size-md);
   text-decoration: none;
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
@@ -145,20 +168,23 @@ nav {
 footer{
     width: 100%;
     /* CSS Gradient from: https://cssgradient.io/  */
-  background: #a4faa2;
+  /* background: #a4faa2;
   background: linear-gradient(90deg,
  rgba(164, 250, 162, 1) 0%,
  rgba(58, 161, 56, 1) 55%,
- rgba(21, 105, 20, 1) 100%);
-  padding: 3rem 0rem 1.5rem;
-  border-radius: 1rem;
+ rgba(21, 105, 20, 1) 100%); */
+  color: #e7ecef;
+  background-color: #1E5077;
+  padding: 2rem 0rem .5rem 0rem;
+  /* border-radius: 1rem; */
   border: .25px solid #156914;
   margin-top: 5rem;
 
 }
 
 .footer-link:hover {
-    color: rgb(56, 86, 68);
+    /* color: rgb(56, 86, 68); */
+    color: lightblue;
     transform: scale(1.2);
   }
 
@@ -167,17 +193,19 @@ footer{
   width: 100%;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
   gap: 20px;
+  color: #e7ecef;
 }
 
 .footer-container-logo{
   display: flex;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
   line-height: .1rem;
+  gap: 10px;
+  font-size: var(--text-size-sm);
 
 }

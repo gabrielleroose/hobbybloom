@@ -4,8 +4,13 @@ DROP TABLE IF EXISTS feed;
 DROP TABLE IF EXISTS log;
 DROP TABLE IF EXISTS circle;
 DROP TABLE IF EXISTS module;
+DROP TABLE IF EXISTS module_stage;
+DROP TABLE IF EXISTS module_stage_progress;
+DROP TABLE IF EXISTS module_stage_questions;
+DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS users;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users (
@@ -39,6 +44,8 @@ CREATE TABLE user_profiles (
     hometown VARCHAR(100),
     bio TEXT,
     hobbies TEXT,
+    last_login DATE,
+    login_streak INT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -100,34 +107,93 @@ CREATE TABLE feed (
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE events (
+-- holds the videos for modules --
+CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    start DATETIME NOT NULL,
-    end DATETIME NOT NULL,
-    created_by INT,
-    FOREIGN KEY (created_by) REFERENCES users(id)
-);
-
-
-/*  Drew Module tables - need to run by team
-CREATE TABLE module (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    description TEXT,
-    number_of_lessons INT,
-    notes TEXT,
-    xpLevel VARCHAR(50),
-    compTime INT,
-    created_by INT
-);
-
-CREATE TABLE module_videos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    module_id INT NOT NULL,
+    sid INT NOT NULL,
     video_url VARCHAR(500) NOT NULL,
     lesson_number INT NOT NULL,
-    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
+    FOREIGN KEY (sid) REFERENCES module_stage(id) ON DELETE CASCADE
 );
 
-*/ -- also may need to create another table to track who is enrolled in the module
+
+-- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
+CREATE TABLE module_stage (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+mid INT NOT NULL,
+stage_num INT NOT NULL DEFAULT 1,
+title varchar(100),
+UNIQUE (mid, stage_num),
+FOREIGN KEY (mid) REFERENCES module(id)
+) ENGINE=InnoDB;
+
+-- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
+CREATE TABLE module_stage_questions (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+msid INT NOT NULL,
+question_text varchar(255),
+is_correct INT NOT NULL DEFAULT 0,
+order_num INT NOT NULL,
+FOREIGN KEY (msid) REFERENCES module_stage(id)
+) ENGINE=InnoDB;
+
+
+
+-- MODULE STAGE PROGRESS TABLE TO KEEP TRACK OF USER PROGRESS.
+CREATE TABLE module_stage_progress (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+uid INT NOT NULL,
+mid INT NOT NULL,
+msid INT NOT NULL,
+FOREIGN KEY (uid) REFERENCES users(id),
+FOREIGN KEY (mid) REFERENCES module(id), 
+FOREIGN KEY (msid) REFERENCES module_stage(id)
+
+) ENGINE=InnoDB;
+
+
+
+-- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- -- TEST DATA -- 
+
+
+
+
+-- MODULE
+INSERT INTO module 
+(id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
+VALUES
+(1, 2, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
+
+INSERT INTO module 
+(id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
+VALUES
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
+-- MODULE_STAGE
+INSERT INTO module_stage (id, mid, stage_num, title)
+VALUES
+(1, 1, 1, 'SELECT Statements'),
+(2, 1, 2, 'Filtering Data'),
+(3, 2, 1, 'Indexing Basics'),
+(4, 2, 2, 'Execution Plans'),
+(5, 2, 3, 'Query Refactoring');
+
+-- MODULE_STAGE_QUESTIONS 
+INSERT INTO module_stage_questions (id, msid, question_text, is_correct, order_num)
+VALUES
+(1, 1, 'Which clause retrieves data from a table?', 1, 1),
+(2, 3, 'What improves query lookup speed?', 1, 1);
+
+
+-- MODULE_STAGE_VIDEOS
+INSERT INTO module_stage_videos (id, sid, video_url, lesson_number)
+VALUES
+(1, 1, 'https://example.com/sql-select', 1),
+(2, 3, 'https://example.com/indexing-basics', 1);
+
+
+
+
+
+
+

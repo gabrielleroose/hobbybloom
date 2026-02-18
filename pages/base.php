@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'db.php';
 ?>
 
@@ -29,7 +30,7 @@ require_once 'db.php';
                 <span class="nav-user" style="color: white; margin-left: auto; padding-right: 10px;">
                     <?= htmlspecialchars($_SESSION['user']['name']) ?>
                 </span>
-                <a class="nav-link" href="logout.php">Logout</a>
+                <!-- <a class="nav-link" href="logout.php">Logout</a> -->
             <?php endif; ?>
 
 
@@ -38,10 +39,11 @@ require_once 'db.php';
         <nav>
         <div class="branding">
             <!-- Logomaker: https://www.squarespace.com/ -->
-            <img class="logo" src="#" alt="logo" />
+            <!-- <img class="logo" src="#" alt="logo" />
             <button class="menu-button" type="button">
-            <span class="material-symbols-outlined">menu</span>
-            </button>
+            <span class="material-symbols-outlined">menu</span> -->
+            <p>Hobby<span class="bloom">Bloom</span></p>
+            <!-- </button> -->
         </div>
 
         <div class="menu">
@@ -52,7 +54,12 @@ require_once 'db.php';
                 <a class="menu-item" href="module.php">Modules</a>
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="chat.php">Chat</a>
-                <a class="menu-item" href="account.php">Account</a>
+                <a class="menu-item wide-view" href="account.php">Account</a>
+                <!-- <a class="menu-item" href="calendar.php">Calendar</a> -->
+                <a class="menu-item wide-view" href="share.php">Share</a>
+                <a class="menu-item wide-view" href="logout.php">Logout</a>
+
+
             </div>
 
         </div>

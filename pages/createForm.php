@@ -1,19 +1,16 @@
 <?php
-session_start();
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', 1);
 
-// Change below to real data base info once we have it
-$host = "localhost";
-$dbname = "your_database_name";
-$username = "db_user";
-$password = "db_password";
+require_once 'db.php';
 
 
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1; // made up login for test
-}
+
+require_once 'db.php';
 
 $success = false;
 $error = "";
+
 
 // form submission handling below 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -54,6 +51,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ":compTime" => $compTime,
             ]);
 
+
+
+    $module_id = $pdo->lastInsertId();
+
+    if (!empty($_POST['videos'])) {
+
+        $videoSQL = "
+            INSERT INTO module_videos
+            (module_id, video_url, lesson_number)
+            VALUES (?, ?, ?)
+        ";
+
+        $videoStmt = $pdo->prepare($videoSQL);
+
+        foreach ($_POST['videos'] as $index => $url) {
+
+            $url = trim($url);
+            if ($url !== "") {
+                $videoStmt->execute([
+                    $module_id,
+                    $url,
+                    $index + 1
+                ]);
+            }
+        }
+    }
+
+
             $success = true;
 
         } catch (PDOException $e) {
@@ -67,8 +92,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Create Module</title>
+    <meta charset="UTF-8">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
 
@@ -89,11 +118,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Number of lessons:</label><br>
     <input 
-    type="number" 
-    id="videoCount" 
-    min="0" 
-    max="10" 
+    type="number"
+    id="videoCount"
+    name="videoCount"
+    min="0"
+    max="10"
     onchange="generateVideoInputs()"
+>
+
 >
 
 <div id="videoInputs"></div><br>
@@ -114,7 +146,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Estimated time of completion:</label>
     <!-- maybe do a set time format if possible -->
     <label for="estimate">Estimated time (minutes):</label>
-<input type="number" id="estimate" min="1" required>
+    <input
+    type="number"
+    id="estimate"
+    name="estimate"
+    min="1"
+    required
+    >
+
 <p id="formattedOutput"></p>
 
 
@@ -123,6 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </form>
 
 </body>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
 
 <script>
@@ -169,11 +209,5 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 
-need:  ( module name )
-       ( Module Description )
-        ( Creator )
-        ( number of lessons - way to upload videos -
-            the actual lessons )
-        ( notes section )
-        ( difficult level )
-        ( estimated time )
+
+        
