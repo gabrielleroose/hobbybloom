@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
     dateClick: function(info) {
 
         let title = prompt("Event Title:");
+        let time = prompt("Event Time (HH:MM):");
+        let description = prompt("Description:");
+
 
         if(title){
 
@@ -40,11 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({
                     title: title,
-                    date: info.dateStr
+                    date: info.dateStr,
+                    time: time,
+                    description: description
                 })
+
             })
             .then(() => calendar.refetchEvents());
         }
+    },
+
+    eventClick: function(info){
+    alert(info.event.extendedProps.description);
     }
 });
 
