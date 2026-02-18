@@ -8,7 +8,6 @@ if (isset($_SESSION['user']['id'])) {
     $res = $stmt->fetch();
     
     if ($res && $res['hobbies']) {
-        // Explode turns the string "Cooking, Lego" into an array ["Cooking", "Lego"]
         $myHobbies = explode(', ', $res['hobbies']);
     }
 }
