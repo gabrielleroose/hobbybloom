@@ -2,49 +2,29 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// require_once $_SERVER['DOCUMENT_ROOT'] . '/pages/base.php';
 require_once __DIR__ . '/base.php';
 
 $streak = 1;
-
 if (isset($_SESSION['user']['id'])) {
-    $stmt = $conn->prepare("
-        SELECT last_login, login_streak 
-        FROM user_profiles 
-        WHERE user_id = ?
-    ");
+    $stmt = $conn->prepare("SELECT last_login, login_streak FROM user_profiles WHERE user_id = ?");
     $stmt->execute([$_SESSION['user']['id']]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($userData) {
         $lastLogin = $userData['last_login'];
         $currentStreak = (int)$userData['login_streak'];
-
         $today = new DateTime();
-        if ($lastLogin) {
-            $lastLoginDate = new DateTime($lastLogin);
-            $diff = $lastLoginDate->diff($today)->days;
-        } else {
-            $diff = 999; // first login → reset streak
-        }
+        $diff = $lastLogin ? (new DateTime($lastLogin))->diff($today)->days : 999;
 
         if ($diff === 1) {
-            // logged in yesterday → streak continues
             $streak = $currentStreak + 1;
         } elseif ($diff === 0) {
-            // already logged in today
             $streak = $currentStreak;
         } else {
-            // missed a day → reset
             $streak = 1;
         }
 
-        // update DB
-        $update = $conn->prepare("
-            UPDATE user_profiles
-            SET last_login = CURDATE(), login_streak = ?
-            WHERE user_id = ?
-        ");
+        $update = $conn->prepare("UPDATE user_profiles SET last_login = CURDATE(), login_streak = ? WHERE user_id = ?");
         $update->execute([$streak, $_SESSION['user']['id']]);
     }
 }
@@ -54,30 +34,64 @@ if (isset($_SESSION['user']['id'])) {
     $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
     $stmt->execute([$_SESSION['user']['id']]);
     $res = $stmt->fetch();
-    
     if ($res && $res['hobbies']) {
         $myHobbies = explode(', ', $res['hobbies']);
     }
 }
 
-$currentModule = null;
 
+$recommendations = [];
+if (isset($_SESSION['user']['id']) && !empty($myHobbies)) {
+    $stmt = $conn->prepare("SELECT mid FROM log WHERE uid = ? AND complete = 1");
+    $stmt->execute([$_SESSION['user']['id']]);
+    $completedIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    $stmt = $conn->prepare("SELECT id, name, description, exp_level FROM module");
+    $stmt->execute();
+    $allModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($allModules as $mod) {
+        if (in_array($mod['id'], $completedIds)) { continue; }
+
+        foreach ($myHobbies as $hobby) {
+            if (stripos($mod['name'], $hobby) !== false || stripos($mod['description'], $hobby) !== false) {
+                $recommendations[] = $mod;
+                break;
+            }
+        }
+    }
+}
+
+$currentModule = null;
 if (isset($_SESSION['user']['id'])) {
     $stmt = $conn->prepare("
-        SELECT m.name
+        SELECT m.name, m.id
         FROM log l
         JOIN module m ON l.mid = m.id
-        WHERE l.uid = ?
-          AND l.complete = 0
-        ORDER BY l.last_visited DESC
-        LIMIT 1
+        WHERE l.uid = ? AND l.complete = 0
+        ORDER BY l.last_visited DESC LIMIT 1
     ");
     $stmt->execute([$_SESSION['user']['id']]);
-    $currentModule = $stmt->fetchColumn();
+    $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 
-
+$hobbyColors = [
+    "Cooking" => "#ff9999",
+    "Knitting" => "#e6e6fa",
+    "Lego" => "#ffd700",
+    "Sewing" => "#ffb6c1",
+    "Painting" => "#ffdab9",
+    "Hiking" => "#90ee90",
+    "Reading" => "#a8d0e6",
+    "Gardening" => "#3cb371",
+    "Baking" => "#f4a460",
+    "Meditation" => "#e0ffff",
+    "Music" => "#dda0dd",
+    "Movies" => "#cd5c5c",
+    "Gaming" => "#9370db",
+    "Yoga" => "#ffdead"
+];
 ?>
 
 <!DOCTYPE html>
@@ -87,149 +101,72 @@ if (isset($_SESSION['user']['id'])) {
     <title>Dashboard</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
-
 </head>
 
 <body>
 
 <main class="main-dashboard">
 
-        <div class="my-dashboard">
+    <div class="my-dashboard">
         <p> Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'there') ?> </p>
+    </div>
+
+    <div class="dash-display">
+        <p>My Dashboard</p>
+        <p class="streak">🔥<?= $streak ?> Day Streak</p>
+    </div>
+    
+    <div class="dash-heading"><p>Jump Back In!</p></div>
+    <div class="dash-item">
+        <?php if ($currentModule): ?>
+            <p class="dash-item-text">📘 Continue: <strong><?= htmlspecialchars($currentModule['name']) ?></strong></p>
+            <a href="module.php?id=<?= $currentModule['id'] ?>" class="resume-btn">Resume Module</a>
+        <?php else: ?>
+            <p class="dash-item-text">✨You're all caught up! Start a new module.</p>
+            <a href="module.php" class="resume-btn">Browse Modules</a>
+        <?php endif; ?>
+    </div>
+
+    <?php if (!empty($recommendations)): ?>
+    <div class="dashboard-circles">
+        <h2>Recommended For You</h2>
+        <div class="horizontal-scroll">
+            <?php foreach ($recommendations as $rec): ?>
+            <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #<?= substr(md5($rec['name']), 0, 6) ?>;"></div>
+                    <p style="font-size: 0.8rem; font-weight: bold;"><?= htmlspecialchars($rec['name']) ?></p>
+                    <p style="font-size: 0.7rem; color: #ccc;"><?= htmlspecialchars($rec['exp_level']) ?></p>
+                </div>
+            </a>
+            <?php endforeach; ?>
         </div>
+    </div>
+    <?php endif; ?>
 
-
-        <div class="dash-display">
-            <!-- <div class="dash-inner"> -->
-                <p>My Dashboard</p>
-                <p class="streak">🔥<?= $streak ?> Day Streak<?= $streak === 1 ? '' : '' ?></p>
-            <!-- </div> -->
-        </div>
-        
-        <div class="dash-heading"><p>Jump Back In!</p></div>
-        <div class="dash-item">
-            <?php if ($currentModule): ?>
-            <p>📘 Continue: <strong><?= htmlspecialchars($currentModule) ?></strong></p>
-            <a href="module.php" class="resume-btn">Resume Module</a>
-            <?php else: ?>
-                <p class="dash-item-text">✨You're all caught up! Start a new module.</p>
-                <a href="module.php" class="resume-btn">Browse Modules</a>
-            <?php endif; ?>
-        </div>
-
-        <div class="dashboard-circles">
-
-            <h2>Your Circles</h2>
-            <div class="horizontal-scroll">
-                
-                <?php if (in_array("Cooking", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #ff9999;"></div>
-                    <p>Cooking</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Knitting", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #e6e6fa;"></div>
-                    <p>Knitting</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Lego", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #ffd700;"></div>
-                    <p>Lego</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Sewing", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #ffb6c1;"></div>
-                    <p>Sewing</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Painting", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #ffdab9;"></div>
-                    <p>Painting</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Hiking", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #90ee90;"></div>
-                    <p>Hiking</p>
-                </div>
-                <?php endif; ?>
-                
-                <?php if (in_array("Reading", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #a8d0e6;"></div>
-                    <p>Reading</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Gardening", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #3cb371;"></div>
-                    <p>Gardening</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Baking", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #f4a460;"></div>
-                    <p>Baking</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Meditation", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #e0ffff;"></div>
-                    <p>Meditation</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Music", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #dda0dd;"></div>
-                    <p>Music</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Movies", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #cd5c5c;"></div>
-                    <p>Movies</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Gaming", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #9370db;"></div>
-                    <p>Gaming</p>
-                </div>
-                <?php endif; ?>
-
-                <?php if (in_array("Yoga", $myHobbies)): ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #ffdead;"></div>
-                    <p>Yoga</p>
-                </div>
-                <?php endif; ?>
-
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #cccccc;"></div>
-                    <p>General</p>
-                </div>
-                
+    <div class="dashboard-circles">
+        <h2>Your Circles</h2>
+        <div class="horizontal-scroll">
+            
+            <?php foreach ($myHobbies as $hobby): 
+                $color = $hobbyColors[$hobby] ?? '#cccccc'; 
+            ?>
+            <div class="story-circle">
+                <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                <p><?= htmlspecialchars($hobby) ?></p>
             </div>
+            <?php endforeach; ?>
+
+            <div class="story-circle">
+                <div class="circle-img" style="background-color: #cccccc;"></div>
+                <p>General</p>
+            </div>
+            
         </div>
+    </div>
 
-    </main>
+</main>
 
-    <?php include __DIR__ . '/../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>
