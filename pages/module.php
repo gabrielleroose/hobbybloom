@@ -1,9 +1,11 @@
 <?php
 require_once 'db.php';
 
+
+
 $module_id = (int)($_GET['id'] ?? 0);
 
-$stmt = $pdo->prepare("
+$stmt = $conn->prepare("
     SELECT *
     FROM modules
     WHERE id = :id
@@ -11,7 +13,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([":id"=>$module_id]);
 $module = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("
+$stmt = $conn->prepare("
     SELECT *
     FROM module_videos
     WHERE module_id = :id
@@ -19,6 +21,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([":id"=>$module_id]);
 $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+include 'base.php';
 ?>
 
 
@@ -33,7 +38,7 @@ $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-    <?php include 'base.php'; ?>
+    
 
 <!-- general structure of module.twig content for generated content w/ example (wait for Wednesday meeting for normalized css conversation?).
     may also have to create a couple more div containers, or change tags, in order to accurately style in accordance w/ wireframe
