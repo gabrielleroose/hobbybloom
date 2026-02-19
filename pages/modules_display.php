@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beginner Cooking</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
-</head>
-<body>
-
-    <?php 
+<?php 
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1); //debugging/error messages
         error_reporting(E_ALL);
         
-        session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistantly across pages.
+        // session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistently across pages.
         require_once __DIR__ . '/../vendor/autoload.php';
 
         require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
@@ -38,22 +27,65 @@
     }
 
 
-    $all_module_ids = "SELECT id from module";
+    $mod_id_list = [];
+
+    $all_module_ids = "SELECT * from module";
     $stmt = $pdo->prepare($all_module_ids);
-    $stmt->execute();
-    $module_ids_array = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    $stmt -> execute();
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $mod_id_list[] = $row['id'];
+    }
+    
+
+
+
+    $all_mods = [];
+    foreach ($mod_id_list as $id) {
+    
+        $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
+        JOIN module_stage_progress AS msp ON msp.mid = m.id
+        WHERE m.id = ?";
+
+        $stmt = $pdo->prepare($fetch_mod_info);
+        $stmt->execute([$id]);
+        $all_mods[$id] = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        echo "all_mods[$id]";
+
+    }
+
+    
+    ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner Cooking</title>
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
+</head>
+<body>
+
+
+        
+
+
+
+
+    
+
+
     
 
     
 
-    //!!!NOTE: WE NEED TO ADD A MODULES_DISPLAY.TWIG FILE SO THAT WE CAN PROPERLY PASS THROUGH THE SELECTED MID!!!
-
-
 
 
 
 
     
-    include __DIR__ . '/../includes/footer.php'; ?>
-</body>
-</html>
+    
