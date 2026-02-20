@@ -895,7 +895,8 @@ background-color:#b0b0b0;
 }
 
   
-.module_inner_card .mod_name {
+.module_header {
   text-align: center;
+  border: 2px solid black;
   
 }
