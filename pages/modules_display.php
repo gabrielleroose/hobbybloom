@@ -82,7 +82,10 @@
                     <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
                     <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
                     <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
-
+                    <form  action="./module.php" method="POST">
+                        <input type="hidden">
+                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id']?>">Try it out</button>
+                    </form>
                 </div>
             </div>
         <?php endforeach; ?>
