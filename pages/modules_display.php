@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beginner Cooking</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
-</head>
-<body>
-
-    <?php 
+<?php 
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1); //debugging/error messages
         error_reporting(E_ALL);
         
-        session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistantly across pages.
+        // session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistently across pages.
         require_once __DIR__ . '/../vendor/autoload.php';
 
         require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
@@ -38,7 +27,9 @@
     }
 
 
-    $all_module_ids = "SELECT id from module";
+    $mod_id_list = [];
+
+    $all_module_ids = "SELECT * from module";
     $stmt = $pdo->prepare($all_module_ids);
     $stmt->execute();
     $module_ids_array = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -54,6 +45,6 @@
 
 
     
-    include __DIR__ . '/../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

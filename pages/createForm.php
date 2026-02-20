@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <?php include 'base.php'; ?>
+<?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
 
@@ -243,17 +244,75 @@ document.getElementById("estimate").addEventListener("input", function () {
     }
 
     for (let i = 1; i <= stageCount; i++) {
+
       const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount;
 
-      stageDiv.innerHTML = ` 
-        <h3>Stage ${i}</h3>
-        <input type="text" name="stageTitle_${i}" required />
+      stageDiv.innerHTML = `
+       <div class="stage_number"> 
+            <h3>Stage ${i}</h3>
+        </div>
+
+        <br><br>
+
+        <div class="stage_title">
+            <label>Stage Title:</label>
+            <input type="text" name="stageTitle_${i}" required />
+        </div>
+
+        <br><br>
+        <div class="stage_questions">
+            <!-- question -->
+            <label>Question:</label><br>
+            <input type="text" name="stages[${i}][question]" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
+        </div>
+                <br><br>
+
+        <div class="stage_image">
+            <!-- img upload -->
+            <label>Upload Image:</label><br>
+            <input type="file" 
+            name="stages[${i}][image]">
+        </div>
+
+        <br><br>
+
+        <div class="stage_answers">
+            <!-- answers -->
+            <strong>Answers:</strong><br>
+        </div>
+
+                <hr>
+
       `;
+
+      
 
       stagesContainer.appendChild(stageDiv);
       
     }
   });
+
+  function generateAnswers(stageNumber) {
+
+        let answersHTML = "";
+
+        for (let a = 1; a <= 4; a++) {
+
+            answersHTML += `
+                <input type="text"
+                       name="stages[${stageNumber}][answers][${a}][text]"
+                       placeholder="Answer ${a}" required>
+
+                <input type="radio"
+                       name="stages[${stageNumber}][correct]"
+                       value="${a}" required> Correct
+                <br>
+            `;
+        }
+
+        return answersHTML;
+    }
+
 });
 
 
