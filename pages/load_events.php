@@ -3,7 +3,14 @@ require_once 'base.php';
 
 $stmt = $conn->query("SELECT id, title, start, end FROM events");
 
-$events = [];
+$events[] = [
+    'title' => $row['title'],
+    'start' => $row['date'] . 'T' . $row['time'],
+    'extendedProps' => [
+        'description' => $row['description']
+    ]
+];
+
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $events[] = $row;
