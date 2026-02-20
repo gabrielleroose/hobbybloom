@@ -44,31 +44,51 @@
     foreach ($mod_id_list as $id) {
     
         $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
-        JOIN module_stage_progress AS msp ON msp.mid = m.id
+        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
         WHERE m.id = ?";
 
         $stmt = $pdo->prepare($fetch_mod_info);
         $stmt->execute([$id]);
-        $all_mods[$id] = $stmt->fetch(PDO::FETCH_ASSOC);
+        $module = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        echo "all_mods[$id]";
-
+        if ($module !== false) {
+            $all_mods[$id] = $module; //checking to make sure module exists before adding it to $all_mods
+            }
     }
 
     
-    ?>
+?>
+
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beginner Cooking</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginner Cooking</title>
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/nav.css" rel="stylesheet">
 </head>
+
 <body>
+    <div class="module_back_container">
+        <?php foreach ($all_mods as $mod): ?>
+            <div class="module_outter_card">
+                <div class="module_inner_card">
+
+                    <div class="mod_name"><?= htmlspecialchars($mod['name'] ?? '')?></div> <!-- ?? '' checks if null -->
+                    <div class="mod_description"><?= htmlspecialchars($mod['description'] ?? '')?></div>
+                    <div class="rating"><?= htmlspecialchars($mod['rating'] ?? '')?></div>
+                    <div class="exp_level"><?= htmlspecialchars($mod['exp_level'] ?? '')?></div>
+                    <div class="num_lessons"><?= htmlspecialchars($mod['num_lessons'] ?? '')?></div>
+
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</body>    
+
+</html>
 
 
         
