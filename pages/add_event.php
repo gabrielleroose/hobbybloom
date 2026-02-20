@@ -8,17 +8,16 @@ $date = $data['date'];
 $time = $data['time'];
 $description = $data['description'];
 
+$sql = "INSERT INTO events (title, event_date, event_time, description)
+        VALUES (:title, :event_date, :event_time, :description)";
 
-$stmt = $conn->prepare(
-    "INSERT INTO events (title, date, time, description)
-     VALUES (?, ?, ?, ?)"
-    );
-    $stmt->bind_param("ssss", $title, $date, $time, $description);
-    $stmt->execute();
-    
+$stmt = $conn->prepare($sql);
 
 $stmt->execute([
-    $title,
-    $date . " 09:00:00",
-    $date . " 10:00:00"
+    ':title' => $title,
+    ':event_date' => $date,
+    ':event_time' => $time,
+    ':description' => $description
 ]);
+
+

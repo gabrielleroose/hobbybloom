@@ -1,19 +1,24 @@
 <?php
-require_once 'base.php';
+require_once 'db.php';
 
-$stmt = $conn->query("SELECT id, title, start, end FROM events");
+header('Content-Type: application/json');
 
-$events[] = [
-    'title' => $row['title'],
-    'start' => $row['date'] . 'T' . $row['time'],
-    'extendedProps' => [
-        'description' => $row['description']
-    ]
-];
+$sql = "SELECT id, title, event_date, event_time, description FROM events";
+$stmt = $conn->query($sql);
 
+$events = [];
 
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $events[] = $row;
+while ($row = $stmt->fetch()) {
+    $events[] = [
+        'id' => $row['id'],
+        'title' => $row['title'],
+        'start' => $row['event_date'] . 'T' . ($row['event_time'] ?? '00:00:00'),
+        'extendedProps' => [
+            'description' => $row['description']
+        ]
+    ];
 }
 
 echo json_encode($events);
+
+
