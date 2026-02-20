@@ -75,12 +75,13 @@
         <?php foreach ($all_mods as $mod): ?>
             <div class="module_outter_card">
                 <div class="module_inner_card">
-
-                    <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div> <!-- ?? '' checks if null -->
+                    <div class="module_header">
+                        <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div> <!-- ?? '' checks if null -->
+                        <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+                    </div>
                     <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
-                    <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
-                    <div class="num_lessons"><p><?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
+                    <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
 
                 </div>
             </div>
