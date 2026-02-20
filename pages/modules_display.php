@@ -76,11 +76,11 @@
             <div class="module_outter_card">
                 <div class="module_inner_card">
 
-                    <div class="mod_name"><?= htmlspecialchars($mod['name'] ?? '')?></div> <!-- ?? '' checks if null -->
-                    <div class="mod_description"><?= htmlspecialchars($mod['description'] ?? '')?></div>
-                    <div class="rating"><?= htmlspecialchars($mod['rating'] ?? '')?></div>
-                    <div class="exp_level"><?= htmlspecialchars($mod['exp_level'] ?? '')?></div>
-                    <div class="num_lessons"><?= htmlspecialchars($mod['num_lessons'] ?? '')?></div>
+                    <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div> <!-- ?? '' checks if null -->
+                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
+                    <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+                    <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
+                    <div class="num_lessons"><p><?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
 
                 </div>
             </div>
