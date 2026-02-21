@@ -14,81 +14,81 @@ $error = "";
 
 // form submission handling below 
 //strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $name = trim($_POST["name"]);
-    $description = trim($_POST["description"]);
-    $NumOfLessons = $_POST["videoCount"] ?? 0;
-    $notes = $_POST["notes"] ?? "";
-    $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
-    $compTime = $_POST["estimate"] ?? 0;
-
-
-    if (empty($name)) {
-        $error = "Module name is required.";
-    } else {
-        try {
-            $pdo = new PDO(
-                "mysql:host=$host;dbname=$dbname;charset=utf8",
-                $username,
-                $password
-            );
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $sql = "INSERT INTO module
-            (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
-            VALUES
-            (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
+//     $name = trim($_POST["name"]);
+//     $description = trim($_POST["description"]);
+//     $NumOfLessons = $_POST["videoCount"] ?? 0;
+//     $notes = $_POST["notes"] ?? "";
+//     $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
+//     $compTime = $_POST["estimate"] ?? 0;
 
 
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ":name" => $name,
-                ":description" => $description,
-                ":created_by" => $_SESSION['user_id'],
-                ":Number_of_lessons" => $NumOfLessons,
-                ":notes" => $notes,
-                ":xpLevel" => $xpLevel,
-                ":compTime" => $compTime,
-            ]);
+//     if (empty($name)) {
+//         $error = "Module name is required.";
+//     } else {
+//         try {
+//             $pdo = new PDO(
+//                 "mysql:host=$host;dbname=$dbname;charset=utf8",
+//                 $username,
+//                 $password
+//             );
+//             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//             $sql = "INSERT INTO module
+//             (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
+//             VALUES
+//             (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
 
 
-    $module_id = $pdo->lastInsertId();
+//             $stmt = $pdo->prepare($sql);
+//             $stmt->execute([
+//                 ":name" => $name,
+//                 ":description" => $description,
+//                 ":created_by" => $_SESSION['user_id'],
+//                 ":Number_of_lessons" => $NumOfLessons,
+//                 ":notes" => $notes,
+//                 ":xpLevel" => $xpLevel,
+//                 ":compTime" => $compTime,
+//             ]);
+
+
+//     $module_id = $pdo->lastInsertId();
 
     
         
 
-    if (!empty($_POST['videos'])) {
+//     if (!empty($_POST['videos'])) {
 
-        $videoSQL = "
-            INSERT INTO module_videos
-            (module_id, video_url, lesson_number)
-            VALUES (?, ?, ?)
-        ";
+//         $videoSQL = "
+//             INSERT INTO module_videos
+//             (module_id, video_url, lesson_number)
+//             VALUES (?, ?, ?)
+//         ";
 
-        $videoStmt = $pdo->prepare($videoSQL);
+//         $videoStmt = $pdo->prepare($videoSQL);
 
-        foreach ($_POST['videos'] as $index => $url) {
+//         foreach ($_POST['videos'] as $index => $url) {
 
-            $url = trim($url);
-            if ($url !== "") {
-                $videoStmt->execute([
-                    $module_id,
-                    $url,
-                    $index + 1
-                ]);
-            }
-        }
-    }
+//             $url = trim($url);
+//             if ($url !== "") {
+//                 $videoStmt->execute([
+//                     $module_id,
+//                     $url,
+//                     $index + 1
+//                 ]);
+//             }
+//         }
+//     }
 
 
-            $success = true;
+//             $success = true;
 
-        } catch (PDOException $e) {
-            $error = "Something went wrong saving the module.";
-        }
-    }
-}
+//         } catch (PDOException $e) {
+//             $error = "Something went wrong saving the module.";
+//         }
+//     }
+// }
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <?php include 'base.php'; ?>
-<?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
 
@@ -113,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <p style="color:green;">Module created successfully!</p>
 <?php endif; ?>
 
-<form method="POST">
+<form method="POST" action="form_processing.php">
     <label>Module Name:</label><br>
     <input type="text" name="name" required><br><br>
 
@@ -248,27 +247,32 @@ document.getElementById("estimate").addEventListener("input", function () {
       let answersHTML = "";
 
     // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
-    for (let a = 1; a <= 3; a++) {
-        answersHTML += `
-            <input type="text"
-                   id = "0"
-                   class="stage_questions_false"
-                   name="stages[${i}][answers][${a}][text]"
-                   placeholder="False Answer ${a}" required>
-            <br>
-        `;
-    }
+    for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer
+    answersHTML += `
+        <input type="text"
+               class="stage_questions_false"
+               name="stages[${i}][answers][${a}][text]"
+               placeholder="False Answer ${a}" required>
+
+        <input type="hidden" 
+               name="stages[${i}][answers][${a}][is_correct]"
+               value="0">
+
+        <br>
+    `;
+}
 
     // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
     answersHTML += `
-        <div class="stage_answers_correct">
-            <strong>Correct Answer:</strong><br>
-            <input type="text"
-                   id="${i}
-                   name="stages[${i}][answers][4][text]"
-                   required>
-        </div>
-    `;
+    <input type="text"
+           class="stage_questions_correct"
+           name="stages[${i}][answers][4][text]"
+           placeholder="Correct Answer" required>
+
+    <input type="hidden"
+           name="stages[${i}][answers][4][is_correct]"
+           value="1">
+`;
 
       stageDiv.innerHTML = `
        <div class="stage_number"> 
