@@ -128,24 +128,22 @@ $error = "";
                             max="5"
                             onchange="generateVideoInputs()">
 
-                            <div id="videoInputs"></div><br>
-
-                        <div>
-                            <label>Number of lessons:</label><br>
-                            <input 
-                            type="number"
-                            id="stage_num"
-                            name="stage_num"
-                            min="0"
-                            max="5"
-                            >
-                        </div>
-                            
-                        <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
+<div>
+    <label>Number of lessons:</label><br>
+    <input 
+    type="number"
+    id="stage_num"
+    name="stage_num"
+    min="0"
+    max="5"
+    >
+</div>
+    
+<div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
-
-                            
+<div id="videoInputs"></div><br>
+    
 
                             <label>Notes:</label><br>
                             <textarea name="notes" rows="4" cols="40"></textarea><br><br>
@@ -225,9 +223,9 @@ $error = "";
             });
             </script>
 
-            <script>
-                //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
-                document.addEventListener("DOMContentLoaded", function () {
+<script>
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
+    document.addEventListener("DOMContentLoaded", function () {
 
                 const stageSelect = document.getElementById("stage_num");
                 const stagesContainer = document.getElementById("stagesContainer");
@@ -243,42 +241,34 @@ $error = "";
                 return;
                 }
 
+    for (let i = 1; i <= stageCount; i++) {
 
-                
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
 
-                for (let i = 1; i <= stageCount; i++) { //begin 1st for loop
+      let answersHTML = "";
 
-                const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
+    // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
+    for (let a = 1; a <= 3; a++) {
+        answersHTML += `
+            <input type="text"
+                   id = "0"
+                   class="stage_questions_false"
+                   name="stages[${i}][answers][${a}][text]"
+                   placeholder="False Answer ${a}" required>
+            <br>
+        `;
+    }
 
-                let answersHTML = "";
-
-                // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
-                for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer 
-                answersHTML += `
-                    <input type="text"
-                        class="stage_questions_false"
-                        name="stages[${i}][answers][${a}][text]"
-                        placeholder="False Answer ${a}" required>
-
-                    <input type="hidden" 
-                        name="stages[${i}][answers][${a}][is_correct]"
-                        value="0">
-
-                    <br>
-                `;
-            }
-
-                // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
-                answersHTML += `
-                <input type="text"
-                    class="stage_questions_correct"
-                    name="stages[${i}][answers][4][text]"
-                    placeholder="Correct Answer" required>
-
-                <input type="hidden"
-                    name="stages[${i}][answers][4][is_correct]"
-                    value="1">
-            `;
+    // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
+    answersHTML += `
+        <div class="stage_answers_correct">
+            <strong>Correct Answer:</strong><br>
+            <input type="text"
+                   id="${i}
+                   name="stages[${i}][answers][4][text]"
+                   required>
+        </div>
+    `;
 
                 stageDiv.innerHTML = `
                 <div class="stage_number"> 
@@ -287,19 +277,19 @@ $error = "";
 
                     <br><br>
 
-                    <div class="stage_title">
-                        <label>Stage Title:</label><br>
-                        <input type="text" name="stages[${i}][title]" required />
-                    </div>
+        <div class="stage_title">
+            <label>Stage Title:</label><br>
+            <input type="text" name="stageTitle_${i}" required />
+        </div>
 
-                    <br><br>
+        <br><br>
 
-                    <div class="stage_questions">
-                        <!-- question -->
-                        <label>Question:</label><br>
-                        <input type="text" name="stages[${i}][question]" id="${i}" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
-                    </div>
-                            <br><br>
+        <div class="stage_questions">
+            <!-- question -->
+            <label>Question:</label><br>
+            <input type="text" name="stages[${i}][question]" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
+        </div>
+                <br><br>
 
                     <div class="stage_image">
                         <!-- img upload -->
@@ -310,23 +300,23 @@ $error = "";
 
                     <br><br>
 
-                    <div class="stage_answers">
-                        <strong>False Answers:</strong><br>
-                        ${answersHTML}
-                    </div>
-                `;
+        <div class="stage_answers">
+            <strong>False Answers:</strong><br>
+            ${answersHTML}
+        </div>
+      `;
 
-                
-                
-                stagesContainer.appendChild(stageDiv);
+      
+      
+      stagesContainer.appendChild(stageDiv);
 
-                
-                
-                
-                } //end 1st for loop
-            });
+    
+      
+      
+    }
+  });
 
-            });
-            </script>
+});
+</script>
 
     <?php 
