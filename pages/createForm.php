@@ -13,14 +13,7 @@ $error = "";
 // form submission handling below 
 //strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
 // if ($_SERVER["REQUEST_METHOD"] === "POST") {
-// if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-//     $name = trim($_POST["name"]);
-//     $description = trim($_POST["description"]);
-//     $NumOfLessons = $_POST["videoCount"] ?? 0;
-//     $notes = $_POST["notes"] ?? "";
-//     $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
-//     $compTime = $_POST["estimate"] ?? 0;
 //     $name = trim($_POST["name"]);
 //     $description = trim($_POST["description"]);
 //     $NumOfLessons = $_POST["videoCount"] ?? 0;
