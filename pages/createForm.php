@@ -140,10 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     >
 </div>
     
-<div id="stagesContainer"></div>
+<div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
-
-<div id="stagesContainer"></div>
 
 <div id="videoInputs"></div><br>
     
@@ -226,7 +224,7 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 <script>
-    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
     document.addEventListener("DOMContentLoaded", function () {
 
     const stageSelect = document.getElementById("stage_num");
@@ -245,7 +243,32 @@ document.getElementById("estimate").addEventListener("input", function () {
 
     for (let i = 1; i <= stageCount; i++) {
 
-      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount;
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
+
+      let answersHTML = "";
+
+    // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
+    for (let a = 1; a <= 3; a++) {
+        answersHTML += `
+            <input type="text"
+                   id = "0"
+                   class="stage_questions_false"
+                   name="stages[${i}][answers][${a}][text]"
+                   placeholder="False Answer ${a}" required>
+            <br>
+        `;
+    }
+
+    // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
+    answersHTML += `
+        <div class="stage_answers_correct">
+            <strong>Correct Answer:</strong><br>
+            <input type="text"
+                   id="${i}
+                   name="stages[${i}][answers][4][text]"
+                   required>
+        </div>
+    `;
 
       stageDiv.innerHTML = `
        <div class="stage_number"> 
@@ -255,11 +278,12 @@ document.getElementById("estimate").addEventListener("input", function () {
         <br><br>
 
         <div class="stage_title">
-            <label>Stage Title:</label>
+            <label>Stage Title:</label><br>
             <input type="text" name="stageTitle_${i}" required />
         </div>
 
         <br><br>
+
         <div class="stage_questions">
             <!-- question -->
             <label>Question:</label><br>
@@ -277,49 +301,25 @@ document.getElementById("estimate").addEventListener("input", function () {
         <br><br>
 
         <div class="stage_answers">
-            <!-- answers -->
-            <strong>Answers:</strong><br>
+            <strong>False Answers:</strong><br>
+            ${answersHTML}
         </div>
-
-                <hr>
-
       `;
 
       
-
+      
       stagesContainer.appendChild(stageDiv);
+
+    
+      
       
     }
   });
 
-  function generateAnswers(stageNumber) {
-
-        let answersHTML = "";
-
-        for (let a = 1; a <= 4; a++) {
-
-            answersHTML += `
-                <input type="text"
-                       name="stages[${stageNumber}][answers][${a}][text]"
-                       placeholder="Answer ${a}" required>
-
-                <input type="radio"
-                       name="stages[${stageNumber}][correct]"
-                       value="${a}" required> Correct
-                <br>
-            `;
-        }
-
-        return answersHTML;
-    }
-
 });
-
-
-    
-
 </script>
 
+<?php 
 
 
         
