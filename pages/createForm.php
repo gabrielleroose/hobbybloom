@@ -151,6 +151,7 @@ $error = "";
 <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
+<div id="stagesContainer"></div>
 
     
 
@@ -336,4 +337,10 @@ $error = "";
 });
 </script>
 
-    <?php 
+<?php 
+
+
+        
+
+
+        
