@@ -13,7 +13,14 @@ $error = "";
 // form submission handling below 
 //strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
 // if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+//     $name = trim($_POST["name"]);
+//     $description = trim($_POST["description"]);
+//     $NumOfLessons = $_POST["videoCount"] ?? 0;
+//     $notes = $_POST["notes"] ?? "";
+//     $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
+//     $compTime = $_POST["estimate"] ?? 0;
 //     $name = trim($_POST["name"]);
 //     $description = trim($_POST["description"]);
 //     $NumOfLessons = $_POST["videoCount"] ?? 0;
@@ -248,27 +255,32 @@ $error = "";
       let answersHTML = "";
 
     // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
-    for (let a = 1; a <= 3; a++) {
-        answersHTML += `
-            <input type="text"
-                   id = "0"
-                   class="stage_questions_false"
-                   name="stages[${i}][answers][${a}][text]"
-                   placeholder="False Answer ${a}" required>
-            <br>
-        `;
-    }
+    for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer
+    answersHTML += `
+        <input type="text"
+               class="stage_questions_false"
+               name="stages[${i}][answers][${a}][text]"
+               placeholder="False Answer ${a}" required>
+
+        <input type="hidden" 
+               name="stages[${i}][answers][${a}][is_correct]"
+               value="0">
+
+        <br>
+    `;
+}
 
     // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
     answersHTML += `
-        <div class="stage_answers_correct">
-            <strong>Correct Answer:</strong><br>
-            <input type="text"
-                   id="${i}
-                   name="stages[${i}][answers][4][text]"
-                   required>
-        </div>
-    `;
+    <input type="text"
+           class="stage_questions_correct"
+           name="stages[${i}][answers][4][text]"
+           placeholder="Correct Answer" required>
+
+    <input type="hidden"
+           name="stages[${i}][answers][4][is_correct]"
+           value="1">
+`;
 
                 stageDiv.innerHTML = `
                 <div class="stage_number"> 
