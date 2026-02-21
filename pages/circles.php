@@ -17,7 +17,6 @@
 
         <div class="search-row">
             <input type="text" class="search-bar" placeholder="Search">
-            <a href="chat.php" class="chat-icon-link">💬</a>
         </div>
 
         <h2>Your Circles</h2>
