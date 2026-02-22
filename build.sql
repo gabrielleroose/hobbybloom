@@ -1,4 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;  
+DROP TABLE IF EXISTS user_follows;
 DROP TABLE IF EXISTS user_profiles;
 DROP TABLE IF EXISTS feed;
 DROP TABLE IF EXISTS log;
@@ -61,6 +62,15 @@ CREATE TABLE user_profiles (
     FOREIGN KEY (user_id) REFERENCES users(id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE user_follows (
+    follower_id INT NOT NULL,
+    followed_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (follower_id, followed_id),
+    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (followed_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE tag (
@@ -205,6 +215,8 @@ CREATE TABLE events (
         ON DELETE SET NULL
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+
 
 -- TEST DATA --
 
