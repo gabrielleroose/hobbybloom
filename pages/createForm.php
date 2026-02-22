@@ -248,14 +248,17 @@ $error = "";
                 return;
                 }
 
-    for (let i = 1; i <= stageCount; i++) {
+
+    
+
+    for (let i = 1; i <= stageCount; i++) { //begin 1st for loop
 
       const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
 
       let answersHTML = "";
 
     // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
-    for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer
+    for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer 
     answersHTML += `
         <input type="text"
                class="stage_questions_false"
@@ -291,7 +294,7 @@ $error = "";
 
         <div class="stage_title">
             <label>Stage Title:</label><br>
-            <input type="text" name="stageTitle_${i}" required />
+            <input type="text" name="stage_title_${i}" required />
         </div>
 
         <br><br>
@@ -299,7 +302,7 @@ $error = "";
         <div class="stage_questions">
             <!-- question -->
             <label>Question:</label><br>
-            <input type="text" name="stages[${i}][question]" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
+            <input type="text" name="stages[${i}][question]" id="${i}" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
         </div>
                 <br><br>
 
@@ -325,7 +328,7 @@ $error = "";
     
       
       
-    }
+    } //end 1st for loop
   });
 
 });
