@@ -156,16 +156,20 @@ $hobbyColors = [
             <?php foreach ($myHobbies as $hobby): 
                 $color = $hobbyColors[$hobby] ?? '#cccccc'; 
             ?>
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                <p><?= htmlspecialchars($hobby) ?></p>
-            </div>
+            <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                    <p><?= htmlspecialchars($hobby) ?></p>
+                </div>
+            </a>
             <?php endforeach; ?>
 
-            <div class="story-circle">
-                <div class="circle-img" style="background-color: #cccccc;"></div>
-                <p>General</p>
-            </div>
+            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                <div class="story-circle">
+                    <div class="circle-img" style="background-color: #cccccc;"></div>
+                    <p>General</p>
+                </div>
+            </a>
             
         </div>
     </div>

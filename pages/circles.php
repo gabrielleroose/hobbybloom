@@ -72,10 +72,12 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($myHobbies as $hobby): 
                     $color = $hobbyColors[$hobby] ?? '#cccccc'; 
                 ?>
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                    <p style="color: white; font-size: 12px; margin-top: 5px; text-align: center;"><?= htmlspecialchars($hobby) ?></p>
-                </div>
+                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                        <p style="color: white; font-size: 12px; margin-top: 5px; text-align: center;"><?= htmlspecialchars($hobby) ?></p>
+                    </div>
+                </a>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
