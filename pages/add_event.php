@@ -1,23 +1,41 @@
 <?php
+// Turn off standard error display so it doesn't break JSON format
+ini_set('display_errors', 0);
 require_once 'db.php';
 
-$data = json_decode(file_get_contents("php://input"), true);
+header('Content-Type: application/json');
 
-$title = $data['title'];
-$date = $data['date'];
-$time = $data['time'];
-$description = $data['description'];
+try {
+    $input = file_get_contents("php://input");
+    $data = json_decode($input, true);
 
-$sql = "INSERT INTO events (title, event_date, event_time, description)
-        VALUES (:title, :event_date, :event_time, :description)";
+    // Check if data was received
+    if (!$data) {
+        throw new Exception("No data received from the frontend.");
+    }
 
-$stmt = $conn->prepare($sql);
+    // Strict Validation
+    if (empty($data['title']) || empty($data['date']) || empty($data['time'])) {
+        throw new Exception("Missing required fields: Title, Date, or Time.");
+    }
 
-$stmt->execute([
-    ':title' => $title,
-    ':event_date' => $date,
-    ':event_time' => $time,
-    ':description' => $description
-]);
+    $sql = "INSERT INTO events (title, event_date, event_time, description)
+            VALUES (:title, :event_date, :event_time, :description)";
 
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':title'        => $data['title'],
+        ':event_date'   => $data['date'],
+        ':event_time'   => $data['time'],
+        ':description'  => $data['description'] ?? null
+    ]);
 
+    echo json_encode(["status" => "success", "message" => "Event saved to database!"]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "message" => $e->getMessage()
+    ]);
+}
