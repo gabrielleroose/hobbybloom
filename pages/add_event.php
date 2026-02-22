@@ -20,4 +20,35 @@ $stmt->execute([
     ':description' => $description
 ]);
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$client = new Google_Client();
+$client->setAuthConfig(__DIR__ . '/../credentials.json');
+$client->addScope(Google_Service_Calendar::CALENDAR);
+
+$accessToken = json_decode(file_get_contents(__DIR__ . '/../token.json'), true);
+$client->setAccessToken($accessToken);
+
+$service = new Google_Service_Calendar($client);
+
+$startDateTime = $date . 'T' . $time . ':00';
+$endDateTime = $date . 'T' . $time . ':00';
+
+$event = new Google_Service_Calendar_Event([
+    'summary' => $title,
+    'description' => $description,
+    'start' => [
+        'dateTime' => $startDateTime,
+        'timeZone' => 'America/Indiana/Indianapolis',
+    ],
+    'end' => [
+        'dateTime' => $endDateTime,
+        'timeZone' => 'America/Indiana/Indianapolis',
+    ],
+]);
+
+$calendarId = 'primary'; // or your specific calendar ID
+$service->events->insert($calendarId, $event);
+
+
 

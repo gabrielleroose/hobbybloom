@@ -57,8 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         eventClick: function(info){
-            alert(info.event.extendedProps.description);
+            if (confirm("Delete this event?")) {
+
+                fetch('delete_event.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: info.event.id
+                    })
+                })
+                .then(() => {
+                    info.event.remove(); // removes from calendar instantly
+                });
+            }
         }
+        
     });
 
     calendar.render();
