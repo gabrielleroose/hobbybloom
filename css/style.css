@@ -948,3 +948,11 @@ h2 {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+
+
+
+/* *************************** CALENDAR STYLES *************************** */
+
+.calendar{
+  border: 3px solid yellow;
+}
