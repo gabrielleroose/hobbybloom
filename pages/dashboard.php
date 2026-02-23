@@ -112,9 +112,12 @@ $hobbyColors = [
     <title>Dashboard</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 </head>
 
-<body>
+<body class="body-dashboard">
 
 <main class="main-dashboard">
 
@@ -123,10 +126,18 @@ $hobbyColors = [
     </div>
 
     <div class="dash-display">
+        <div class="dash-display-streak">
         <p>My Dashboard</p>
         <p class="streak">🔥<?= $streak ?> Day Streak</p>
+        </div>
+
+        <div class="dash-calendar" >
+        <h3 style="color: #333; margin-bottom: 10px;">Upcoming Schedule</h3>
+        <div id="calendar-mini"></div>
+        <a href="calendar.php" style="display: block; margin-top: 10px; text-align: right; color: #2c6ca3; text-decoration: none; font-size: 0.9rem;">View Full Calendar →</a>
+        </div>
     </div>
-    
+
     <div class="dash-heading"><p>Jump Back In!</p></div>
     <div class="dash-item">
         <?php if ($currentModule): ?>
@@ -181,6 +192,22 @@ $hobbyColors = [
     </div>
 
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar-mini');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'listWeek', // Shows events as a clean list for the week
+        headerToolbar: false,    // Hides navigation to keep it compact
+        height: 'auto',
+        events: 'load_events.php', // Reuses your existing events loader!
+        eventClick: function(info) {
+            alert("Event: " + info.event.title + "\nDescription: " + info.event.extendedProps.description);
+        }
+    });
+    calendar.render();
+});
+</script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

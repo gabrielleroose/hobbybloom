@@ -795,8 +795,24 @@ h2 {
 
 /* ********************* DASHBOARD STYLES ********************* */
 
+.body-dashboard{
+  /* background: #020024;
+background: radial-gradient(circle, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 0.51) 53%, rgba(0, 212, 255, 1) 100%); */
+
+/* background: #020024;
+background: radial-gradient(circle, rgba(2, 0, 36, 1) 0%, rgba(30, 80, 119, 0.51) 53%, rgba(0, 212, 255, 1) 100%); */
+
+/* background: #1E5077;
+background: radial-gradient(circle, rgba(30, 80, 119, 1) 0%, rgba(0, 212, 255, 0.75) 53%, rgba(0, 143, 45, 1) 100%); */
+
+/* background: #205077;
+background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75) 53%, rgba(0, 212, 255, 1) 100%); */
+
+background: url(../images/plants-grow.jpg);
+}
+
 .main-dashboard {
-  background-color: #F1F2F5;
+  /* background-color: #F1F2F5; */
   border-radius: 1rem;
   /* box-shadow: 1px 1px #434343; */
   width: 100%;
@@ -806,6 +822,7 @@ h2 {
   margin: 0 auto;
 }
 
+
 .my-dashboard {
   padding-left: 4rem;
   font-size: var(--text-size-2xl);
@@ -813,13 +830,20 @@ h2 {
 }
 
 .dash-display {
-  margin: 0 auto;
-  width: 60%;
-  background-color: #1E5077;
+  /* margin: 0 auto; */
+  /* width: 60%; */
+  /* background-color: #1E5077; */
+  border: 2px solid #1E5077;
+  height: 250px;
   border-radius: 20px;
   color: white;
-  padding-left: 3rem;
-  font-size: var(--text-size-3xl);
+  /* padding-left: 3rem; */
+  /* font-size: var(--text-size-3xl); */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  gap: 20px;
 }
 
 .dash-inner {
@@ -836,6 +860,38 @@ h2 {
   font-size: var(--text-size-2xl);
   font-style: italic;
 }
+
+.dash-display-streak{
+  border: 2px solid red;
+  background-color: #1e507781;
+  padding: 2rem;
+  border-radius: 2rem;
+}
+
+.dash-display-streak {
+  /* 1. Translucent background (White at 20% opacity) */
+  background: rgba(255, 255, 255, 0.2);
+  
+  /* 2. The 'Frosting' (Blur effect) */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  
+  /* 3. High-definition border (Light reflecting off the edge) */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  /* 4. Soft shadow to give it 'lift' */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  /* Your existing layout properties */
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 1350px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+
 
 .dash-heading {
   font-size: 30px;
@@ -913,6 +969,60 @@ h2 {
 .horizontal-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* Dashboard Calendar Styles */
+
+.dash-calendar {
+  width: 100%;
+  max-width: 450px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background-color: #1e507781;
+  border-radius: 2rem;
+  color: white;
+  border: 2px solid orange;
+
+  display: flex;
+  flex-direction: column;
+  /* margin: 0 auto; */
+  /* margin-bottom: 2rem; */
+}
+
+.dash-calendar {
+  /* 1. Translucent background (White at 20% opacity) */
+  background: rgba(255, 255, 255, 0.2);
+  
+  /* 2. The 'Frosting' (Blur effect) */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  
+  /* 3. High-definition border (Light reflecting off the edge) */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  /* 4. Soft shadow to give it 'lift' */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  /* Your existing layout properties */
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 1350px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+
+/* Make the list view text match your app's theme */
+.fc-list-event-title a {
+  color: #333 !important;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.fc-list-day-text, .fc-list-day-side-text {
+  color: #2c6ca3 !important;
+}
+
 
 /* ******************************* MODULE CSS ******************************* */
 
