@@ -249,3 +249,10 @@ VALUES
 (1, 'DROP', 0, 2),
 (1, 'CREATE', 0, 3),
 (1, 'GRAB', 0, 4);
+
+INSERT INTO circle (name, uid, description) VALUES 
+('Cooking', 1, 'Share recipes, tips, and culinary masterpieces.'),
+('Knitting', 1, 'Yarn lovers unite. Share your latest patterns.'),
+('Lego', 1, 'Brick by brick, show off your awesome builds.'),
+('Gaming', 1, 'Discuss the latest releases and find teammates.'),
+('Hiking', 1, 'Trail recommendations and gear discussions.');

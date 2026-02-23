@@ -60,8 +60,9 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="page-container">
 
-        <div class="search-row">
-            <input type="text" class="search-bar" placeholder="Search Circles...">
+        <div class="search-row" style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <input type="text" class="search-bar" placeholder="Search Circles..." style="margin-bottom: 0;">
+            <a href="create_circle.php" class="light-btn" style="text-decoration: none; color: white; background-color: #3cb371; display: flex; align-items: center; white-space: nowrap; border: none;">+ Create Circle</a>
         </div>
 
         <h2>Your Circles</h2>
@@ -90,10 +91,12 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php else: ?>
                 <?php foreach ($suggestedCircles as $circle): ?>
-                <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                    <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
-                    <span style="color: #ccc; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars(substr($circle['description'], 0, 30)) ?>...</span>
-                </div>
+                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
+                    <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+                        <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
+                        <span style="color: #ccc; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars(substr($circle['description'], 0, 30)) ?>...</span>
+                    </div>
+                </a>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
