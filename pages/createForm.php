@@ -1,6 +1,3 @@
-
-
-
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1);
@@ -98,12 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body>
-<?php include 'base.php'; ?>
 <?php include 'base.php'; ?>
 
 <h2>Create a Module</h2>
@@ -174,14 +167,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     required
     >
 
-    <input
-    type="number"
-    id="estimate"
-    name="estimate"
-    min="1"
-    required
-    >
-
 <p id="formattedOutput"></p>
 
 
@@ -190,7 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </form>
 
 </body>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </html>
 
@@ -257,7 +241,7 @@ document.getElementById("estimate").addEventListener("input", function () {
 
     for (let i = 1; i <= stageCount; i++) {
 
-      const stageDiv = document.createElement("div"); //loops through values from i=1 to max of stageCount;
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount;
 
       stageDiv.innerHTML = `
        <div class="stage_number"> 
