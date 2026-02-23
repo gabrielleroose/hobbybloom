@@ -35,6 +35,7 @@ CREATE TABLE circle (
     name VARCHAR(40) NOT NULL,
     uid INT NOT NULL,
     description TEXT,
+    color VARCHAR(7) DEFAULT '#1f5077',
     PRIMARY KEY (circle_id),
     FOREIGN KEY (uid) REFERENCES users(id)
         ON DELETE CASCADE
@@ -53,7 +54,7 @@ CREATE TABLE circle_messages (
 CREATE TABLE user_profiles (
     profile_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    gender VARCHAR(50),
+    profile_color VARCHAR(7) DEFAULT '#1f5077',
     hometown VARCHAR(100),
     bio TEXT,
     hobbies TEXT,
