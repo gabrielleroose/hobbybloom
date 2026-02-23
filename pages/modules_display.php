@@ -72,6 +72,10 @@ foreach ($mod_id_list as $id) {
 
 <body>
     <div class="module_back_container">
+        <div>
+            <button><a href="createForm.php">Create a New Module!</a></button>
+
+        </div>
         <?php foreach ($all_mods as $mod): ?>
             <div class="module_outter_card">
 
