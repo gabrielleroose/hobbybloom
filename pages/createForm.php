@@ -135,6 +135,8 @@ $error = "";
                             max="5"
                             onchange="generateVideoInputs()">
 
+    <div id="videoInputs"></div><br>
+
 <div>
     <label>Number of lessons:</label><br>
     <input 
@@ -149,7 +151,7 @@ $error = "";
 <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
-<div id="videoInputs"></div><br>
+
     
 
                             <label>Notes:</label><br>
@@ -294,7 +296,7 @@ $error = "";
 
         <div class="stage_title">
             <label>Stage Title:</label><br>
-            <input type="text" name="stage_title_${i}" required />
+            <input type="text" name="stages[${i}][title]" required />
         </div>
 
         <br><br>
