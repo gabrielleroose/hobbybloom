@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Recomended experince level:</label><br>
         <select id="xpLevel" name="xpLevel">
             <option value="Beginner" selected>Beginner</option>
-            <option value="Intermidate">Intermidate</option>
+            <option value="Intermediate">Intermediate</option>
             <option value="Expert">Expert</option>
         </select>
         <br><br>
