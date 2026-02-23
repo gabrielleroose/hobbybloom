@@ -9,27 +9,29 @@ if (!isset($_SESSION['user']['id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $_SESSION['user']['id'];
     
+    $username = trim($_POST['username']);
     $age = $_POST['age'];
-    $gender = $_POST['gender'];
     $hometown = $_POST['from']; 
     $bio = $_POST['bio'] ?? '';
     $hobbies = $_POST['selected_hobbies'];
 
     try {
-        $stmt = $conn->prepare("UPDATE users SET age = ? WHERE id = ?");
-        $stmt->execute([$age, $userId]);
+        $stmt = $conn->prepare("UPDATE users SET age = ?, username = ? WHERE id = ?");
+        $stmt->execute([$age, $username, $userId]);
+        
+        $_SESSION['user']['name'] = $username;
 
         $check = $conn->prepare("SELECT profile_id FROM user_profiles WHERE user_id = ?");
         $check->execute([$userId]);
         
         if ($check->fetch()) {
-            $sql = "UPDATE user_profiles SET gender=?, hometown=?, bio=?, hobbies=? WHERE user_id=?";
+            $sql = "UPDATE user_profiles SET hometown=?, bio=?, hobbies=? WHERE user_id=?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$gender, $hometown, $bio, $hobbies, $userId]);
+            $stmt->execute([$hometown, $bio, $hobbies, $userId]);
         } else {
-            $sql = "INSERT INTO user_profiles (user_id, gender, hometown, bio, hobbies) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO user_profiles (user_id, hometown, bio, hobbies) VALUES (?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$userId, $gender, $hometown, $bio, $hobbies]);
+            $stmt->execute([$userId, $hometown, $bio, $hobbies]);
         }
 
         header("Location: dashboard.php");

@@ -42,7 +42,7 @@ $stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
 $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $msgStmt = $conn->prepare("
-    SELECT cm.message, cm.created_at, u.username 
+    SELECT cm.message, cm.created_at, u.id AS user_id, u.username 
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
     WHERE cm.hobby_name = ?
@@ -50,7 +50,6 @@ $msgStmt = $conn->prepare("
 ");
 $msgStmt->execute([$currentHobby]);
 $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 $memStmt = $conn->prepare("
     SELECT u.id, u.username, 
@@ -102,95 +101,94 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
     <div class="page-container">
+        <div class="page-container-inside">
         
-        <div style="background-color: <?= $headerColor ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
-            <h1 style="color: #333; margin: 0; font-size: 32px; font-weight: bold;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
-            <p style="color: #555; margin-top: 10px;">Connect, share, and learn about <?= htmlspecialchars(strtolower($currentHobby)) ?>!</p>
-            
-            <form action="circle_action.php" method="POST" style="margin-top: 20px;">
-                <input type="hidden" name="action" value="toggle_circle">
-                <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
-                <?php if ($isMember): ?>
-                    <button type="submit" style="background-color: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">✓ Member (Leave)</button>
-                <?php else: ?>
-                    <button type="submit" style="background-color: white; color: #333; border: 2px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">+ Join Circle</button>
-                <?php endif; ?>
-            </form>
-        </div>
-
-        <h2>Circle Members</h2>
-        <div class="member-list">
-            <?php if (empty($members)): ?>
-                <p style="color: #666; margin: 0; text-align: center;">You are the only member so far! Invite some friends.</p>
-            <?php else: ?>
-                <?php foreach ($members as $mem): ?>
-                    <div class="member-row">
-                        <div>
-                            <div class="member-avatar" style="background-color: #<?= substr(md5($mem['username']), 0, 6) ?>;"></div>
-                            <strong><?= htmlspecialchars($mem['username']) ?></strong>
-                        </div>
-                        
-                        <form action="circle_action.php" method="POST" style="margin: 0;">
-                            <input type="hidden" name="action" value="toggle_follow">
-                            <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
-                            <input type="hidden" name="target_id" value="<?= $mem['id'] ?>">
-                            <?php if ($mem['am_following']): ?>
-                                <button type="submit" class="light-btn" style="background-color: #eee; color: #333; border: 1px solid #ccc; font-size: 12px;">Following</button>
-                            <?php else: ?>
-                                <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; font-size: 12px;">Follow</button>
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-
-        <h2>Modules in this Circle</h2>
-        <?php if (empty($circleModules)): ?>
-            <div class="info-box" style="background-color: #1f5077;">
-                <p>No modules found for this circle yet. Be the first to create one!</p><br>
-                <a href="createForm.php" class="light-btn" style="text-decoration: none; color: #333;">Create Module</a>
+            <div style="background-color: <?= $headerColor ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
+                <h1 style="color: #333; margin: 0; font-size: 32px; font-weight: bold;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+                <p style="color: #555; margin-top: 10px;">Connect, share, and learn about <?= htmlspecialchars(strtolower($currentHobby)) ?>!</p>
+                
+                <form action="circle_action.php" method="POST" style="margin-top: 20px;">
+                    <input type="hidden" name="action" value="toggle_circle">
+                    <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
+                    <?php if ($isMember): ?>
+                        <button type="submit" style="background-color: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">✓ Member (Leave)</button>
+                    <?php else: ?>
+                        <button type="submit" style="background-color: white; color: #333; border: 2px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">+ Join Circle</button>
+                    <?php endif; ?>
+                </form>
             </div>
-        <?php else: ?>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <?php foreach ($circleModules as $mod): ?>
-                    <div class="info-card" style="background-color: #1f5077; color: white; border: none;">
-                        <div class="card-row-between">
-                            <h4 style="color: white; font-size: 20px; margin: 0;"><?= htmlspecialchars($mod['name']) ?></h4>
-                            <span style="background-color: <?= $headerColor ?>; color: #333; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;"><?= htmlspecialchars($mod['exp_level']) ?></span>
-                        </div>
-                        <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;"><?= htmlspecialchars($mod['description']) ?></p>
-                        <a href="module.php?id=<?= $mod['id'] ?>" class="light-btn" style="text-decoration: none; display: inline-block;">View Module</a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
 
-        <div class="chat-container">
-            <h2 style="margin-top: 0; margin-bottom: 15px; color: white;">Circle Discussion</h2>
-            <div class="chat-box" id="chatBox">
-                <?php if (empty($chatMessages)): ?>
-                    <p style="text-align: center; color: #999; margin-top: 20px;">No messages yet. Say hello!</p>
+            <h2>Circle Members</h2>
+            <div class="member-list">
+                <?php if (empty($members)): ?>
+                    <p style="color: #666; margin: 0; text-align: center;">You are the only member so far! Invite some friends.</p>
                 <?php else: ?>
-                    <?php foreach ($chatMessages as $msg): 
-                        $isMine = ($msg['username'] === $_SESSION['user']['name']) ? 'mine' : '';
-                    ?>
-                        <div class="chat-message <?= $isMine ?>">
-                            <div class="chat-author"><?= htmlspecialchars($msg['username']) ?></div>
-                            <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                    <?php foreach ($members as $mem): ?>
+                        <div class="member-row">
+                            <div>
+                                <div class="member-avatar" style="background-color: #<?= substr(md5($mem['username']), 0, 6) ?>;"></div>
+                                <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
+                            </div>
+                            
+                            <form action="circle_action.php" method="POST" style="margin: 0;">
+                                <input type="hidden" name="action" value="toggle_follow">
+                                <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
+                                <input type="hidden" name="target_id" value="<?= $mem['id'] ?>">
+                                <?php if ($mem['am_following']): ?>
+                                    <button type="submit" class="light-btn" style="background-color: #eee; color: #333; border: 1px solid #ccc; font-size: 12px;">Following</button>
+                                <?php else: ?>
+                                    <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; font-size: 12px;">Follow</button>
+                                <?php endif; ?>
+                            </form>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <form method="POST" class="chat-input-row">
-                <input type="text" name="chat_message" class="chat-input" placeholder="Type a message..." required autocomplete="off">
-                <button type="submit" class="light-btn" style="background-color: <?= $headerColor ?>; border: none; font-weight: bold; padding: 10px 20px; color: #333;">Send</button>
-            </form>
-        </div>
 
-    </div>
+            <h2>Modules in this Circle</h2>
+            <?php if (empty($circleModules)): ?>
+                <div class="info-box" style="background-color: #1f5077;">
+                    <p>No modules found for this circle yet. Be the first to create one!</p><br>
+                    <a href="createForm.php" class="light-btn" style="text-decoration: none; color: #333;">Create Module</a>
+                </div>
+            <?php else: ?>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <?php foreach ($circleModules as $mod): ?>
+                        <div class="info-card" style="background-color: #1f5077; color: white; border: none;">
+                            <div class="card-row-between">
+                                <h4 style="color: white; font-size: 20px; margin: 0;"><?= htmlspecialchars($mod['name']) ?></h4>
+                                <span style="background-color: <?= $headerColor ?>; color: #333; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;"><?= htmlspecialchars($mod['exp_level']) ?></span>
+                            </div>
+                            <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;"><?= htmlspecialchars($mod['description']) ?></p>
+                            <a href="module.php?id=<?= $mod['id'] ?>" class="light-btn" style="text-decoration: none; display: inline-block;">View Module</a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
-    <script>
+            <div class="chat-container">
+                <h2 style="margin-top: 0; margin-bottom: 15px; color: white;">Circle Discussion</h2>
+                <div class="chat-box" id="chatBox">
+                    <?php if (empty($chatMessages)): ?>
+                        <p style="text-align: center; color: #999; margin-top: 20px;">No messages yet. Say hello!</p>
+                    <?php else: ?>
+                        <?php foreach ($chatMessages as $msg): 
+                            $isMine = ($msg['username'] === $_SESSION['user']['name']) ? 'mine' : '';
+                        ?>
+                            <div class="chat-message <?= $isMine ?>">
+                                <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-author" style="text-decoration: none; color: inherit; display: block;"><?= htmlspecialchars($msg['username']) ?></a>
+                                <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <form method="POST" class="chat-input-row">
+                    <input type="text" name="chat_message" class="chat-input" placeholder="Type a message..." required autocomplete="off">
+                    <button type="submit" class="light-btn" style="background-color: <?= $headerColor ?>; border: none; font-weight: bold; padding: 10px 20px; color: #333;">Send</button>
+                </form>
+            </div>
+
+        </div> </div> <script>
         const chatBox = document.getElementById('chatBox');
         chatBox.scrollTop = chatBox.scrollHeight;
     </script>
