@@ -151,7 +151,7 @@ $error = "";
                             <label>Notes:</label><br>
                             <textarea name="notes" rows="4" cols="40"></textarea><br><br>
 
-                            <label>Recomended experince level:</label><br>
+                            <label>Recomended experience level:</label><br>
                                 <select id="exp_level" name="exp_level">
                                     <option value="beginner" selected>Beginner</option>
                                     <option value="intermediate">Intermediate</option>
