@@ -882,7 +882,7 @@ h2 {
   border-radius: 30px;
   background-color: #F1F2F5;
   margin: 2% auto;
-  padding-top: 4rem;
+  /* padding-top: 4rem; */
   align-content: center;
   transition: transform 0.3s ease-in-out;
 }
@@ -898,15 +898,9 @@ h2 {
 
 }
 
-
-
 .module_inner_card {
-  padding: 20px;
-  width: 85%;
-  height: 65%;
-  border-radius: 30px;
-  /* background-color: #2c6ca3; */
-  margin: 10% 10%;
+  width: 100%;
+  padding-left: 4rem;
 }
 
 .module_display_entry_button{
@@ -917,6 +911,15 @@ h2 {
   border: none;
   font-weight: bold;
 }
+
+.module_display_entry_button:hover{
+  background-color: rgb(145, 239, 183);
+}
+
+.exp_level{
+  font-style: italic;
+}
+
 
 
 .chat-container {
