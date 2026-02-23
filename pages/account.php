@@ -123,6 +123,19 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
         </div>
+
+        <div style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 30px; text-align: center;">
+            <h3 style="color: #ff6b6b; margin-top: 0; font-size: 24px;">Danger Zone</h3>
+            <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">Once you delete your account, there is no going back. Please be certain.</p>
+            
+            <form action="delete_account.php" method="POST" onsubmit="return confirm('Are you absolutely sure you want to delete your account? This will permanently erase your profile, circles, modules, and chat history.');">
+                <input type="hidden" name="delete_account" value="1">
+                <button type="submit" style="background-color: transparent; border: 2px solid #ff6b6b; color: #ff6b6b; padding: 10px 25px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                    Delete My Account
+                </button>
+            </form>
+        </div>
+
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
