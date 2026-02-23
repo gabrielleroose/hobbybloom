@@ -2,6 +2,7 @@
 
 
 <?php
+session_start();
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1);
 
@@ -112,7 +113,7 @@ $error = "";
     <p style="color:green;">Module created successfully!</p>
 <?php endif; ?>
 
-<form method="POST" action="form_processing.php">
+<form method="POST" action="form_processing.php" enctype="multipart/form-data">
     <label>Module Name:</label><br>
     <input type="text" name="name" required><br><br>
 
@@ -128,6 +129,8 @@ $error = "";
     max="5"
     onchange="generateVideoInputs()">
 
+    <div id="videoInputs"></div><br>
+
 <div>
     <label>Number of lessons:</label><br>
     <input 
@@ -142,17 +145,17 @@ $error = "";
 <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
-<div id="videoInputs"></div><br>
+
     
 
     <label>Notes:</label><br>
     <textarea name="notes" rows="4" cols="40"></textarea><br><br>
 
     <label>Recomended experince level:</label><br>
-        <select id="xpLevel" name="xpLevel">
-            <option value="Beginner" selected>Beginner</option>
-            <option value="Intermidate">Intermidate</option>
-            <option value="Expert">Expert</option>
+        <select id="exp_level" name="exp_level">
+            <option value="beginner" selected>Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
         </select>
         <br><br>
     
@@ -286,7 +289,7 @@ document.getElementById("estimate").addEventListener("input", function () {
 
         <div class="stage_title">
             <label>Stage Title:</label><br>
-            <input type="text" name="stage_title_${i}" required />
+            <input type="text" name="stages[${i}][title]" required />
         </div>
 
         <br><br>

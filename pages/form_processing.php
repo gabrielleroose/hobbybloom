@@ -1,87 +1,130 @@
 <?php
 
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'db.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/twig.php';
 
-//get user's Google ID from session
-
+// get user's google_id
 $googleId = $_SESSION['google_id'] ?? null;
 
-//check if they're logged in. if not, return to index.php
+// check if they're logged in
 if (!$googleId) {
     header('Location: index.php');
     exit;
 }
 
-$pdo->beginTransaction();
+try {
 
-$user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+    $conn->beginTransaction();
 
-$stmt = $pdo->prepare($user_id_sql);
-$stmt->execute([':gid' => $googleId]);
+    // get user_id
+    $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+    $stmt = $conn->prepare($user_id_sql);
+    $stmt->execute([':gid' => $googleId]);
 
-$user_id = $stmt->fetchColumn();
+    $user_id = $stmt->fetchColumn();
 
-
-
-
-$module_name = htmlspecialchars($_POST['name'] ?? []);
-$cid = $user_id;
-$rating = htmlspecialchars($_POST['rating'] ?? []);
-$exp_level = htmlspecialchars($_POST['username'] ?? []);
-$mod_description = htmlspecialchars($_POST['description'] ?? []);
-$num_lessons = ($_POST['stage_num'] ?? []);
-$est_comp_time = htmlspecialchars($_POST['estimate'] ?? []);
-$notes = htmlspecialchars($_POST['notes'] ?? []);
-
-$module_insert_sql = "INSERT INTO module (name, cid, description, rating, exp_level, num_lessons, est_comp_time, notes)
-                        VALUES (:module_name, :cid, :mod_description, :rating, :exp_level, :num_lessons, :est_comp_time, :notes)";
-
-$stmt = $pdo->prepare($module_insert_sql);
-$stmt->execute([':module_name' => $module_name, ':cid' => $cid, ':mod_description'=>$mod_description, ':rating'=>$rating, ':exp_level'=>$exp_level, ":num_lessons"=>$num_lessons, ':est_comp_time'=>$est_comp_time, ':notes'=>$notes]);
-
-
-
-
-
-
-
-
-
-foreach ($_POST['stages'] as $stage_num => $stage_data) {
-
-    
-    $correct_answer = null;
-    $false_answers = [];
-
-
-    foreach ($stage_data['question'] as $question) {
-        $stmt = $pdo->prepare("INSERT INTO module_stage_questions (msid, question_text, order_num) VALUES ($msid, $question, $stage_num)");
+    if (!$user_id) {
+        throw new Exception("User not found in database.");
     }
 
+    //grab form data
+    $module_name   = $_POST['name'] ?? null;
+    $cid           = $user_id;
+    $exp_level     = $_POST['exp_level'] ?? null;
+    $mod_description = $_POST['description'] ?? null;
+    $num_lessons   = isset($_POST['stage_num']) ? (int)$_POST['stage_num'] : 0;
+    $est_comp_time = $_POST['estimate'] ?? null;
+    $notes         = $_POST['notes'] ?? null;
 
+    //module insert
+    $module_insert_sql = " 
+        INSERT INTO module 
+        (name, cid, description, exp_level, num_lessons, est_comp_time, notes)
+        VALUES 
+        (:module_name, :cid, :mod_description, :exp_level, :num_lessons, :est_comp_time, :notes)
+    ";
 
-    foreach ($stage_data['answers'] as $answer) {
+    $stmt = $conn->prepare($module_insert_sql);
+    $stmt->execute([
+        ':module_name'  => $module_name,
+        ':cid'          => $cid,
+        ':mod_description' => $mod_description,
+        ':exp_level'    => $exp_level,
+        ':num_lessons'  => $num_lessons,
+        ':est_comp_time'=> $est_comp_time,
+        ':notes'        => $notes
+    ]);
 
-        $text = $answer['text'];
-        $is_correct = $answer['is_correct']; //checks hidden input value of answersHTML div. 
+   
+    $mid = $conn->lastInsertId(); //gets module id
 
-        if ($is_correct == 1) {
-            $correct_answer = $text; //assigns $text of answer to one of two things: a $correctAns variable, or an array of the false answers.
-        } else {
-            $false_answers[] = $text;
-                }
-
-            }
-
-    foreach ($false_answers as $false_answer) {
-
-        $stmt = $pdo->prepare("INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES (?, ?, 0, ?)");
-        $stmt->execute([question id, $false_answer, ]);
-
-}
-        }
     
-?>
+    if (!empty($_POST['stages'])) { //checks if stage empty
+
+        foreach ($_POST['stages'] as $stage_num => $stage_data) {
+
+            // insert stage
+            $module_stages_insert_sql = "
+                INSERT INTO module_stage (mid, stage_num, title)
+                VALUES (:mid, :stage_num, :title)
+            ";
+
+            $stmt = $conn->prepare($module_stages_insert_sql);
+            $stmt->execute([
+                ':mid'       => $mid,
+                ':stage_num' => $stage_num,
+                ':title'     => $stage_data['title']
+            ]);
+
+            $msid = $conn->lastInsertId();
+
+            // insert question
+            $question = $stage_data['question'];
+
+            $module_stage_question_sql = "
+                INSERT INTO module_stage_questions 
+                (msid, question_text, order_num)
+                VALUES (?, ?, ?)
+            ";
+
+            $stmt = $conn->prepare($module_stage_question_sql);
+            $stmt->execute([$msid, $question, $stage_num]);
+
+            $msqid = $conn->lastInsertId();
+
+            // insert answers
+            $ans_num = 1;
+
+            foreach ($stage_data['answers'] as $answer) {
+
+                $stmt = $conn->prepare("
+                    INSERT INTO module_stage_questions_answers
+                    (msqid, answer, is_correct, ans_num)
+                    VALUES (?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $msqid,
+                    $answer['text'],
+                    $answer['is_correct'],
+                    $ans_num
+                ]);
+
+                $ans_num++;
+            }
+        }
+    }
+
+    $conn->commit();
+    echo "Module created successfully!";
+
+} catch (Exception $e) {
+
+    $conn->rollBack();
+    echo "Error: " . $e->getMessage();
+}
