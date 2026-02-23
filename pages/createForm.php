@@ -1,4 +1,5 @@
 <?php
+session_start();
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors', 1);
 
@@ -11,81 +12,81 @@ $error = "";
 
 // form submission handling below 
 //strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $name = trim($_POST["name"]);
-    $description = trim($_POST["description"]);
-    $NumOfLessons = $_POST["videoCount"] ?? 0;
-    $notes = $_POST["notes"] ?? "";
-    $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
-    $compTime = $_POST["estimate"] ?? 0;
-
-
-    if (empty($name)) {
-        $error = "Module name is required.";
-    } else {
-        try {
-            $pdo = new PDO(
-                "mysql:host=$host;dbname=$dbname;charset=utf8",
-                $username,
-                $password
-            );
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $sql = "INSERT INTO module
-            (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
-            VALUES
-            (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
+//     $name = trim($_POST["name"]);
+//     $description = trim($_POST["description"]);
+//     $NumOfLessons = $_POST["videoCount"] ?? 0;
+//     $notes = $_POST["notes"] ?? "";
+//     $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
+//     $compTime = $_POST["estimate"] ?? 0;
 
 
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ":name" => $name,
-                ":description" => $description,
-                ":created_by" => $_SESSION['user_id'],
-                ":Number_of_lessons" => $NumOfLessons,
-                ":notes" => $notes,
-                ":xpLevel" => $xpLevel,
-                ":compTime" => $compTime,
-            ]);
+//     if (empty($name)) {
+//         $error = "Module name is required.";
+//     } else {
+//         try {
+//             $pdo = new PDO(
+//                 "mysql:host=$host;dbname=$dbname;charset=utf8",
+//                 $username,
+//                 $password
+//             );
+//             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//             $sql = "INSERT INTO module
+//             (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
+//             VALUES
+//             (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
 
 
-    $module_id = $pdo->lastInsertId();
+//             $stmt = $pdo->prepare($sql);
+//             $stmt->execute([
+//                 ":name" => $name,
+//                 ":description" => $description,
+//                 ":created_by" => $_SESSION['user_id'],
+//                 ":Number_of_lessons" => $NumOfLessons,
+//                 ":notes" => $notes,
+//                 ":xpLevel" => $xpLevel,
+//                 ":compTime" => $compTime,
+//             ]);
+
+
+//     $module_id = $pdo->lastInsertId();
 
     
         
 
-    if (!empty($_POST['videos'])) {
+//     if (!empty($_POST['videos'])) {
 
-        $videoSQL = "
-            INSERT INTO module_videos
-            (module_id, video_url, lesson_number)
-            VALUES (?, ?, ?)
-        ";
+//         $videoSQL = "
+//             INSERT INTO module_videos
+//             (module_id, video_url, lesson_number)
+//             VALUES (?, ?, ?)
+//         ";
 
-        $videoStmt = $pdo->prepare($videoSQL);
+//         $videoStmt = $pdo->prepare($videoSQL);
 
-        foreach ($_POST['videos'] as $index => $url) {
+//         foreach ($_POST['videos'] as $index => $url) {
 
-            $url = trim($url);
-            if ($url !== "") {
-                $videoStmt->execute([
-                    $module_id,
-                    $url,
-                    $index + 1
-                ]);
-            }
-        }
-    }
+//             $url = trim($url);
+//             if ($url !== "") {
+//                 $videoStmt->execute([
+//                     $module_id,
+//                     $url,
+//                     $index + 1
+//                 ]);
+//             }
+//         }
+//     }
 
 
-            $success = true;
+//             $success = true;
 
-        } catch (PDOException $e) {
-            $error = "Something went wrong saving the module.";
-        }
-    }
-}
+//         } catch (PDOException $e) {
+//             $error = "Something went wrong saving the module.";
+//         }
+//     }
+// }
 ?>
 
 <!DOCTYPE html>
@@ -109,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <p style="color:green;">Module created successfully!</p>
 <?php endif; ?>
 
-<form method="POST">
+<form method="POST" action="form_processing.php" enctype="multipart/form-data">
     <label>Module Name:</label><br>
     <input type="text" name="name" required><br><br>
 
@@ -125,6 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     max="5"
     onchange="generateVideoInputs()">
 
+    <div id="videoInputs"></div><br>
+
 <div>
     <label>Number of lessons:</label><br>
     <input 
@@ -136,22 +139,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     >
 </div>
     
-<div id="stagesContainer"></div>
+<div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
-<div id="stagesContainer"></div>
 
-<div id="videoInputs"></div><br>
     
 
     <label>Notes:</label><br>
     <textarea name="notes" rows="4" cols="40"></textarea><br><br>
 
     <label>Recomended experince level:</label><br>
-        <select id="xpLevel" name="xpLevel">
-            <option value="Beginner" selected>Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Expert">Expert</option>
+        <select id="exp_level" name="exp_level">
+            <option value="beginner" selected>Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
         </select>
         <br><br>
     
@@ -222,7 +223,7 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 <script>
-    //ensures all content is loaded before attempting to load JS- ensures necessary values are present
+    //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
     document.addEventListener("DOMContentLoaded", function () {
 
     const stageSelect = document.getElementById("stage_num");
@@ -239,9 +240,42 @@ document.getElementById("estimate").addEventListener("input", function () {
     return;
     }
 
-    for (let i = 1; i <= stageCount; i++) {
 
-      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount;
+    
+
+    for (let i = 1; i <= stageCount; i++) { //begin 1st for loop
+
+      const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
+
+      let answersHTML = "";
+
+    // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
+    for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer 
+    answersHTML += `
+        <input type="text"
+               class="stage_questions_false"
+               name="stages[${i}][answers][${a}][text]"
+               placeholder="False Answer ${a}" required>
+
+        <input type="hidden" 
+               name="stages[${i}][answers][${a}][is_correct]"
+               value="0">
+
+        <br>
+    `;
+}
+
+    // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
+    answersHTML += `
+    <input type="text"
+           class="stage_questions_correct"
+           name="stages[${i}][answers][4][text]"
+           placeholder="Correct Answer" required>
+
+    <input type="hidden"
+           name="stages[${i}][answers][4][is_correct]"
+           value="1">
+`;
 
       stageDiv.innerHTML = `
        <div class="stage_number"> 
@@ -251,15 +285,16 @@ document.getElementById("estimate").addEventListener("input", function () {
         <br><br>
 
         <div class="stage_title">
-            <label>Stage Title:</label>
-            <input type="text" name="stageTitle_${i}" required />
+            <label>Stage Title:</label><br>
+            <input type="text" name="stages[${i}][title]" required />
         </div>
 
         <br><br>
+
         <div class="stage_questions">
             <!-- question -->
             <label>Question:</label><br>
-            <input type="text" name="stages[${i}][question]" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
+            <input type="text" name="stages[${i}][question]" id="${i}" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
         </div>
                 <br><br>
 
@@ -273,52 +308,22 @@ document.getElementById("estimate").addEventListener("input", function () {
         <br><br>
 
         <div class="stage_answers">
-            <!-- answers -->
-            <strong>Answers:</strong><br>
+            <strong>False Answers:</strong><br>
+            ${answersHTML}
         </div>
-
-                <hr>
-
       `;
 
       
-
-      stagesContainer.appendChild(stageDiv);
       
-    }
-  });
-
-  function generateAnswers(stageNumber) {
-
-        let answersHTML = "";
-
-        for (let a = 1; a <= 4; a++) {
-
-            answersHTML += `
-                <input type="text"
-                       name="stages[${stageNumber}][answers][${a}][text]"
-                       placeholder="Answer ${a}" required>
-
-                <input type="radio"
-                       name="stages[${stageNumber}][correct]"
-                       value="${a}" required> Correct
-                <br>
-            `;
-        }
-
-        return answersHTML;
-    }
-
-});
-
+      stagesContainer.appendChild(stageDiv);
 
     
+      
+      
+    } //end 1st for loop
+  });
 
+});
 </script>
 
-
-
-        
-
-
-        
+<?php 
