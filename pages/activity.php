@@ -11,7 +11,7 @@
 
     <?php include 'base.php'; ?>
 
-    <div class="page-container">
+    <div class="activity-page-container">
 
         <h1>My Activity</h1>
 
