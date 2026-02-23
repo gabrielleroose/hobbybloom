@@ -160,33 +160,85 @@ footer {
   border-radius: 50%;
 }
 
+/* CIRCLES STYLES */
+
 .page-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+  /* max-width: 600px; */
+  /* margin: 0 auto; */
+  /* padding: 20px; */
   font-family: sans-serif;
+  /* border: 2px solid green; */
+  display: flex;
+  flex-direction: row;
+  /* align-items: flex-start; */
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+.page-container-inside{
+  /* border: 3px solid red; */
+  padding-left: 5rem;
 }
+
+.search-row{
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  /* background-color: #F1F2F5; */
+  /* background-color: rgb(16, 16, 83); */
+  background-color: #1E5077;
+  align-items: flex-start;
+  text-align: left;
+  padding: 2rem 0 0 1.5rem;
+ 
+}
+
+.search-row p {
+  color: white;
+  font-size: var(--text-size-xl);
+  margin: 0 0 15px 0; /* Removes top/left margins, adds bottom margin */
+}
+
 
 .search-bar {
-  width: 100%;
+  width: 80%;
   padding: 10px;
-  background-color: #1f5077;
-  color: white;
+  /* background-color: #1f5077; */
+  /* background-color: rgb(16, 16, 83); */
+  background-color: #F1F2F5;
+  color: rgb(16, 16, 83);;
   border: none;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  border-radius: 25px;
+  margin-bottom: 2rem;
 }
 
 .search-bar::placeholder {
   color: #ccc;
 }
+
+.light-btn {
+  width: 75%;
+  background-color: #a8d0e6;
+  color: rgb(16, 16, 83);;
+  border: none;
+  padding: 10px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: var(--text-size-lg);
+  text-align: center;
+  text-decoration: none;
+}
+
+/* style="display: flex; gap: 15px; margin-bottom: 20px;" */
+
+.page-header {
+  display: flex;
+  /* border: 3px solid orange; */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 
 .chat-list {
   margin-top: 20px;
@@ -231,11 +283,6 @@ footer {
   white-space: nowrap;
 }
 
-.search-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .chat-icon-link {
   font-size: 30px;
