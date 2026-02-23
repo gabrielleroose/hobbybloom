@@ -31,8 +31,8 @@ if (!isset($_SESSION['user'])) {
         <form id="userForm" action="save_onboarding.php" method="post">
             
             <div class="index-form-input">
-                <label for="gender" class="form-label">How do you identify? (Pronouns)</label>
-                <input type="text" class="form-control" name="gender" id="gender" placeholder="e.g. He/Him, She/Her, They/Them" minlength=2 maxlength=50 required>
+                <label for="username" class="form-label">What should we call you?</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="e.g. HobbyMaster201" minlength="2" maxlength="50" required>
             </div>
             
             <div class="index-form-input">
@@ -98,11 +98,11 @@ if (!isset($_SESSION['user'])) {
 
 <script>
     function goToStep2() {
-        const gender = document.getElementById('gender').value;
+        const username = document.getElementById('username').value;
         const age = document.getElementById('age').value;
         const from = document.getElementById('from').value;
         
-        if(gender === "" || age === "" || from === "") {
+        if(username === "" || age === "" || from === "") {
             alert("Please fill out all required fields.");
             return;
         }

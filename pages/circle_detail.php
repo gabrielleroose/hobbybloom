@@ -42,7 +42,7 @@ $stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
 $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $msgStmt = $conn->prepare("
-    SELECT cm.message, cm.created_at, u.username 
+    SELECT cm.message, cm.created_at, u.id AS user_id, u.username 
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
     WHERE cm.hobby_name = ?
@@ -50,7 +50,6 @@ $msgStmt = $conn->prepare("
 ");
 $msgStmt->execute([$currentHobby]);
 $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 $memStmt = $conn->prepare("
     SELECT u.id, u.username, 
@@ -127,7 +126,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="member-row">
                         <div>
                             <div class="member-avatar" style="background-color: #<?= substr(md5($mem['username']), 0, 6) ?>;"></div>
-                            <strong><?= htmlspecialchars($mem['username']) ?></strong>
+                            <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
                         </div>
                         
                         <form action="circle_action.php" method="POST" style="margin: 0;">
@@ -176,7 +175,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         $isMine = ($msg['username'] === $_SESSION['user']['name']) ? 'mine' : '';
                     ?>
                         <div class="chat-message <?= $isMine ?>">
-                            <div class="chat-author"><?= htmlspecialchars($msg['username']) ?></div>
+                            <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-author" style="text-decoration: none; color: inherit; display: block;"><?= htmlspecialchars($msg['username']) ?></a>
                             <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
                         </div>
                     <?php endforeach; ?>

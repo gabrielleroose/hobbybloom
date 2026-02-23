@@ -1,5 +1,5 @@
-<?php 
-require_once 'db.php'; 
+<?php
+require_once 'base.php';
 
 if (!isset($_SESSION['user']['id'])) {
     header("Location: login.php");
@@ -7,8 +7,9 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $userId = $_SESSION['user']['id'];
+
 $stmt = $conn->prepare("
-    SELECT u.age, p.gender, p.hometown, p.bio, p.hobbies 
+    SELECT u.username, u.email, u.age, p.hometown, p.bio, p.hobbies, p.profile_color 
     FROM users u 
     LEFT JOIN user_profiles p ON u.id = p.user_id 
     WHERE u.id = ?
@@ -16,104 +17,113 @@ $stmt = $conn->prepare("
 $stmt->execute([$userId]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$currentHobbies = [];
-if (!empty($user['hobbies'])) {
-    $currentHobbies = explode(', ', $user['hobbies']);
-}
+$followerStmt = $conn->prepare("
+    SELECT u.id, u.username FROM users u 
+    JOIN user_follows f ON u.id = f.follower_id 
+    WHERE f.followed_id = ?
+");
+$followerStmt->execute([$userId]);
+$followers = $followerStmt->fetchAll(PDO::FETCH_ASSOC);
+
+$followingStmt = $conn->prepare("
+    SELECT u.id, u.username FROM users u 
+    JOIN user_follows f ON u.id = f.followed_id 
+    WHERE f.follower_id = ?
+");
+$followingStmt->execute([$userId]);
+$following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account</title>
-    <link href="../css/style.css" rel="stylesheet"> 
+    <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
 </head>
-
 <body>
-
-    <?php include 'base.php'; ?>
-
     <div class="page-container">
-        <h1 style="text-align: center; margin-bottom: 30px;">Edit Your Profile</h1>
+        <h1 style="color: white;">Account Settings</h1>
 
         <?php if (isset($_GET['success'])): ?>
-            <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
-                Profile updated successfully!
-            </div>
+            <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">Profile updated successfully!</p>
         <?php endif; ?>
 
-        <section class="form" style="max-width: 800px; margin: 0 auto;">
+        <form action="update_account.php" method="POST" style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             
-            <form id="accountForm" action="update_account.php" method="post">
-                
-                <div class="index-form-input">
-                    <label for="gender" class="form-label">Identity / Pronouns</label>
-                    <input type="text" class="form-control" name="gender" id="gender" 
-                           value="<?= htmlspecialchars($user['gender'] ?? '') ?>" required>
-                </div>
-                
-                <div class="index-form-input">
-                    <label for="age" class="form-label">Age</label>
-                    <input type="number" class="form-control" id="age" name="age" 
-                           value="<?= htmlspecialchars($user['age'] ?? '') ?>" required>
-                </div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; color: #333;">Username:</label>
+                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
 
-                <div class="index-form-input">
-                    <label for="from" class="form-label">Current Location</label>
-                    <input type="text" class="form-control" id="from" name="from" 
-                           value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" required>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; color: #333;">Profile Theme Color:</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                    <input type="color" name="profile_color" value="<?= htmlspecialchars($user['profile_color'] ?? '#1f5077') ?>" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
+                    <span style="color: #666; font-size: 14px;">Pick a color for your public profile!</span>
                 </div>
+            </div>
 
-                <div class="index-form-input">
-                    <label for="bio" class="form-label">My Goal / Bio</label>
-                    <textarea class="form-control" id="bio" name="bio" rows="3"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; color: #333;">Age:</label>
+                    <input type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
-
-                <div class="mt-5">
-                    <h3 class="form-label" style="text-align: center; margin-bottom: 20px;">Your Interests</h3>
-                    <div class="hobby-grid">
-                        <?php 
-                        $allHobbies = ["Cooking", "Knitting", "Lego", "Sewing", "Painting", "Hiking", "Reading", "Gardening", "Baking", "Meditation", "Music", "Movies", "Gaming", "Yoga"];
-                        
-                        foreach ($allHobbies as $hobby) {
-                            $isSelected = in_array($hobby, $currentHobbies) ? 'selected' : '';
-                            echo "<div class='hobby-btn $isSelected' onclick='toggleHobby(this)'>$hobby</div>";
-                        }
-                        ?>
-                    </div>
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; color: #333;">Hometown:</label>
+                    <input type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
+            </div>
 
-                <input type="hidden" name="selected_hobbies" id="selected_hobbies_input" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>">
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; color: #333;">Bio:</label>
+                <textarea name="bio" rows="3" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+            </div>
 
-                <div class="mt-4 text-center">
-                    <button type="button" class="index-next-button" onclick="submitAccountForm()">Save Changes</button>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
+                <input type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+
+            <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
+        </form>
+
+        <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            
+            <div style="background-color: #1f5077; color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Following (<?= count($following) ?>)</h3>
+                <div style="max-height: 200px; overflow-y: auto; padding-right: 10px;">
+                    <?php if (empty($following)): ?>
+                        <p style="color: #ccc; font-style: italic; font-size: 14px;">You aren't following anyone yet.</p>
+                    <?php else: ?>
+                        <?php foreach ($following as $f): ?>
+                            <a href="profile.php?id=<?= $f['id'] ?>" style="color: white; text-decoration: none; display: block; margin-bottom: 10px; font-weight: bold;">
+                                <span style="background-color: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;">@<?= htmlspecialchars($f['username']) ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-                
-            </form>
-        </section>
+            </div>
+
+            <div style="background-color: #1f5077; color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Followers (<?= count($followers) ?>)</h3>
+                <div style="max-height: 200px; overflow-y: auto; padding-right: 10px;">
+                    <?php if (empty($followers)): ?>
+                        <p style="color: #ccc; font-style: italic; font-size: 14px;">No followers yet.</p>
+                    <?php else: ?>
+                        <?php foreach ($followers as $f): ?>
+                            <a href="profile.php?id=<?= $f['id'] ?>" style="color: white; text-decoration: none; display: block; margin-bottom: 10px; font-weight: bold;">
+                                <span style="background-color: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;">@<?= htmlspecialchars($f['username']) ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div>
     </div>
-
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-
-    <script>
-        function toggleHobby(element) {
-            element.classList.toggle('selected');
-        }
-
-        function submitAccountForm() {
-            const selectedButtons = document.querySelectorAll('.hobby-btn.selected');
-            let hobbies = [];
-            selectedButtons.forEach(btn => {
-                hobbies.push(btn.innerText);
-            });
-
-            document.getElementById('selected_hobbies_input').value = hobbies.join(', ');
-            document.getElementById('accountForm').submit();
-        }
-    </script>
-
 </body>
 </html>

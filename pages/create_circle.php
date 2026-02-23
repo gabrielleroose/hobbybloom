@@ -16,14 +16,16 @@ $success = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = trim($_POST["name"]);
     $description = trim($_POST["description"]);
+    $color = $_POST["color"] ?? '#1f5077';
     $userId = $_SESSION['user']['id'];
 
     if (empty($name) || empty($description)) {
         $error = "Please fill out all fields.";
     } else {
         try {
-            $stmt = $conn->prepare("INSERT INTO circle (name, description, uid) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $description, $userId]);
+            // We now insert the color into the database too!
+            $stmt = $conn->prepare("INSERT INTO circle (name, description, uid, color) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $description, $userId, $color]);
             
             $profStmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
             $profStmt->execute([$userId]);
@@ -85,8 +87,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <textarea name="description" rows="4" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;" placeholder="What is this circle about?"></textarea>
                 </div>
 
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Circle Theme Color:</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="color" name="color" value="#1f5077" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
+                        <span style="color: #666; font-size: 14px;">Pick a primary color for this group!</span>
+                    </div>
+                </div>
+
                 <div style="text-align: center;">
-                    <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; font-size: 16px; padding: 10px 30px;">Create Circle</button>
+                    <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; font-size: 16px; padding: 10px 30px; border-radius: 5px;">Create Circle</button>
                 </div>
             </form>
         <?php endif; ?>

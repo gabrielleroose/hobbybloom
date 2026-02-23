@@ -96,8 +96,7 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <?php foreach ($suggestedCircles as $circle): ?>
                     <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
-                        <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
-                            <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
+                        <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">                            <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
                             <span style="color: #ccc; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars(substr($circle['description'], 0, 30)) ?>...</span>
                         </div>
                     </a>
