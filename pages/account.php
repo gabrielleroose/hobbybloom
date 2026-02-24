@@ -46,50 +46,53 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="account-body">
 
     <div class="account-main-container">
-        <h1 style="color: white;">Account Settings</h1>
 
-        <?php if (isset($_GET['success'])): ?>
-            <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">Profile updated successfully!</p>
-        <?php endif; ?>
+        <div class="account-settings">
+            <h1 style="color: white;">Account Settings</h1>
 
-        <form action="update_account.php" method="POST" style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            
-            <div style="margin-bottom: 20px;">
-                <label style="font-weight: bold; color: #333;">Username:</label>
-                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
-            </div>
+            <?php if (isset($_GET['success'])): ?>
+                <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">Profile updated successfully!</p>
+            <?php endif; ?>
 
-            <div style="margin-bottom: 20px;">
-                <label style="font-weight: bold; color: #333;">Profile Theme Color:</label>
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                    <input type="color" name="profile_color" value="<?= htmlspecialchars($user['profile_color'] ?? '#1f5077') ?>" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
-                    <span style="color: #666; font-size: 14px;">Pick a color for your public profile!</span>
+            <form action="update_account.php" method="POST">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; color: #333;">Username:</label>
+                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
-            </div>
 
-            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                <div style="flex: 1;">
-                    <label style="font-weight: bold; color: #333;">Age:</label>
-                    <input type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; color: #333;">Profile Theme Color:</label>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                        <input type="color" name="profile_color" value="<?= htmlspecialchars($user['profile_color'] ?? '#1f5077') ?>" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
+                        <span style="color: #666; font-size: 14px;">Pick a color for your public profile!</span>
+                    </div>
                 </div>
-                <div style="flex: 1;">
-                    <label style="font-weight: bold; color: #333;">Hometown:</label>
-                    <input type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+
+                <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; color: #333;">Age:</label>
+                        <input type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; color: #333;">Hometown:</label>
+                        <input type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
                 </div>
-            </div>
 
-            <div style="margin-bottom: 20px;">
-                <label style="font-weight: bold; color: #333;">Bio:</label>
-                <textarea name="bio" rows="3" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
-            </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; color: #333;">Bio:</label>
+                    <textarea name="bio" rows="3" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                </div>
 
-            <div style="margin-bottom: 20px;">
-                <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
-                <input type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
-            </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
+                    <input type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
 
-            <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
-        </form>
+                <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
+            </form>
+        </div>
 
         <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             
