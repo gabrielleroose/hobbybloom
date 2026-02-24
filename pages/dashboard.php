@@ -138,17 +138,14 @@ $hobbyColors = [
         </div>
     </div>
 
-    <div class="dash-heading">
-        <p>Jump Back In!</p>
-    </div>
-
     <div class="dash-module">
         <?php if ($currentModule): ?>
             <p class="dash-module-text">📘 Continue: <strong><?= htmlspecialchars($currentModule['name']) ?></strong></p>
             <a href="module.php?id=<?= $currentModule['id'] ?>" class="resume-btn">Resume Module</a>
         <?php else: ?>
+            <p class="dash-module-heading">Modules</p>
             <p class="dash-module-text">✨You're all caught up! Start a new module.</p>
-            <a href="module.php" class="resume-btn">Browse Modules</a>
+            <a href="modules_display.php" class="dash-module-button">Browse Modules →</a>
         <?php endif; ?>
     </div>
 

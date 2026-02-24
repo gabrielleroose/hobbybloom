@@ -825,6 +825,7 @@ background: url(../images/plants-grow.jpg);
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  justify-content: center;
 }
 
 
@@ -868,72 +869,73 @@ background: url(../images/plants-grow.jpg);
 }
 
 .dash-display-streak{
-  border: 2px solid red;
+  /* border: 2px solid red; */
   background-color: #1e507781;
   padding: 2rem;
   border-radius: 2rem;
-}
 
-.dash-display-streak {
-  /* 1. Translucent background (White at 20% opacity) */
+
+  /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
   
-  /* 2. The 'Frosting' (Blur effect) */
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  -webkit-backdrop-filter: blur(12px);
   
-  /* 3. High-definition border (Light reflecting off the edge) */
   border: 1px solid rgba(255, 255, 255, 0.3);
   
-  /* 4. Soft shadow to give it 'lift' */
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  /* Your existing layout properties */
-  border-radius: 1rem;
-  width: 15%;
-  max-width: 1350px;
-  display: flex;
-  flex-direction: column;
-  /* margin: 0 auto; */
-}
-
-
-
-.dash-heading {
-  font-size: 30px;
-  padding-left: 60px;
 }
 
 .dash-module {
   max-width: 800px;
-  height: 200px;
-  background-color: #1f5077;
-  border-radius: 10px;
-  flex-shrink: 0;
-  margin-left: 3rem;
+  width: 40%;
+  height: 275px;
+  margin: 0 auto;
+  margin-top: 4rem;
+  border-radius: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+    
+  border: 1px solid rgba(255, 255, 255, 0.3);
+    
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dash-module-heading{
+  font-size: var(--text-size-2xl);
+  color: #F1F2F5;
+  font-family: sans-serif;
+  padding: 1rem 0 0 1rem;
 }
 
 .dash-module-text {
   color: white;
-  padding: 2rem 0 2rem 2rem;
+  padding: 0rem 0 2rem 2rem;
   font-size: var(--text-size-lg);
+  font-family: sans-serif;
 }
 
-.resume-btn {
-  background-color: white;
-  padding: 1rem;
-  border-radius: 1em;
-  margin-left: 4rem;
-  color: #1E5077;
+.dash-module-button {
+  text-align: right;
+  padding-right: 1rem;
+  color: #F1F2F5;
   text-decoration: none;
   font-size: var(--text-size-md);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.resume-btn:hover {
+.dash-module-button:hover {
   /* color: rgb(56, 86, 68); */
-  color: lightblue;
-  transform: scale(1.2);
+  color: aquamarine;
+  transform: scale(1.05);
 }
 
 .dashboard-circles {
