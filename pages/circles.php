@@ -12,6 +12,14 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userId = $_SESSION['user']['id'];
 
+$searchQuery = trim($_GET['q'] ?? '');
+$searchResults = [];
+if ($searchQuery) {
+    $sStmt = $conn->prepare("SELECT * FROM circle WHERE name LIKE ? OR description LIKE ?");
+    $sStmt->execute(["%$searchQuery%", "%$searchQuery%"]);
+    $searchResults = $sStmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $myHobbies = [];
 $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
@@ -61,13 +69,37 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="page-container">
 
         <div class="search-row">
-            <p>Circles</p>
-            <input type="text" class="search-bar" placeholder="Search Circles...">
-    
-            <a href="create_circle.php" class="light-btn">+ Create New Circle</a>
+            <p style="margin-top: 0; color: white; font-weight: bold; font-size: 24px; text-align: center;">Circles</p>
+            
+            <form method="GET" action="circles.php" style="margin-bottom: 20px;">
+                <input type="text" name="q" class="search-bar" placeholder="Search Circles..." value="<?= htmlspecialchars($searchQuery) ?>" style="width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: none;">
+                <button type="submit" class="light-btn" style="background-color: #a8d0e6; color: #333; border: none; cursor: pointer; width: 100%; text-align: center; padding: 10px; font-weight: bold; border-radius: 5px;">Search</button>
+            </form>
+
+            <a href="create_circle.php" class="light-btn" style="display: block; text-align: center; width: 100%; box-sizing: border-box; padding: 10px; border-radius: 5px;">+ Create New Circle</a>
         </div>
 
         <div class="page-container-inside">
+            
+            <?php if ($searchQuery): ?>
+                <div style="margin-bottom: 30px;">
+                    <h2>Search Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
+                    <div class="horizontal-scroll">
+                        <?php if (empty($searchResults)): ?>
+                            <p style="color: white; font-style: italic;">No circles found matching your search.</p>
+                        <?php else: ?>
+                            <?php foreach ($searchResults as $circle): ?>
+                            <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
+                                <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">
+                                    <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
+                                    <span style="color: #ccc; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars(substr($circle['description'], 0, 30)) ?>...</span>
+                                </div>
+                            </a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <h2>Your Circles</h2>
             <div class="horizontal-scroll">
@@ -96,7 +128,8 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <?php foreach ($suggestedCircles as $circle): ?>
                     <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
-                        <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">                            <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
+                        <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">                            
+                            <strong style="color: white;"><?= htmlspecialchars($circle['name']) ?></strong>
                             <span style="color: #ccc; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars(substr($circle['description'], 0, 30)) ?>...</span>
                         </div>
                     </a>

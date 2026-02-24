@@ -21,6 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['chat_message'])) {
     exit();
 }
 
+$circleStmt = $conn->prepare("SELECT color FROM circle WHERE name = ? LIMIT 1");
+$circleStmt->execute([$currentHobby]);
+$circleData = $circleStmt->fetch(PDO::FETCH_ASSOC);
+
 $hobbyColors = [
     "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
     "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
@@ -28,7 +32,12 @@ $hobbyColors = [
     "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
     "Gaming" => "#9370db", "Yoga" => "#ffdead"
 ];
-$headerColor = $hobbyColors[$currentHobby] ?? '#cccccc';
+
+if ($circleData && !empty($circleData['color'])) {
+    $headerColor = $circleData['color'];
+} else {
+    $headerColor = $hobbyColors[$currentHobby] ?? '#1f5077';
+}
 
 $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
@@ -104,16 +113,16 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="page-container-inside">
         
             <div style="background-color: <?= $headerColor ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
-                <h1 style="color: #333; margin: 0; font-size: 32px; font-weight: bold;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
-                <p style="color: #555; margin-top: 10px;">Connect, share, and learn about <?= htmlspecialchars(strtolower($currentHobby)) ?>!</p>
+                <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+                <p style="color: #eee; margin-top: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Connect, share, and learn about <?= htmlspecialchars(strtolower($currentHobby)) ?>!</p>
                 
                 <form action="circle_action.php" method="POST" style="margin-top: 20px;">
                     <input type="hidden" name="action" value="toggle_circle">
                     <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
                     <?php if ($isMember): ?>
-                        <button type="submit" style="background-color: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">✓ Member (Leave)</button>
+                        <button type="submit" style="background-color: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">✓ Member (Leave)</button>
                     <?php else: ?>
-                        <button type="submit" style="background-color: white; color: #333; border: 2px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">+ Join Circle</button>
+                        <button type="submit" style="background-color: white; color: #333; border: 2px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">+ Join Circle</button>
                     <?php endif; ?>
                 </form>
             </div>
