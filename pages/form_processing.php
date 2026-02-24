@@ -121,10 +121,13 @@ try {
     }
 
     $conn->commit();
-    echo "Module created successfully!";
+    header("Location: modules_display.php");
+    exit;
+    
 
 } catch (Exception $e) {
 
     $conn->rollBack();
     echo "Error: " . $e->getMessage();
 }
+
