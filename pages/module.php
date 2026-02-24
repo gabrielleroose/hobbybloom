@@ -79,15 +79,15 @@ try {
     // get mod_id
     $mod_id = $_POST['module_id'];
 
-    $mod_stage_sql = "SELECT ms.id FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
+    $mod_stage_sql = "SELECT ms.id, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
     $stmt = $conn->prepare($mod_stage_sql);
     $stmt->execute(['mid' => $mod_id]);
     
-    $mod_stage_ids = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info.
+    $mod_stages = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info.
      
     $module_stage_info = [];
 
-    foreach ($mod_stage_ids as $stage) {
+    foreach ($mod_stages as $stage) {
             $stage_id = $stage['id'];
 
         $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
@@ -95,31 +95,40 @@ try {
         $stmt->execute([$stage_id]);
         $module_stage_questions = $stmt->fetchAll();
         
+        echo "<div class='stage_title'>";
+        echo $stage['title'];
+        echo "</div><br><br>";
 
         foreach($module_stage_questions as $question){
 
             $question_id = $question['id'];  // question id
             $question_text = $question['question_text']; //question text
 
-            $module_stage_questions_answers_sql = "SELECT answer, is_correct from module_stage_questions_answers AS msqia JOIN module_stage_questions AS msq ON msqia.msqid = msq.id WHERE msqia.msqid = ?";
+            $module_stage_questions_answers_sql = "SELECT msqa.id, answer, is_correct from module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
             $stmt = $conn->prepare($module_stage_questions_answers_sql);
             $stmt->execute([$question_id]);
             
             $module_stage_answers = $stmt->fetchAll();
+            echo $question['question_text'];
 
             foreach ($module_stage_answers as $answer) {
 
                 $module_stage_info[$stage_id]['questions'][$question_id]['answers'][] = 
                 ['answer' => $answer['answer'], 
                 'is_correct' => $answer['is_correct']];
+
+
+                echo "<div class='module_answer'>";
+                echo "<input type='radio' name='question_" . $question_id . "' id='answer_" . $answer['id'] . "' value='" . $answer['id'] . "'>";
+                echo "<label for='answer_" . $answer['id'] . "'>" . htmlspecialchars($answer['answer']) . "</label>";
+                echo "</div>"; 
+                   
            
             }
         }
     }
-    
-    echo '<pre>'; 
-    print_r($module_stage_info);
-    echo '</pre>';
+
+        
 
     $conn->commit();
     
