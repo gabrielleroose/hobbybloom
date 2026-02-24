@@ -5,55 +5,24 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'db.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/twig.php';
 
-$module_id = (int)($_GET['id'] ?? 0);
-
-$stmt = $pdo->prepare("
-    SELECT *
-    FROM modules
-    WHERE id = :id
-");
-$stmt->execute([":id" => $module_id]);
-$module = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$stmt = $pdo->prepare("
-    SELECT *
-    FROM module_videos
-    WHERE module_id = :id
-    ORDER BY lesson_number
-");
-$stmt->execute([":id" => $module_id]);
-$videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// get user's google_id
+$googleId = $_SESSION['google_id'] ?? null;
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beginner Cooking</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <title>Module Questions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
 </head>
+<body>
 
-<body class="module-body">
-
-    <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1); //debugging/error messages
-    error_reporting(E_ALL);
-
-    session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistantly across pages.
-    require_once __DIR__ . '/../vendor/autoload.php';
-
-    require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
-
-    require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
-    include 'base.php';
-
-    $googleId = $_SESSION['google_id'] ?? null;
+<?php
 
 // check if they're logged in
 if (!$googleId) {
@@ -83,7 +52,7 @@ try {
     $stmt = $conn->prepare($mod_stage_sql);
     $stmt->execute(['mid' => $mod_id]);
     
-    $mod_stages = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info.
+    $mod_stages = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info
      
     $module_stage_info = [];
 
@@ -94,12 +63,12 @@ try {
         $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
         $stmt = $conn->prepare($module_stage_questions_sql);
         $stmt->execute([$stage_id]);
-        $module_stage_questions = $stmt->fetchAll();
+        $module_stage_questions = $stmt->fetchAll(); //grabs all selected info, arranges into array as seen in mod_id statements
         
        $hidden = ($stage['stage_num'] == 1) ? "" : "hidden"; //if stage['stage_num' == 1, set $hidden to "". otherwise, set to "hidden"]
         echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
         
-        echo "<div class='stage_title' id='stage_" . $stage['stage_num'] . "'>";
+        echo "<div class='stage_title'>";
         echo $stage['title'];
         echo "</div><br><br>";
         
@@ -115,7 +84,7 @@ try {
             $stmt = $conn->prepare($module_stage_questions_answers_sql);
             $stmt->execute([$question_id]);
             
-            $module_stage_answers = $stmt->fetchAll();
+            $module_stage_answers = $stmt->fetchAll(); 
             echo $question['question_text'];
 
             foreach ($module_stage_answers as $answer) {
@@ -145,5 +114,10 @@ try {
     $conn->rollBack();
     echo "Error: " . $e->getMessage();
 }
+
 ?>
 
+<script src="../js/module.js"></script>
+
+</body>
+</html>
