@@ -512,6 +512,10 @@ h2 {
 
 /* ****************************** ACTIVITY STYLES ****************************** */
 
+.activity-body{
+  background-color: #BDC29D;
+}
+
 .activity-page-container{
   width: 50%;
   margin: 0 auto;
@@ -1125,7 +1129,7 @@ background: url(../images/plants-grow.jpg);
   flex-direction: row;
   flex-wrap: wrap;
   margin: 0 auto;
-  gap: 10px;
+  /* gap: 7px; */
 }
 
 

@@ -7,7 +7,7 @@
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
 </head>
-<body>
+<body class="activity-body">
 
     <?php include 'base.php'; ?>
 
