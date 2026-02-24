@@ -1342,14 +1342,7 @@ background-color: #BDC29D;
 .module-body{
   /* background-color: #6096ba; */
   /* background-color: #010319; */
-  /* background-color: #bdc29d; */
-  /* background-color: #E8FCCF; */
-  /* background-color: #96E072; */
-  /* background-color: #CDF1BC; */
-  /* background-color: #B3EA9A; */
-  /* background-color: #8DE067; */
-
-  background-color: #BDC29D;
+  background-color: #bdc29d;
 }
 
 .module_back_container {
@@ -1362,8 +1355,20 @@ background-color: #BDC29D;
   flex-direction: row;
   flex-wrap: wrap;
   margin: 0 auto;
-  /* gap: 7px; */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
 }
+  /* gap: 7px; */
+
+
 
 
 .create-button-wrapper {
@@ -1510,19 +1515,21 @@ background-color: #BDC29D;
   
 .module_header {
   text-align: center;
-  border: 2px solid black;
-  
 }
 
 .hidden {
             display: none;
-        }
+}
 
 
 
 
-      /* maybe calander css */
-      /* *************************** CALENDAR STYLES *************************** */
+/* maybe calander css */
+/* *************************** CALENDAR STYLES *************************** */
+
+.calendar-body{
+  background-color: #BDC29D;
+}
 
 
 #calendar{
@@ -1624,4 +1631,89 @@ background-color: #BDC29D;
 
 #saveEvent:hover, #cancelEvent:hover {
   opacity: 0.8;
+}
+
+/* ************************************* ACCOUNT STYLES ************************************* */
+/* ************************************* ACCOUNT STYLES ************************************* */
+
+.account-body{
+  background-color: #BDC29D;
+  width: 80%;
+  margin: 0 auto;
+}
+
+
+/* ************************************* SHARE STYLES ************************************* */
+/* ************************************* SHARE STYLES ************************************* */
+.share-body{
+  background-color: #BDC29D;
+}
+
+/* ************************************* CREATE FORM STYLES ************************************* */
+/* ************************************* CREATE FORM STYLES ************************************* */
+
+.create-body{
+  background-color: #BDC29D;
+}
+
+.create-module-main{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 4px solid yellow;
+
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.create-module-main:hover{
+  /* transform: scale(1.05); */
+}
+
+.create-module-main h2{
+  font-size: var(--text-size-2xl);
+  color: #f1f2f5;
+  /* margin-bottom: 2rem; */
+}
+
+/* ************************************* PROFILE STYLES ************************************* */
+/* ************************************* PROFILE STYLES ************************************* */
+
+.profile-body{
+  background-color: #BDC29D;
+}
+
+.profile-container{
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+
+  margin: 0 auto;
+  width: 80%;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
 }
