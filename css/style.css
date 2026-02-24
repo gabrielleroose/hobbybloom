@@ -1513,6 +1513,10 @@ background-color: #BDC29D;
 
 /* *************************** CALENDAR STYLES *************************** */
 
+.calendar-body{
+  background-color: #BDC29D;
+}
+
 #calendar{
   /* border: 3px solid yellow; */
   width: 90%;
@@ -1617,7 +1621,8 @@ background-color: #BDC29D;
 
 
 
-/* ACCOUNT STYLES */
+/* ************************************* ACCOUNT STYLES ************************************* */
+/* ************************************* ACCOUNT STYLES ************************************* */
 
 .account-body{
   background-color: #BDC29D;
@@ -1628,4 +1633,11 @@ background-color: #BDC29D;
   flex-direction: column;
   width: 80%;
   margin: 0 auto;
+}
+
+
+/* ************************************* SHARE STYLES ************************************* */
+/* ************************************* SHARE STYLES ************************************* */
+.share-body{
+  background-color: #BDC29D;
 }
