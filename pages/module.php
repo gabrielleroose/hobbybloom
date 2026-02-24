@@ -79,7 +79,7 @@ try {
     // get mod_id
     $mod_id = $_POST['module_id'];
 
-    $mod_stage_sql = "SELECT ms.id, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
+    $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
     $stmt = $conn->prepare($mod_stage_sql);
     $stmt->execute(['mid' => $mod_id]);
     
@@ -87,17 +87,24 @@ try {
      
     $module_stage_info = [];
 
-    foreach ($mod_stages as $stage) {
-            $stage_id = $stage['id'];
 
+    
+    foreach ($mod_stages as $stage) {
+        $stage_id = $stage['id'];
         $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
         $stmt = $conn->prepare($module_stage_questions_sql);
         $stmt->execute([$stage_id]);
         $module_stage_questions = $stmt->fetchAll();
         
-        echo "<div class='stage_title'>";
+       $hidden = ($stage['stage_num'] == 1) ? "" : "hidden"; //if stage['stage_num' == 1, set $hidden to "". otherwise, set to "hidden"]
+        echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
+        
+        echo "<div class='stage_title' id='stage_" . $stage['stage_num'] . "'>";
         echo $stage['title'];
         echo "</div><br><br>";
+        
+        
+           
 
         foreach($module_stage_questions as $question){
 
@@ -125,11 +132,11 @@ try {
                    
            
             }
+           echo "<button class='submit-stage' data-stage='" . $stage['stage_num'] . "'>Submit</button>";
         }
+        echo "</div>";
     }
-
-        
-
+    
     $conn->commit();
     
 
@@ -138,7 +145,5 @@ try {
     $conn->rollBack();
     echo "Error: " . $e->getMessage();
 }
-
-
-    
 ?>
+
