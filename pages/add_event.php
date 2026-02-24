@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'db.php';
-
 header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -30,12 +29,30 @@ $stmt = $conn->prepare("INSERT INTO events (title,event_date,event_time,descript
 $stmt->execute([$title,$date,$time,$description,$location,$user_id]);
 $event_id = $conn->lastInsertId();
 
-// Insert invites
+// Insert invites (skip creator if included accidentally)
 if(!empty($invitees)){
     $invite_stmt = $conn->prepare("INSERT INTO event_invites (event_id,user_id,status) VALUES (?,?, 'pending')");
     foreach($invitees as $uid){
-        $invite_stmt->execute([$event_id,$uid]);
+        if ($uid != $user_id) {
+            $invite_stmt->execute([$event_id,$uid]);
+        }
     }
 }
 
-echo json_encode(['success'=>true,'id'=>$event_id]);
+// Return event in FullCalendar-friendly format
+$start = $date . 'T' . ($time ?: '00:00:00');
+
+echo json_encode([
+    'success' => true,
+    'event' => [
+        'id' => $event_id,
+        'title' => $title,
+        'start' => $start,
+        'extendedProps' => [
+            'description' => $description,
+            'location' => $location,
+            'status' => null,
+            'isOwner' => true
+        ]
+    ]
+]);
