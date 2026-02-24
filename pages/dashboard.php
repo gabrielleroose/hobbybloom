@@ -127,14 +127,14 @@ $hobbyColors = [
 
     <div class="dash-display">
         <div class="dash-display-streak">
-        <p>My Dashboard</p>
-        <p class="streak">🔥<?= $streak ?> Day Streak</p>
+            <!-- <p>My Dashboard</p> -->
+            <p class="streak">🔥<?= $streak ?> Day Streak</p>
         </div>
 
         <div class="dash-calendar" >
-        <h3 style="color: #333; margin-bottom: 10px;">Upcoming Schedule</h3>
-        <div id="calendar-mini"></div>
-        <a href="calendar.php" style="display: block; margin-top: 10px; text-align: right; color: #2c6ca3; text-decoration: none; font-size: 0.9rem;">View Full Calendar →</a>
+            <h3>Upcoming Schedule</h3>
+            <div id="calendar-mini"></div>
+            <a href="calendar.php">View Full Calendar →</a>
         </div>
     </div>
 
