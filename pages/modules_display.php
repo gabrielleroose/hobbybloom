@@ -72,10 +72,7 @@ foreach ($mod_id_list as $id) {
 
 <body class="module-body">
     <div class="module_back_container">
-        <div>
-            <button><a href="createForm.php">Create a New Module!</a></button>
-
-        </div>
+        
         <?php foreach ($all_mods as $mod): ?>
             <div class="module_outter_card">
 
@@ -101,11 +98,19 @@ foreach ($mod_id_list as $id) {
                     </div>
                     <form action="./module.php" method="POST">
                         <input type="hidden">
-                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Try it out</button>
+                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
                     </form>
                 </div>
             </div>
         <?php endforeach; ?>
+
+        <div class="create-button-wrapper">
+            <button class="create-module-button">
+                <a href="createForm.php">Create New Module</a>
+            </button>
+
+        </div>
+
     </div>
 </body>
 

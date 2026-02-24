@@ -1105,7 +1105,14 @@ background: url(../images/plants-grow.jpg);
 .module-body{
   /* background-color: #6096ba; */
   /* background-color: #010319; */
-  background-color: #bdc29d;
+  /* background-color: #bdc29d; */
+  /* background-color: #E8FCCF; */
+  /* background-color: #96E072; */
+  /* background-color: #CDF1BC; */
+  /* background-color: #B3EA9A; */
+  /* background-color: #8DE067; */
+
+  background-color: #BDC29D;
 }
 
 .module_back_container {
@@ -1119,6 +1126,46 @@ background: url(../images/plants-grow.jpg);
   flex-wrap: wrap;
   margin: 0 auto;
   gap: 10px;
+}
+
+
+.create-button-wrapper {
+  width: 100%;      
+  display: flex;
+  justify-content: center; 
+  padding: 2rem 0; 
+}
+
+.create-module-button{
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+
+  justify-content: end;
+  align-content: end;
+
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.create-module-button a{
+  text-decoration: none;
+  /* color: black; */
+  color: #1E5077;
+  font-weight: bold;
+  font-size: var(--text-size-md);
+
+}
+
+.create-module-button:hover{
+  transform: scale(1.05);
 }
 
 .module_outter_card {
@@ -1162,18 +1209,49 @@ background: url(../images/plants-grow.jpg);
   padding-left: 4rem;
 }
 
-.module_display_entry_button{
+/* .module_display_entry_button{
   background-color: #FFFFFF;
   padding: 1rem;
   margin-top: 1.5rem;
   border-radius: 1rem;
   border: none;
   font-weight: bold;
+} */
+
+.module_display_entry_button {
+  background: rgba(255, 255, 255, 0.15); 
+  
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+
+  /* color: black; */
+  color: #1E5077;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0 0 20rem;
+  border-radius: 1rem;
+  /* font-weight: bold; */
+  font-family: sans-serif;
+  font-size: var(--text-size-md);
+  cursor: pointer;
+
+  
+  transition: all 0.3s ease-in-out;
 }
 
-.module_display_entry_button:hover{
-  background-color: rgb(145, 239, 183);
+
+.module_display_entry_button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
+/* .module_display_entry_button:hover{
+  background-color: rgb(145, 239, 183);
+} */
 
 .exp_level{
   font-style: italic;
