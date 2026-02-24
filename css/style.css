@@ -1566,14 +1566,52 @@ background-color: #BDC29D;
 
 
 .chat-container {
-  background-color: #1f5077;
-  border-radius: 10px;
+  /* background-color: #1f5077;
+  border-radius: 10px; */
   padding: 20px;
-  width: 85%;
-  height: 65%;
+  /* width: 85%;
+  height: 65%; */
   border-radius: 30px;
   background-color:#2c6ca3;
-  margin: 10% 10%;
+
+   /* glassmorphism */
+   background: rgba(255, 255, 255, 0.2);
+
+   backdrop-filter: blur(12px);
+   -webkit-backdrop-filter: blur(12px);
+ 
+   border: 1px solid rgba(255, 255, 255, 0.3);
+ 
+   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+ 
+   transition: transform 0.3s ease-in-out;
+
+
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+
+}
+
+.chat-input-row{
+  margin-top: 7rem;
+}
+
+.chat-input{
+  padding: 1rem;
+  border-radius: 2rem;
+   /* glassmorphism */
+   background: rgba(255, 255, 255, 0.2);
+
+   backdrop-filter: blur(12px);
+   -webkit-backdrop-filter: blur(12px);
+ 
+   border: 1px solid rgba(255, 255, 255, 0.3);
+ 
+   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+ 
+   transition: transform 0.3s ease-in-out;
+  
 }
 
   
