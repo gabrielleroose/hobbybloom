@@ -19,13 +19,11 @@ if (!$id) {
     exit;
 }
 
+// Delete event only if user owns it
 $stmt = $conn->prepare("
     DELETE FROM events
     WHERE id = ? AND created_by = ?
 ");
-
 $stmt->execute([$id, $user_id]);
-
-
 
 echo json_encode(['success' => true]);
