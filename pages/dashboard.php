@@ -127,8 +127,9 @@ $hobbyColors = [
 
     <div class="dash-display">
         <div class="dash-display-streak">
+            <p class="streaks">Streaks</p>
             <!-- <p>My Dashboard</p> -->
-            <p class="streak">🔥<?= $streak ?> Day Streak</p>
+            <p class="day-streak">🔥<?= $streak ?> Days</p>
         </div>
 
         <div class="dash-calendar" >
@@ -167,26 +168,30 @@ $hobbyColors = [
     <?php endif; ?>
 
     <div class="dashboard-circles">
-        <h2>Your Circles</h2>
         <div class="horizontal-scroll">
-            
-            <?php foreach ($myHobbies as $hobby): 
-                $color = $hobbyColors[$hobby] ?? '#cccccc'; 
-            ?>
-            <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                    <p><?= htmlspecialchars($hobby) ?></p>
-                </div>
-            </a>
-            <?php endforeach; ?>
+            <h2>Your Circles</h2>
 
-            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #cccccc;"></div>
-                    <p>General</p>
-                </div>
-            </a>
+            <div class="dashboard-circles-flex">
+            
+                <?php foreach ($myHobbies as $hobby): 
+                    $color = $hobbyColors[$hobby] ?? '#cccccc'; 
+                ?>
+                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                        <p><?= htmlspecialchars($hobby) ?></p>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+
+                <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: #cccccc;"></div>
+                        <p>General</p>
+                    </div>
+                </a>
+
+            </div>
             
         </div>
     </div>

@@ -850,7 +850,7 @@ background: url(../images/plants-grow.jpg);
   flex-direction: row;
   justify-content: center;
 
-  gap: 20px;
+  gap: 30px;
 }
 
 .dash-inner {
@@ -863,16 +863,24 @@ background: url(../images/plants-grow.jpg);
   text-align: left;
 }
 
-.streak {
+.streaks{
   font-size: var(--text-size-2xl);
+  padding-left: 1.5rem;
+}
+
+.day-streak {
+  font-size: var(--text-size-xl);
   font-style: italic;
+  text-align: right;
+  padding: 7.5rem 1.5rem 0 0;
 }
 
 .dash-display-streak{
   /* border: 2px solid red; */
   background-color: #1e507781;
-  padding: 2rem;
   border-radius: 2rem;
+  width: 22%;
+  font-family: sans-serif;
 
 
   /* glassmorphism */
@@ -884,6 +892,12 @@ background: url(../images/plants-grow.jpg);
   border: 1px solid rgba(255, 255, 255, 0.3);
   
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.dash-display-streak:hover{
+  transform: scaleX(1.05);
 }
 
 .dash-module {
@@ -896,7 +910,7 @@ background: url(../images/plants-grow.jpg);
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
 
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
@@ -907,13 +921,24 @@ background: url(../images/plants-grow.jpg);
   border: 1px solid rgba(255, 255, 255, 0.3);
     
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.dash-module:hover{
+  transform: scaleX(1.05);
 }
 
 .dash-module-heading{
   font-size: var(--text-size-2xl);
   color: #F1F2F5;
   font-family: sans-serif;
-  padding: 1rem 0 0 1rem;
+  /* padding: 1rem 0 0 1rem; */
+  padding-left: 1.25rem;
+}
+
+.dash-module p{
+  margin: none;
 }
 
 .dash-module-text {
@@ -921,26 +946,31 @@ background: url(../images/plants-grow.jpg);
   padding: 0rem 0 2rem 2rem;
   font-size: var(--text-size-lg);
   font-family: sans-serif;
+  text-align: center;
 }
 
 .dash-module-button {
   text-align: right;
-  padding-right: 1rem;
+  /* padding-right: 1rem; */
+  padding: 2.5rem 1rem 0 0;
   color: #F1F2F5;
   text-decoration: none;
   font-size: var(--text-size-md);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  transition: transform 0.3s ease-in-out;
 }
 
 .dash-module-button:hover {
   /* color: rgb(56, 86, 68); */
-  color: aquamarine;
-  transform: scale(1.05);
+  /* color: rgb(145, 239, 183); */
+  transform: scale(1.025);
 }
 
 .dashboard-circles {
   margin: 4rem 0 0 3rem;
   padding-bottom: 2rem;
+
+  /* border: 3px solid pink; */
 }
 
 .story-circle {
@@ -962,17 +992,49 @@ background: url(../images/plants-grow.jpg);
   color: #333;
 }
 
-.horizontal-scroll {
+.dashboard-circles-flex{
   display: flex;
   overflow-x: auto;
-  gap: 15px;
-  scrollbar-width: none;
-  background-color: #1f5077;
-  padding: 1rem;
-  border-radius: 1rem;
-  max-width: 80%;
+  margin-top: 5rem;
 
 }
+
+.horizontal-scroll {
+  gap: 15px;
+  scrollbar-width: none;
+  /* background-color: #1f5077; */
+  padding: 1rem;
+  border-radius: 2rem;
+  max-width: 80%;
+  width: 55%;
+  height: 250px;
+  margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+     
+  border: 1px solid rgba(255, 255, 255, 0.3);
+     
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+}
+
+.horizontal-scroll:hover{
+  transform: scaleX(1.05);
+}
+
+.horizontal-scroll h2{
+  font-size: var(--text-size-2xl);
+  color: #f1f2f5;
+}
+
+
+
 
 .horizontal-scroll::-webkit-scrollbar {
   display: none;
@@ -990,6 +1052,8 @@ background: url(../images/plants-grow.jpg);
   color: white;
   border: 2px solid orange;
 
+  font-family: sans-serif;
+
   display: flex;
   flex-direction: column;
   /* margin: 0 auto; */
@@ -1003,20 +1067,30 @@ background: url(../images/plants-grow.jpg);
     border: 1px solid rgba(255, 255, 255, 0.3);
     
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+    transition: transform 0.3s ease-in-out;
+}
+
+.dash-calendar:hover{
+  transform: scaleX(1.05);
 }
 
 .dash-calendar a{
   text-align: right;
   color: #F1F2F5;
   text-decoration: none;
-  margin-top: 1rem;
+  margin-top: 2.75rem;
+  transition: transform 0.3s ease-in-out;
+}
 
+.dash-calendar a:hover{
+  transform: scaleX(1.025);
 }
 
 
 /* Make the list view text match app's theme */
 .fc-list-event-title a {
-  color: #333 !important;
+  color: #F1F2F5;
   text-decoration: none;
   font-weight: bold;
 }
