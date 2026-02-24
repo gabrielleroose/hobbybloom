@@ -1342,14 +1342,7 @@ background-color: #BDC29D;
 .module-body{
   /* background-color: #6096ba; */
   /* background-color: #010319; */
-  /* background-color: #bdc29d; */
-  /* background-color: #E8FCCF; */
-  /* background-color: #96E072; */
-  /* background-color: #CDF1BC; */
-  /* background-color: #B3EA9A; */
-  /* background-color: #8DE067; */
-
-  background-color: #BDC29D;
+  background-color: #bdc29d;
 }
 
 .module_back_container {
@@ -1362,8 +1355,20 @@ background-color: #BDC29D;
   flex-direction: row;
   flex-wrap: wrap;
   margin: 0 auto;
-  /* gap: 7px; */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
 }
+  /* gap: 7px; */
+
+
 
 
 .create-button-wrapper {
@@ -1510,8 +1515,6 @@ background-color: #BDC29D;
   
 .module_header {
   text-align: center;
-  border: 2px solid black;
-  
 }
 
 .hidden {
