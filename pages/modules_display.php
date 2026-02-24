@@ -28,107 +28,70 @@ try {
 
 $mod_id_list = [];
 
-$all_module_ids = "SELECT * from module";
-$stmt = $pdo->prepare($all_module_ids);
-$stmt->execute();
+    $all_module_ids = "SELECT * from module";
+    $stmt = $pdo->prepare($all_module_ids);
+    $stmt -> execute();
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $mod_id_list[] = $row['id'];
+    }
+    
 
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $mod_id_list[] = $row['id'];
-}
 
 
-
-
-$all_mods = [];
-foreach ($mod_id_list as $id) {
-
-    $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
+    $all_mods = [];
+    foreach ($mod_id_list as $id) {
+    
+        $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
         LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
         WHERE m.id = ?";
 
-    $stmt = $pdo->prepare($fetch_mod_info);
-    $stmt->execute([$id]);
-    $module = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare($fetch_mod_info);
+        $stmt->execute([$id]);
+        $module = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($module !== false) {
-        $all_mods[$id] = $module; //checking to make sure module exists before adding it to $all_mods
+        if ($module !== false) {
+            $all_mods[$id] = $module; //checking to make sure module exists before adding it to $all_mods
+            }
     }
-}
 
-
+    
 ?>
 
 
 
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modules</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginner Cooking</title>
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/nav.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="module_back_container">
-        <div>
-            <button><a href="createForm.php">Create a New Module!</a></button>
-
-        </div>
         <?php foreach ($all_mods as $mod): ?>
             <div class="module_outter_card">
-
-                     <div class="module_header">
-                        <div class="mod_name">
-                            <h3><?= htmlspecialchars($mod['name'] ?? '') ?></h3>
-                        </div> <!-- ?? '' checks if null -->
+                <div class="module_inner_card">
+                    <div class="module_header">
+                        <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div> <!-- ?? '' checks if null -->
                         <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
-
-                <div class="module_inner_card">
-
-                    <div class="exp_level">
-                        <p><?= htmlspecialchars($mod['exp_level'] ?? '') ?></p>
-                    </div>
-
-                    <div class="mod_description">
-                        <p><?= htmlspecialchars($mod['description'] ?? '') ?></p>
-                    </div>
-
-                    <div class="num_lessons">
-                        <p>Number of lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '') ?></p>
-                    </div>
-                    <form action="./module.php" method="POST">
+                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
+                    <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
+                    <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
+                    <form  action="./module.php" method="POST">
                         <input type="hidden">
-                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Try it out</button>
+                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id']?>">Try it out</button>
                     </form>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-</body>
+</body>    
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

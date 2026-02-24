@@ -1,182 +1,120 @@
 <?php
+
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'db.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/twig.php';
 
-$module_id = (int)($_GET['id'] ?? 0);
-
-$stmt = $pdo->prepare("
-    SELECT *
-    FROM modules
-    WHERE id = :id
-");
-$stmt->execute([":id"=>$module_id]);
-$module = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$stmt = $pdo->prepare("
-    SELECT *
-    FROM module_videos
-    WHERE module_id = :id
-    ORDER BY lesson_number
-");
-$stmt->execute([":id"=>$module_id]);
-$videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// get user's google_id
+$googleId = $_SESSION['google_id'] ?? null;
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beginner Cooking</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <title>Module Questions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
 </head>
 <body>
 
-    <?php 
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1); //debugging/error messages
-        error_reporting(E_ALL);
-        
-        session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistantly across pages.
-        require_once __DIR__ . '/../vendor/autoload.php';
+<?php
 
-        require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
-
-        require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
-        include 'base.php';
-
-        $googleId = $_SESSION['google_id'] ?? null;
-
-        if (!$googleId) {                   //checking if google id present, sending back to index.php if not.
-        header('Location: index.php');
-        exit;
+// check if they're logged in
+if (!$googleId) {
+    header('Location: index.php');
+    exit;
 }
 
+try {
 
-    try {
-        $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $conn->beginTransaction();
 
-    } catch (PDOException $e) {
-        die("database connection failed: " . $e->getMessage());
+
+    $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+    $stmt = $conn->prepare($user_id_sql);
+    $stmt->execute([':gid' => $googleId]);
+
+    $user_id = $stmt->fetchColumn();
+
+    if (!$user_id) {
+        throw new Exception("User not found in database.");
     }
 
+    // get mod_id
+    $mod_id = $_POST['module_id'];
+
+    $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
+    $stmt = $conn->prepare($mod_stage_sql);
+    $stmt->execute(['mid' => $mod_id]);
+    
+    $mod_stages = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info
+     
+    $module_stage_info = [];
+
+    foreach ($mod_stages as $stage) {
+        $stage_id = $stage['id'];
+        $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
+        $stmt = $conn->prepare($module_stage_questions_sql);
+        $stmt->execute([$stage_id]);
+        $module_stage_questions = $stmt->fetchAll(); //grabs all selected info, arranges into array as seen in mod_id statements
+        
+       $hidden = ($stage['stage_num'] == 1) ? "" : "hidden"; //if stage['stage_num' == 1, set $hidden to "". otherwise, set to "hidden"]
+        echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
+        
+        echo "<div class='stage_title'>";
+        echo $stage['title'];
+        echo "</div><br><br>";
+        
+        
+           
+
+        foreach($module_stage_questions as $question){
+
+            $question_id = $question['id'];  // question id
+            $question_text = $question['question_text']; //question text
+
+            $module_stage_questions_answers_sql = "SELECT msqa.id, answer, is_correct from module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+            $stmt = $conn->prepare($module_stage_questions_answers_sql);
+            $stmt->execute([$question_id]);
+            
+            $module_stage_answers = $stmt->fetchAll(); 
+            echo $question['question_text'];
+
+            foreach ($module_stage_answers as $answer) {
+
+                $module_stage_info[$stage_id]['questions'][$question_id]['answers'][] = 
+                ['answer' => $answer['answer'], 
+                'is_correct' => $answer['is_correct']];
 
 
-
-    //SELECTS USER ID WHERE GOOGLEID FROM SESSION MATCHES GOOGLE_ID IN USERS TABLE
-    $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
-    $stmt = $pdo->prepare($user_id_sql);
-    $stmt->execute(['gid' => $googleId]);
-    $userid_row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $userid = $userid_row ? $userid_row['id'] : null; //NOTE: $userid may be used for all queries hereon out.
-
-
-    //HELPS DISPLAY LOGGED-IN USER'S CREATED MODULES. SELECTS MODULE ID WHERE CURRENT USER ID IS EQUAL TO THAT OF THE CREATOR OF THE MODULE. HELPS DISPLAY USER-CREATED MODULES.
-    $user_mid_sql = "SELECT id FROM module WHERE :userid = cid";
-    $stmt = $pdo->prepare($user_mid_sql);
-    $stmt->execute(['userid' => $userid]);
-    $user_created_modules_id_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $user_created_modules_id = $user_created_modules_id_row ? array_column($user_created_modules_id_row, 'id') : []; //array_column function structure in this context: (array gained from query, column name from SQL table column from which you're fetching : failsafe answer)
-    //output for above variable is an array of all logged in user's created module id's; each module id is one that was created by the user
-
-    // $current_module_stage = "SELECT id FROM module_stage WHERE mid = ""; NOTE: WE NEED TO CREATE A PAGE WHICH DISPLAYS ALL CREATED MODULES
+                echo "<div class='module_answer'>";
+                echo "<input type='radio' name='question_" . $question_id . "' id='answer_" . $answer['id'] . "' value='" . $answer['id'] . "'>";
+                echo "<label for='answer_" . $answer['id'] . "'>" . htmlspecialchars($answer['answer']) . "</label>";
+                echo "</div>"; 
+                   
+           
+            }
+           echo "<button class='submit-stage' data-stage='" . $stage['stage_num'] . "'>Submit</button>";
+        }
+        echo "</div>";
+    }
+    
+    $conn->commit();
     
 
-    //!!!NOTE: WE NEED TO ADD A MODULES_DISPLAY.TWIG FILE SO THAT WE CAN PROPERLY PASS THROUGH THE SELECTED MID!!!
-            
-     ?>
+} catch (Exception $e) {
 
-<!-- general structure of module.twig content for generated content w/ example (wait for Wednesday meeting for normalized css conversation?).
-    may also have to create a couple more div containers, or change tags, in order to accurately style in accordance w/ wireframe
+    $conn->rollBack();
+    echo "Error: " . $e->getMessage();
+}
+?>
 
+<script src="../js/module.js"></script>
 
-<div class = classfor-maincontainer>
-
-    <div class="current-stage">
-
-        content, according to module wireframe: 
-        stage number (1, 2, or 3)
-        
-        video                 brief description
-
-    </div>
-
-    <div class="classfor-next-steps">
-        videos of next steps side-by-side, maybe just present single next step and its description?
-    </div>
-
-    <div class="classfor-creator-profile">
-        "creator name"          view profile button (settings implementation?)
-
-        pfp and username
-    </div>
-
-
-    <div class="classfor-questions>
-    display for questions here. discuss on wednesday whether or not we want this to be called questions or comments.
-    </div>
-
-</div>
-    -->
-
-
-
-
-    <div class="page-container">
-
-        <div class="module-page-header">
-            <h1><?= htmlspecialchars($module['name']) ?></h1>
-            <button class="header-search-btn">Search</button>
-        </div>
-
-        <div class="main-step-card">
-        <div class="step-title">
-            Step <?= $current['lesson_number'] ?>
-        </div>
-        <?php if (!empty($videos)): ?>
-        <iframe
-            width="560"
-            height="315"
-            src="<?= htmlspecialchars($videos[0]['video_url']) ?>"
-            allowfullscreen>
-        </iframe>
-        <?php endif; ?>
-
-        
-        <?php foreach(array_slice($videos,1) as $video): ?>
-            <div class="video-thumbnail small">
-                Lesson <?= $video['lesson_number'] ?>
-            </div>
-        <?php endforeach; ?>
-
-
-        <h3 class="section-title">Get to Know “Creator Name”!</h3>
-        <div class="info-card">
-            <div class="card-row-between">
-                <h4>“Creator Name”</h4>
-                <button class="light-btn">view profile</button>
-            </div>
-            <div class="creator-profile">
-                <div class="creator-avatar"></div>
-                <div class="creator-details">
-                    <span class="username">Username</span>
-                    <span class="description">Description</span>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="section-title">Questions:</h3>
-        <div class="info-card">
-            <div class="card-row-between">
-                <h4>Title</h4>
-                <button class="light-btn">submit</button>
-            </div>
-            <p class="question-content">question contents</p>
-        </div>
-
-    </div>
-
-    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

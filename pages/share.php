@@ -91,7 +91,7 @@ foreach ($mid_ids as $mid_id) {
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="share-body">
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

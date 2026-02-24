@@ -112,9 +112,12 @@ $hobbyColors = [
     <title>Dashboard</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 </head>
 
-<body>
+<body class="body-dashboard">
 
 <main class="main-dashboard">
 
@@ -123,18 +126,27 @@ $hobbyColors = [
     </div>
 
     <div class="dash-display">
-        <p>My Dashboard</p>
-        <p class="streak">🔥<?= $streak ?> Day Streak</p>
+        <div class="dash-display-streak">
+            <p class="streaks">Streaks</p>
+            <!-- <p>My Dashboard</p> -->
+            <p class="day-streak">🔥<?= $streak ?> Days</p>
+        </div>
+
+        <div class="dash-calendar" >
+            <h3>Upcoming Schedule</h3>
+            <div id="calendar-mini"></div>
+            <a href="calendar.php">View Full Calendar →</a>
+        </div>
     </div>
-    
-    <div class="dash-heading"><p>Jump Back In!</p></div>
-    <div class="dash-item">
+
+    <div class="dash-module">
         <?php if ($currentModule): ?>
-            <p class="dash-item-text">📘 Continue: <strong><?= htmlspecialchars($currentModule['name']) ?></strong></p>
+            <p class="dash-module-text">📘 Continue: <strong><?= htmlspecialchars($currentModule['name']) ?></strong></p>
             <a href="module.php?id=<?= $currentModule['id'] ?>" class="resume-btn">Resume Module</a>
         <?php else: ?>
-            <p class="dash-item-text">✨You're all caught up! Start a new module.</p>
-            <a href="module.php" class="resume-btn">Browse Modules</a>
+            <p class="dash-module-heading">Modules</p>
+            <p class="dash-module-text">✨You're all caught up! Start a new module.</p>
+            <a href="modules_display.php" class="dash-module-button">Browse Modules →</a>
         <?php endif; ?>
     </div>
 
@@ -156,31 +168,51 @@ $hobbyColors = [
     <?php endif; ?>
 
     <div class="dashboard-circles">
-        <h2>Your Circles</h2>
         <div class="horizontal-scroll">
-            
-            <?php foreach ($myHobbies as $hobby): 
-                $color = $hobbyColors[$hobby] ?? '#cccccc'; 
-            ?>
-            <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                    <p><?= htmlspecialchars($hobby) ?></p>
-                </div>
-            </a>
-            <?php endforeach; ?>
+            <h2>Your Circles</h2>
 
-            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #cccccc;"></div>
-                    <p>General</p>
-                </div>
-            </a>
+            <div class="dashboard-circles-flex">
+            
+                <?php foreach ($myHobbies as $hobby): 
+                    $color = $hobbyColors[$hobby] ?? '#cccccc'; 
+                ?>
+                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                        <p><?= htmlspecialchars($hobby) ?></p>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+
+                <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: #cccccc;"></div>
+                        <p>General</p>
+                    </div>
+                </a>
+
+            </div>
             
         </div>
     </div>
 
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar-mini');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'listWeek', // Shows events as a clean list for the week
+        headerToolbar: false,    // Hides navigation to keep it compact
+        height: 'auto',
+        events: 'load_events.php', // Reuses your existing events loader!
+        eventClick: function(info) {
+            alert("Event: " + info.event.title + "\nDescription: " + info.event.extendedProps.description);
+        }
+    });
+    calendar.render();
+});
+</script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

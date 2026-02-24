@@ -1,0 +1,130 @@
+<?php
+
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once 'db.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/twig.php';
+
+// get user's google_id
+$googleId = $_SESSION['google_id'] ?? null;
+
+// check if they're logged in
+if (!$googleId) {
+    header('Location: index.php');
+    exit;
+}
+
+try {
+
+    $conn->beginTransaction();
+
+    // get user_id
+    $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+    $stmt = $conn->prepare($user_id_sql);
+    $stmt->execute([':gid' => $googleId]);
+
+    $user_id = $stmt->fetchColumn();
+
+    if (!$user_id) {
+        throw new Exception("User not found in database.");
+    }
+
+    //grab form data
+    $module_name   = $_POST['name'] ?? null;
+    $cid           = $user_id;
+    $exp_level     = $_POST['exp_level'] ?? null;
+    $mod_description = $_POST['description'] ?? null;
+    $num_lessons   = isset($_POST['stage_num']) ? (int)$_POST['stage_num'] : 0;
+    $est_comp_time = $_POST['estimate'] ?? null;
+    $notes         = $_POST['notes'] ?? null;
+
+    //module insert
+    $module_insert_sql = " 
+        INSERT INTO module 
+        (name, cid, description, exp_level, num_lessons, est_comp_time, notes)
+        VALUES 
+        (:module_name, :cid, :mod_description, :exp_level, :num_lessons, :est_comp_time, :notes)
+    ";
+
+    $stmt = $conn->prepare($module_insert_sql);
+    $stmt->execute([
+        ':module_name'  => $module_name,
+        ':cid'          => $cid,
+        ':mod_description' => $mod_description,
+        ':exp_level'    => $exp_level,
+        ':num_lessons'  => $num_lessons,
+        ':est_comp_time'=> $est_comp_time,
+        ':notes'        => $notes
+    ]);
+
+   
+    $mid = $conn->lastInsertId(); //gets module id
+
+    
+    if (!empty($_POST['stages'])) { //checks if stage empty
+
+        foreach ($_POST['stages'] as $stage_num => $stage_data) {
+
+            // insert stage
+            $module_stages_insert_sql = "
+                INSERT INTO module_stage (mid, stage_num, title)
+                VALUES (:mid, :stage_num, :title)
+            ";
+
+            $stmt = $conn->prepare($module_stages_insert_sql);
+            $stmt->execute([
+                ':mid'       => $mid,
+                ':stage_num' => $stage_num,
+                ':title'     => $stage_data['title']
+            ]);
+
+            $msid = $conn->lastInsertId();
+
+            // insert question
+            $question = $stage_data['question'];
+
+            $module_stage_question_sql = "
+                INSERT INTO module_stage_questions 
+                (msid, question_text, order_num)
+                VALUES (?, ?, ?)
+            ";
+
+            $stmt = $conn->prepare($module_stage_question_sql);
+            $stmt->execute([$msid, $question, $stage_num]);
+
+            $msqid = $conn->lastInsertId();
+
+            // insert answers
+            $ans_num = 1;
+
+            foreach ($stage_data['answers'] as $answer) {
+
+                $stmt = $conn->prepare("
+                    INSERT INTO module_stage_questions_answers
+                    (msqid, answer, is_correct, ans_num)
+                    VALUES (?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $msqid,
+                    $answer['text'],
+                    $answer['is_correct'],
+                    $ans_num
+                ]);
+
+                $ans_num++;
+            }
+        }
+    }
+
+    $conn->commit();
+    echo "Module created successfully!";
+
+} catch (Exception $e) {
+
+    $conn->rollBack();
+    echo "Error: " . $e->getMessage();
+}

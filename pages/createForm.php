@@ -97,34 +97,36 @@ $error = "";
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
 </head>
-<body>
-<?php include 'base.php'; ?>
+<body class="create-body">
+                <?php include 'base.php'; ?>
 
-<h2>Create a Module</h2>
+                <div class="create-module-main">
 
-<?php if (!empty($error)): ?>
-    <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
-<?php endif; ?>
+                        <h2>Create a Module</h2>
 
-<?php if ($success): ?>
-    <p style="color:green;">Module created successfully!</p>
-<?php endif; ?>
+                        <?php if (!empty($error)): ?>
+                            <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
+                        <?php endif; ?>
 
-<form method="POST" action="form_processing.php" enctype="multipart/form-data">
-    <label>Module Name:</label><br>
-    <input type="text" name="name" required><br><br>
+                        <?php if ($success): ?>
+                            <p style="color:green;">Module created successfully!</p>
+                        <?php endif; ?>
 
-    <label>Description:</label><br>
-    <textarea name="description" rows="4" cols="40"></textarea><br><br>
+                        <form method="POST" action="form_processing.php" enctype="multipart/form-data">
+                            <label>Module Name:</label><br>
+                            <input type="text" name="name" required><br><br>
 
-    <label>Number of videos:</label><br>
-    <input 
-    type="number"
-    id="videoCount"
-    name="videoCount"
-    min="0"
-    max="5"
-    onchange="generateVideoInputs()">
+                            <label>Description:</label><br>
+                            <textarea name="description" rows="4" cols="40"></textarea><br><br>
+
+                            <label>Number of videos:</label><br>
+                            <input 
+                            type="number"
+                            id="videoCount"
+                            name="videoCount"
+                            min="0"
+                            max="5"
+                            onchange="generateVideoInputs()">
 
     <div id="videoInputs"></div><br>
 
@@ -142,103 +144,105 @@ $error = "";
 <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
 
+<div id="stagesContainer"></div>
 
     
 
-    <label>Notes:</label><br>
-    <textarea name="notes" rows="4" cols="40"></textarea><br><br>
+                            <label>Notes:</label><br>
+                            <textarea name="notes" rows="4" cols="40"></textarea><br><br>
 
-    <label>Recomended experince level:</label><br>
-        <select id="exp_level" name="exp_level">
-            <option value="beginner" selected>Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="expert">Expert</option>
-        </select>
-        <br><br>
-    
+                            <label>Recomended experience level:</label><br>
+                                <select id="exp_level" name="exp_level">
+                                    <option value="beginner" selected>Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                                <br><br>
+                            
 
-    <label>Estimated time of completion:</label>
-    <!-- maybe do a set time format if possible -->
-    <label for="estimate">Estimated time (minutes):</label>
-    <input
-    type="number"
-    id="estimate"
-    name="estimate"
-    min="1"
-    required
-    >
+                            <label>Estimated time of completion:</label>
+                            <!-- maybe do a set time format if possible -->
+                            <label for="estimate">Estimated time (minutes):</label>
+                            <input
+                            type="number"
+                            id="estimate"
+                            name="estimate"
+                            min="1"
+                            required
+                            >
 
-<p id="formattedOutput"></p>
-
-
-
-    <button type="submit">Create Module</button>
-</form>
-
-</body>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
-</html>
-
-<script>
-function generateVideoInputs() {
-    const count = document.getElementById("videoCount").value;
-    const container = document.getElementById("videoInputs");
-
-    // clear existing inputs
-    container.innerHTML = "";
-
-    for (let i = 1; i <= count; i++) {
-        const input = document.createElement("input");
-        input.type = "url";
-        input.name = "videos[]";
-        input.placeholder = "Video " + i + " link";
-        input.required = true;
-
-        container.appendChild(input);
-        container.appendChild(document.createElement("br"));
-    }
-}
-</script>
+                        <p id="formattedOutput"></p>
 
 
-<script>
-document.getElementById("estimate").addEventListener("input", function () {
-  const minutes = parseInt(this.value, 10);
-  const output = document.getElementById("formattedOutput");
 
-  if (isNaN(minutes) || minutes <= 0) {
-    output.textContent = "";
-    return;
-  }
+                            <button type="submit">Create Module</button>
+                        </form>
+                    </div>
 
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
+                    </body>
+                            <?php include __DIR__ . '/../includes/footer.php'; ?>
+            </html>
 
-  let formatted = "";
-  if (hours > 0) formatted += `${hours} hour${hours !== 1 ? "s" : ""} `;
-  if (remainingMinutes > 0) formatted += `${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}`;
+            <script>
+            function generateVideoInputs() {
+                const count = document.getElementById("videoCount").value;
+                const container = document.getElementById("videoInputs");
 
-  output.textContent = `Estimated time: ${formatted}`;
-});
-</script>
+                // clear existing inputs
+                container.innerHTML = "";
+
+                for (let i = 1; i <= count; i++) {
+                    const input = document.createElement("input");
+                    input.type = "url";
+                    input.name = "videos[]";
+                    input.placeholder = "Video " + i + " link";
+                    input.required = true;
+
+                    container.appendChild(input);
+                    container.appendChild(document.createElement("br"));
+                }
+            }
+            </script>
+
+
+            <script>
+            document.getElementById("estimate").addEventListener("input", function () {
+            const minutes = parseInt(this.value, 10);
+            const output = document.getElementById("formattedOutput");
+
+            if (isNaN(minutes) || minutes <= 0) {
+                output.textContent = "";
+                return;
+            }
+
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+
+            let formatted = "";
+            if (hours > 0) formatted += `${hours} hour${hours !== 1 ? "s" : ""} `;
+            if (remainingMinutes > 0) formatted += `${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}`;
+
+            output.textContent = `Estimated time: ${formatted}`;
+            });
+            </script>
 
 <script>
     //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
     document.addEventListener("DOMContentLoaded", function () {
 
-    const stageSelect = document.getElementById("stage_num");
-    const stagesContainer = document.getElementById("stagesContainer");
-    
+                const stageSelect = document.getElementById("stage_num");
+                const stagesContainer = document.getElementById("stagesContainer");
+                
 
-    stageSelect.addEventListener("input", function () {
-    const stageCount = this.valueAsNumber;
+                stageSelect.addEventListener("input", function () {
+                const stageCount = this.valueAsNumber;
 
-    stagesContainer.innerHTML = ""; //wipes data on change. 
+                stagesContainer.innerHTML = ""; //wipes data on change. 
 
-    if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
-    stagesContainer.innerHTML = "";
-    return;
-    }
+                if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
+                stagesContainer.innerHTML = "";
+                return;
+                }
 
 
     
@@ -277,12 +281,12 @@ document.getElementById("estimate").addEventListener("input", function () {
            value="1">
 `;
 
-      stageDiv.innerHTML = `
-       <div class="stage_number"> 
-            <h3>Stage ${i}</h3>
-        </div>
+                stageDiv.innerHTML = `
+                <div class="stage_number"> 
+                        <h3>Stage ${i}</h3>
+                    </div>
 
-        <br><br>
+                    <br><br>
 
         <div class="stage_title">
             <label>Stage Title:</label><br>
@@ -298,14 +302,14 @@ document.getElementById("estimate").addEventListener("input", function () {
         </div>
                 <br><br>
 
-        <div class="stage_image">
-            <!-- img upload -->
-            <label>Upload Image:</label><br>
-            <input type="file" 
-            name="stages[${i}][image]">
-        </div>
+                    <div class="stage_image">
+                        <!-- img upload -->
+                        <label>Upload Image:</label><br>
+                        <input type="file" 
+                        name="stages[${i}][image]">
+                    </div>
 
-        <br><br>
+                    <br><br>
 
         <div class="stage_answers">
             <strong>False Answers:</strong><br>
@@ -327,3 +331,9 @@ document.getElementById("estimate").addEventListener("input", function () {
 </script>
 
 <?php 
+
+
+        
+
+
+        
