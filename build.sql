@@ -208,7 +208,7 @@ FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
 
 -- MODULE_STAGE_QUESTION_USER_ANSWERS
 CREATE TABLE module_stage_questions_user_answers (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY_KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     uid INT NOT NULL, 
     msqaid INT NOT NULL,
     FOREIGN KEY (uid) REFERENCES users(id)
