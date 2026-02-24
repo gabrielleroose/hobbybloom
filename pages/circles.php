@@ -109,20 +109,20 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <div class="circles-flex">
 
-                    <?php if (empty($myHobbies)): ?>
-                        <p style="color: white; font-style: italic;">You haven't added any interests yet. Update your account to see your circles!</p>
-                    <?php else: ?>
-                        <?php foreach ($myHobbies as $hobby): 
-                            $color = $hobbyColors[$hobby] ?? '#cccccc'; 
-                        ?>
-                        <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none;">
-                            <div class="circles-circle">
-                                <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                                <p style="color: white; font-size: 12px; margin-top: 5px; text-align: center;"><?= htmlspecialchars($hobby) ?></p>
-                            </div>
-                        </a>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                        <?php if (empty($myHobbies)): ?>
+                            <p style="color: white; font-style: italic;">You haven't added any interests yet. Update your account to see your circles!</p>
+                        <?php else: ?>
+                            <?php foreach ($myHobbies as $hobby): 
+                                $color = $hobbyColors[$hobby] ?? '#cccccc'; 
+                            ?>
+                            <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none;">
+                                <div class="circles-circle">
+                                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                                    <p style="color: white; font-size: 12px; margin-top: 5px; text-align: center;"><?= htmlspecialchars($hobby) ?></p>
+                                </div>
+                            </a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
 
                     </div>
                 </div>
