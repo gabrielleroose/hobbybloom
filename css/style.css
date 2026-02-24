@@ -1613,3 +1613,19 @@ background-color: #BDC29D;
 #saveEvent:hover, #cancelEvent:hover {
   opacity: 0.8;
 }
+
+
+
+
+/* ACCOUNT STYLES */
+
+.account-body{
+  background-color: #BDC29D;
+}
+
+.account-main-container{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
+}

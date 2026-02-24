@@ -43,8 +43,9 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
 </head>
-<body>
-    <div class="page-container">
+<body class="account-body">
+
+    <div class="account-main-container">
         <h1 style="color: white;">Account Settings</h1>
 
         <?php if (isset($_GET['success'])): ?>
