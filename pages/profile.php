@@ -56,8 +56,8 @@ if ($myId != $targetId) {
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
 </head>
-<body>
-    <div class="page-container">
+<body class="profile-body">
+    <div class="profile-container">
         
         <div style="background-color: <?= htmlspecialchars($bgColor) ?>; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px;">
             <div style="width: 80px; height: 80px; background-color: white; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; color: <?= htmlspecialchars($bgColor) ?>;">
