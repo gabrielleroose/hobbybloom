@@ -70,7 +70,7 @@ foreach ($mod_id_list as $id) {
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="module-body">
     <div class="module_back_container">
         <div>
             <button><a href="createForm.php">Create a New Module!</a></button>

@@ -1102,6 +1102,12 @@ background: url(../images/plants-grow.jpg);
 
 /* ******************************* MODULE CSS ******************************* */
 
+.module-body{
+  /* background-color: #6096ba; */
+  /* background-color: #010319; */
+  background-color: #bdc29d;
+}
+
 .module_back_container {
   /* background-color: #F1F2F5; */
   border-radius: 1rem;
@@ -1126,6 +1132,17 @@ background: url(../images/plants-grow.jpg);
   margin: 2% auto;
   /* padding-top: 4rem; */
   align-content: center;
+  transition: transform 0.3s ease-in-out;
+
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
   transition: transform 0.3s ease-in-out;
 }
 
