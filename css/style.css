@@ -114,6 +114,34 @@ footer {
   text-align: center;
 }
 
+
+/* *************************************** TEAM STYLES *************************************** */
+/* *************************************** TEAM STYLES *************************************** */
+
+.team-body{
+  background-color: #BDC29D;
+
+}
+
+.team-main-container{
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+  width: 80%;
+  margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+}
+
 .outter-box {
   margin-left: 200px;
   margin-right: 200px;
