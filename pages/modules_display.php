@@ -88,6 +88,13 @@ $mod_id_list = [];
                 </div>
             </div>
         <?php endforeach; ?>
+
+        <div class="create-button-wrapper">
+            <button class="create-module-button">
+                <a href="createForm.php">Create New Module</a>
+            </button>
+
+        </div>
     </div>
 </body>    
 
