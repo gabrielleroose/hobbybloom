@@ -11,12 +11,14 @@ if (!isset($_SESSION['user']['id'])) {
 
 $user_id = $_SESSION['user']['id'];
 
+// Fetch events the user created OR is invited to **and not declined**
 $stmt = $conn->prepare("
     SELECT e.id, e.title, e.event_date, e.event_time, e.description, e.location, 
            ei.status AS invite_status, e.created_by
     FROM events e
-    LEFT JOIN event_invites ei ON e.id = ei.event_id AND ei.user_id = ?
-    WHERE e.created_by = ? OR ei.user_id = ?
+    LEFT JOIN event_invites ei 
+        ON e.id = ei.event_id AND ei.user_id = ?
+    WHERE e.created_by = ? OR (ei.user_id = ? AND ei.status != 'declined')
 ");
 $stmt->execute([$user_id, $user_id, $user_id]);
 

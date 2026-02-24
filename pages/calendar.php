@@ -57,7 +57,7 @@
         <button id="cancelEvent">Cancel</button>
     </div>
 
-<script>
+    <script>
 document.addEventListener('DOMContentLoaded', function() {
 
     let selectedDate = null;
@@ -68,13 +68,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        events: 'load_events.php',
+        height: 'auto',
 
+        // Fetch events from backend
+        events: function(fetchInfo, successCallback, failureCallback) {
+            fetch('load_events.php')
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Events fetched:', data); // debug
+                    successCallback(data);
+                })
+                .catch(err => {
+                    console.error('Failed to fetch events:', err);
+                    failureCallback(err);
+                });
+        },
+
+        // Click on a date to create new event
         dateClick: function(info) {
             selectedDate = info.dateStr;
             editingEventId = null;
             isInvite = false;
 
+            // Reset modal
             document.getElementById('eventId').value = "";
             document.getElementById('eventTitle').value = "";
             document.getElementById('eventTime').value = "";
@@ -84,23 +100,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('deleteEvent').style.display = 'none';
             document.getElementById('inviteActions').style.display = 'none';
+            document.getElementById('saveEvent').style.display = 'inline-block';
 
             document.getElementById('eventModal').style.display = 'block';
             document.getElementById('modalOverlay').style.display = 'block';
         },
 
+        // Click on an event
         eventClick: function(info) {
             const event = info.event;
             editingEventId = event.id;
 
+            const isOwner = event.extendedProps.isOwner;
+            const status = event.extendedProps.status;
+
+            // Reset modal
             document.getElementById('eventId').value = event.id;
             document.getElementById('eventTitle').value = event.title;
-            document.getElementById('eventTime').value = event.startStr.includes('T') ? event.startStr.split('T')[1].substring(0,5) : "";
             document.getElementById('eventLocation').value = event.extendedProps.location || "";
             document.getElementById('eventDescription').value = event.extendedProps.description || "";
 
-            // Check if this is an invite for current user
-            if(event.extendedProps.status === 'pending') {
+            // Handle time safely
+            if (event.start) {
+                let hours = event.start.getHours().toString().padStart(2, '0');
+                let minutes = event.start.getMinutes().toString().padStart(2, '0');
+                document.getElementById('eventTime').value = (hours === '00' && minutes === '00') ? '' : `${hours}:${minutes}`;
+            } else {
+                document.getElementById('eventTime').value = '';
+            }
+
+            // Determine which buttons to show
+            if (status === 'pending' && !isOwner) {
+                // Invite for current user
                 isInvite = true;
                 document.getElementById('inviteActions').style.display = 'block';
                 document.getElementById('saveEvent').style.display = 'none';
@@ -108,8 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 isInvite = false;
                 document.getElementById('inviteActions').style.display = 'none';
-                document.getElementById('saveEvent').style.display = 'inline-block';
-                document.getElementById('deleteEvent').style.display = 'inline-block';
+                // Only owner can edit/delete
+                if (isOwner) {
+                    document.getElementById('saveEvent').style.display = 'inline-block';
+                    document.getElementById('deleteEvent').style.display = 'inline-block';
+                } else {
+                    document.getElementById('saveEvent').style.display = 'none';
+                    document.getElementById('deleteEvent').style.display = 'none';
+                }
             }
 
             document.getElementById('eventModal').style.display = 'block';
@@ -119,13 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 
+    // Close modal
     function closeModal() {
         document.getElementById('eventModal').style.display = 'none';
         document.getElementById('modalOverlay').style.display = 'none';
     }
-
     document.getElementById('cancelEvent').onclick = closeModal;
 
+    // Save or update event
     document.getElementById('saveEvent').onclick = function() {
         const title = document.getElementById('eventTitle').value.trim();
         const time = document.getElementById('eventTime').value;
@@ -149,12 +187,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 description,
                 invitees
             })
-        }).then(() => {
-            calendar.refetchEvents();
-            closeModal();
-        });
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.error){
+                alert(data.error);
+            } else {
+                calendar.refetchEvents();
+                closeModal();
+            }
+        })
+        .catch(err => console.error('Save event failed:', err));
     };
 
+    // Delete event
     document.getElementById('deleteEvent').onclick = function() {
         if (!editingEventId) return;
         if (!confirm("Delete this event?")) return;
@@ -163,30 +209,41 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: editingEventId })
-        }).then(() => {
-            calendar.refetchEvents();
-            closeModal();
-        });
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.error){
+                alert(data.error);
+            } else {
+                calendar.refetchEvents();
+                closeModal();
+            }
+        })
+        .catch(err => console.error('Delete event failed:', err));
     };
 
+    // Accept invite
     document.getElementById('acceptInvite').onclick = function() {
         fetch('respond_invite.php', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({id: editingEventId, status: 'accepted'})
-        }).then(() => {
+        })
+        .then(() => {
             calendar.refetchEvents();
             closeModal();
         });
     };
 
+    // Decline invite
     document.getElementById('declineInvite').onclick = function() {
         fetch('respond_invite.php', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({id: editingEventId, status: 'declined'})
-        }).then(() => {
-            calendar.refetchEvents();
+        })
+        .then(() => {
+            calendar.refetchEvents(); // event disappears from calendar
             closeModal();
         });
     };
