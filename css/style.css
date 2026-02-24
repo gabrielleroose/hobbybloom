@@ -1689,3 +1689,31 @@ background-color: #BDC29D;
   color: #f1f2f5;
   /* margin-bottom: 2rem; */
 }
+
+/* ************************************* PROFILE STYLES ************************************* */
+/* ************************************* PROFILE STYLES ************************************* */
+
+.profile-body{
+  background-color: #BDC29D;
+}
+
+.profile-container{
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+
+  margin: 0 auto;
+  width: 80%;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+}
