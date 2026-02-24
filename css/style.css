@@ -272,6 +272,10 @@ footer {
   margin-bottom: 15px;
 }
 
+.main-circles-activity-wrapper{
+  display: flex;
+}
+
 .your-circles-wrapper{
   /* gap: 15px; */
   scrollbar-width: none;
@@ -279,7 +283,7 @@ footer {
   padding: 1rem;
   border-radius: 2rem;
   /* max-width: 80%; */
-  width: 100;
+  width: 45%;
   height: 250px;
   margin: 0 auto;
 
@@ -296,7 +300,7 @@ footer {
   transition: transform 0.3s ease-in-out;
 
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   gap: 20px;
   box-sizing: border-box;
 
@@ -305,18 +309,123 @@ footer {
 .circles-flex{
   display: flex;
   overflow-x: auto;
-  margin-top: 5rem;
+  margin-top: 2.5rem;
 }
 
 
 .your-circles-wrapper{
-  transform: scaleX(1.05);
+  transform: scale(1.05);
 }
 
 .your-circles-wrapper h2{
   font-size: var(--text-size-2xl);
   color: #f1f2f5;
 }
+
+.circles-activity-wrapper{
+    /* gap: 15px; */
+  scrollbar-width: none;
+  /* background-color: #1f5077; */
+  padding: 1rem;
+  border-radius: 2rem;
+  /* max-width: 80%; */
+  width: 45%;
+  height: 250px;
+  margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+     
+  border: 1px solid rgba(255, 255, 255, 0.3);
+     
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+  box-sizing: border-box;
+
+}
+
+.activity-flex{
+  display: flex;
+  overflow-x: auto;
+  margin-top: 2.5rem;
+}
+
+
+.circles-activity-wrapper{
+  transform: scale(1.05);
+}
+
+.circles-activity-wrapper h2{
+  font-size: var(--text-size-2xl);
+  color: #f1f2f5;
+}
+
+
+.suggested-circles-wrapper{
+  /* gap: 15px; */
+  scrollbar-width: none;
+  /* background-color: #1f5077; */
+  padding: 1rem 2rem 4rem 2rem;
+  border-radius: 2rem;
+  /* max-width: 80%; */
+  width: 90%;
+  height: auto;
+  min-height: 250px;
+  margin: 0 auto;
+
+  margin-top: 3rem;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+     
+  border: 1px solid rgba(255, 255, 255, 0.3);
+     
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+}
+
+.suggested-circles-wrapper h2{
+  font-size: var(--text-size-2xl);
+  color: #f1f2f5;
+  /* margin-bottom: 2rem; */
+}
+
+
+.suggested-circles-wrapper:hover{
+  transform: scale(1.05);
+}
+
+.suggested-flex{
+  display: flex;
+  overflow-x: auto;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 30px 20px;
+  justify-content: center;
+  overflow: visible;
+}
+
+.circles-circle{
+  gap: 5px;
+  min-width: 70px;
+}
+
 
 
 
@@ -898,7 +1007,9 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 
 /* background url: https://substackcdn.com/image/fetch/$s_!EN7v!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb1da058a-8c6d-42f0-87e1-4c9a8f72423a_5184x3456.jpeg */
-background: url(../images/plants-grow.jpg);
+/* background: url(../images/plants-grow.jpg); */
+
+background-color: #BDC29D;
 }
 
 .main-dashboard {
@@ -982,7 +1093,7 @@ background: url(../images/plants-grow.jpg);
 }
 
 .dash-display-streak:hover{
-  transform: scaleX(1.05);
+  transform: scale(1.05);
 }
 
 .dash-module {
@@ -1011,7 +1122,7 @@ background: url(../images/plants-grow.jpg);
 }
 
 .dash-module:hover{
-  transform: scaleX(1.05);
+  transform: scale(1.05);
 }
 
 .dash-module-heading{
@@ -1110,7 +1221,7 @@ background: url(../images/plants-grow.jpg);
 }
 
 .horizontal-scroll:hover{
-  transform: scaleX(1.05);
+  transform: scale(1.05);
 }
 
 .horizontal-scroll h2{
@@ -1157,7 +1268,7 @@ background: url(../images/plants-grow.jpg);
 }
 
 .dash-calendar:hover{
-  transform: scaleX(1.05);
+  transform: scale(1.05);
 }
 
 .dash-calendar a{
@@ -1169,7 +1280,7 @@ background: url(../images/plants-grow.jpg);
 }
 
 .dash-calendar a:hover{
-  transform: scaleX(1.025);
+  transform: scale(1.025);
 }
 
 
