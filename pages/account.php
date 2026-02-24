@@ -56,9 +56,9 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
             <form action="update_account.php" method="POST">
                 
-                <div style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; color: #333;">Username:</label>
-                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                <div  class="account-username">
+                    <label>Username:</label>
+                    <input class="username-input" type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -141,6 +141,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
     </div>
+
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>

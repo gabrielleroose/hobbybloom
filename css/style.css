@@ -1638,9 +1638,91 @@ background-color: #BDC29D;
 
 .account-body{
   background-color: #BDC29D;
+  /* width: 80%; */
+  /* margin: 0 auto; */
+}
+
+.account-main-container{
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
   width: 80%;
   margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
 }
+
+.account-settings{
+  border: 3px solid orange;
+  width: 70%;
+  margin: 0 auto;
+
+  font-family: sans-serif;
+
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+
+   /* glassmorphism */
+   background: rgba(255, 255, 255, 0.2);
+
+   backdrop-filter: blur(12px);
+   -webkit-backdrop-filter: blur(12px);
+ 
+   border: 1px solid rgba(255, 255, 255, 0.3);
+ 
+   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+ 
+   transition: transform 0.3s ease-in-out;
+
+   display: flex;
+   flex-direction: column;
+}
+
+.account-username{
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  color: #153853;
+  font-weight: bold;
+  font-size: var(--text-size-lg);
+
+}
+
+.username-input{
+  padding: 1rem;
+  border-radius: 2rem;
+  margin-top: .5rem;
+
+   /* glassmorphism */
+   background: rgba(255, 255, 255, 0.2);
+
+   backdrop-filter: blur(12px);
+   -webkit-backdrop-filter: blur(12px);
+ 
+   border: 1px solid rgba(255, 255, 255, 0.3);
+ 
+   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+ 
+   transition: transform 0.3s ease-in-out;
+   color: #153853;
+   font-size: var(--text-size-md);
+   
+}
+
+style="margin-bottom: 20px;"
+tyle="font-weight: bold; color: #333;"
+style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;"
 
 
 /* ************************************* SHARE STYLES ************************************* */
