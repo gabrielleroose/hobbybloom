@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'db.php';
-
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user']['id'])) {
@@ -19,7 +18,7 @@ $date = $data['date'] ?? '';
 $time = $data['time'] ?? null;
 $description = trim($data['description'] ?? '');
 $location = trim($data['location'] ?? '');
-$invitees = $data['invitees'] ?? []; // array of user_ids
+$invitees = $data['invitees'] ?? [];
 
 if (!$id || !$title || !$date) {
     echo json_encode(['error' => 'Missing required fields']);
@@ -40,10 +39,28 @@ $stmtDel->execute([$id]);
 
 // Add new invites
 if (!empty($invitees)) {
-    $stmtInvite = $conn->prepare("INSERT INTO event_invites (event_id, user_id) VALUES (?, ?)");
+    $stmtInvite = $conn->prepare("INSERT INTO event_invites (event_id, user_id, status) VALUES (?, ?, 'pending')");
     foreach ($invitees as $invitee_id) {
-        $stmtInvite->execute([$id, $invitee_id]);
+        if ($invitee_id != $user_id) {
+            $stmtInvite->execute([$id, $invitee_id]);
+        }
     }
 }
 
-echo json_encode(['success' => true]);
+// Return updated event in FullCalendar format
+$start = $date . 'T' . ($time ?: '00:00:00');
+
+echo json_encode([
+    'success' => true,
+    'event' => [
+        'id' => $id,
+        'title' => $title,
+        'start' => $start,
+        'extendedProps' => [
+            'description' => $description,
+            'location' => $location,
+            'status' => null,
+            'isOwner' => true
+        ]
+    ]
+]);

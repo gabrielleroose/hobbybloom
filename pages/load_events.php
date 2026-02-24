@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/base.php';
-
+require_once __DIR__ . '/db.php'; // just connect to DB
 
 header('Content-Type: application/json');
 
@@ -12,7 +11,6 @@ if (!isset($_SESSION['user']['id'])) {
 
 $user_id = $_SESSION['user']['id'];
 
-// Fetch events user created OR is invited to
 $stmt = $conn->prepare("
     SELECT e.id, e.title, e.event_date, e.event_time, e.description, e.location, 
            ei.status AS invite_status, e.created_by
