@@ -23,7 +23,6 @@ $googleId = $_SESSION['google_id'] ?? null;
 <body>
 
 <?php
-
 // check if they're logged in
 if (!$googleId) {
     header('Location: index.php');
