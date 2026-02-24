@@ -1,30 +1,43 @@
 <?php
-ini_set('display_errors', 0);
+session_start();
 require_once 'db.php';
 
 header('Content-Type: application/json');
 
-if (!isset($conn)) {
+if (!isset($_SESSION['user']['id'])) {
     echo json_encode([]);
     exit;
 }
 
-$sql = "SELECT id, title, event_date, event_time, description FROM events";
-$stmt = $conn->query($sql);
+$user_id = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("
+    SELECT id, title, event_date, event_time, description, location
+    FROM events
+    WHERE created_by = ?
+");
+
+$stmt->execute([$user_id]);
 
 $events = [];
 
-while ($row = $stmt->fetch()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+    $start = $row['event_date'];
+
+    if (!empty($row['event_time'])) {
+        $start .= 'T' . $row['event_time'];
+    }
+
     $events[] = [
         'id' => $row['id'],
         'title' => $row['title'],
-        'start' => $row['event_date'] . 'T' . ($row['event_time'] ?? '00:00:00'),
+        'start' => $start,
         'extendedProps' => [
-            'description' => $row['description']
+            'description' => $row['description'],
+            'location' => $row['location']
         ]
     ];
 }
 
 echo json_encode($events);
-
-

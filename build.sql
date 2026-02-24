@@ -210,12 +210,16 @@ CREATE TABLE events (
     event_date DATE NOT NULL,
     event_time TIME,
     description TEXT,
-    created_by INT,
+    location VARCHAR(255),
+    created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_events_user
     FOREIGN KEY (created_by) REFERENCES users(id)
-        ON DELETE SET NULL
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
 
 
 

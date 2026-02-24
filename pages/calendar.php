@@ -8,7 +8,7 @@
     <link href="../css/style.css" rel="stylesheet"> 
     <link href="../css/nav.css" rel="stylesheet">
 
-    <?php include 'base.php'; ?>
+    <?php include 'base.php';?>
 
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -32,8 +32,14 @@
     <label>Time</label>
     <input type="time" id="eventTime">
 
+    <label>Location</label>
+    <input type="text" id="eventLocation">
+
+
     <label>Description</label>
     <textarea id="eventDescription"></textarea>
+
+
 
     <button id="saveEvent">Save</button>
     <button id="deleteEvent" style="display:none;">Delete</button>
