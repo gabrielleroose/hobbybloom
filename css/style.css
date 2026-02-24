@@ -796,6 +796,9 @@ h2 {
 /* ********************* DASHBOARD STYLES ********************* */
 
 .body-dashboard{
+
+/* gradient from: https://cssgradient.io/ */
+
   /* background: #020024;
 background: radial-gradient(circle, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 0.51) 53%, rgba(0, 212, 255, 1) 100%); */
 
@@ -808,6 +811,8 @@ background: radial-gradient(circle, rgba(30, 80, 119, 1) 0%, rgba(0, 212, 255, 0
 /* background: #205077;
 background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75) 53%, rgba(0, 212, 255, 1) 100%); */
 
+
+/* background url: https://substackcdn.com/image/fetch/$s_!EN7v!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb1da058a-8c6d-42f0-87e1-4c9a8f72423a_5184x3456.jpeg */
 background: url(../images/plants-grow.jpg);
 }
 
@@ -834,7 +839,7 @@ background: url(../images/plants-grow.jpg);
   /* margin: 0 auto; */
   /* width: 60%; */
   /* background-color: #1E5077; */
-  border: 2px solid pink;
+  /* border: 2px solid pink; */
   height: 275px;
   border-radius: 20px;
   color: white;
@@ -899,7 +904,7 @@ background: url(../images/plants-grow.jpg);
   padding-left: 60px;
 }
 
-.dash-item {
+.dash-module {
   max-width: 800px;
   height: 200px;
   background-color: #1f5077;
@@ -908,7 +913,7 @@ background: url(../images/plants-grow.jpg);
   margin-left: 3rem;
 }
 
-.dash-item-text {
+.dash-module-text {
   color: white;
   padding: 2rem 0 2rem 2rem;
   font-size: var(--text-size-lg);
