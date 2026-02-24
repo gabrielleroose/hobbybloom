@@ -495,6 +495,40 @@ footer {
 }
 
 
+/* ***************************** CIRCLE DETAIL STYLES ************************* */
+/* ***************************** CIRCLE DETAIL STYLES ************************* */
+
+.circle-detail-body{
+  background-color: #BDC29D;
+
+}
+
+.circle-detail-main-container{
+  border-radius: 2rem;
+  padding: 1rem 0 3rem 3rem;
+  width: 80%;
+  margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+  
+}
+
+.detail-container-inside{
+  /* border: 3px solid orange; */
+  width: 75%;
+  margin: 0 auto;
+}
+
 
 
 
@@ -1115,6 +1149,7 @@ background-color: #BDC29D;
   justify-content: center;
 
   gap: 30px;
+  margin-bottom: 10rem;
 }
 
 .dash-inner {
@@ -1310,6 +1345,7 @@ background-color: #BDC29D;
   /* width: 100%; */
   width: 30%;
   /* max-width: 300px; */
+  height: 400px;
   padding: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   border-radius: 2rem;
@@ -1747,10 +1783,6 @@ background-color: #BDC29D;
    font-size: var(--text-size-md);
    
 }
-
-style="margin-bottom: 20px;"
-tyle="font-weight: bold; color: #333;"
-style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;"
 
 
 /* ************************************* SHARE STYLES ************************************* */

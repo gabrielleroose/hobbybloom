@@ -107,10 +107,10 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </style>
 </head>
-<body>
+<body class="circle-detail-body">
 
-    <div class="page-container">
-        <div class="page-container-inside">
+    <div class="circle-detail-main-container">
+        <div class="detail-container-inside">
         
             <div style="background-color: <?= $headerColor ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
                 <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
