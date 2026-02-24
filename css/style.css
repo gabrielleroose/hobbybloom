@@ -1519,13 +1519,17 @@ background-color: #BDC29D;
 
 .hidden {
             display: none;
-        }
+}
 
 
 
 
-      /* maybe calander css */
-      /* *************************** CALENDAR STYLES *************************** */
+/* maybe calander css */
+/* *************************** CALENDAR STYLES *************************** */
+
+.calendar-body{
+  background-color: #BDC29D;
+}
 
 
 #calendar{
@@ -1627,3 +1631,20 @@ background-color: #BDC29D;
 
 #saveEvent:hover, #cancelEvent:hover {
   opacity: 0.8;
+}
+
+/* ************************************* ACCOUNT STYLES ************************************* */
+/* ************************************* ACCOUNT STYLES ************************************* */
+
+.account-body{
+  background-color: #BDC29D;
+  width: 80%;
+  margin: 0 auto;
+}
+
+
+/* ************************************* SHARE STYLES ************************************* */
+/* ************************************* SHARE STYLES ************************************* */
+.share-body{
+  background-color: #BDC29D;
+}
