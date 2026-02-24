@@ -56,17 +56,12 @@ try {
      
     $module_stage_info = [];
 
-
-    
     foreach ($mod_stages as $stage) {
         $stage_id = $stage['id'];
         $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
         $stmt = $conn->prepare($module_stage_questions_sql);
         $stmt->execute([$stage_id]);
-        $module_stage_questions = $stmt->fetchAll(); //grabs all selected info, arranges into array as seen in mod_id statements
-        
-       $hidden = ($stage['stage_num'] == 1) ? "" : "hidden"; //if stage['stage_num' == 1, set $hidden to "". otherwise, set to "hidden"]
-        echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
+        $module_stage_questions = $stmt->fetchAll();
         
         echo "<div class='stage_title'>";
         echo $stage['title'];
@@ -115,6 +110,8 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
+
+    
 ?>
 
 <script src="../js/module.js"></script>
