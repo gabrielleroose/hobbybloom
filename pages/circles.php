@@ -64,15 +64,15 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="circles-body">
 
     <div class="page-container">
 
         <div class="search-row">
-            <p style="margin-top: 0; color: white; font-weight: bold; font-size: 24px; text-align: center;">Circles</p>
+            <p>Circles</p>
             
             <form method="GET" action="circles.php" style="margin-bottom: 20px;">
-                <input type="text" name="q" class="search-bar" placeholder="Search Circles..." value="<?= htmlspecialchars($searchQuery) ?>" style="width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: none;">
+                <input type="text" name="q" class="search-bar" placeholder="Search Circles..." value="<?= htmlspecialchars($searchQuery) ?>">
                 <button type="submit" class="light-btn" style="background-color: #a8d0e6; color: #333; border: none; cursor: pointer; width: 100%; text-align: center; padding: 10px; font-weight: bold; border-radius: 5px;">Search</button>
             </form>
 
@@ -101,8 +101,14 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php endif; ?>
 
-            <h2>Your Circles</h2>
-            <div class="horizontal-scroll">
+            
+            <div class="your-circles-wrapper">
+                <h2>Your Circles</h2>
+
+                <div class="circles-flex">
+
+            
+
                 <?php if (empty($myHobbies)): ?>
                     <p style="color: white; font-style: italic;">You haven't added any interests yet. Update your account to see your circles!</p>
                 <?php else: ?>
@@ -117,6 +123,8 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
+
+                </div>
             </div>
 
             <h2>Suggested For You</h2>

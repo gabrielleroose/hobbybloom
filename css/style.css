@@ -160,7 +160,12 @@ footer {
   border-radius: 50%;
 }
 
-/* CIRCLES STYLES */
+/* ****************************** CIRCLES STYLES  ****************************** */
+/* ***************************************************************************** */
+
+.circles-body{
+  background-color: #BDC29D;
+}
 
 .page-container {
   /* max-width: 600px; */
@@ -182,9 +187,27 @@ footer {
   display: flex;
   flex-direction: column;
   width: 20%;
+
+  border-radius: 2rem;
   /* background-color: #F1F2F5; */
   /* background-color: rgb(16, 16, 83); */
-  background-color: #1E5077;
+  /* background-color: #1E5077; */
+
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+    
+  border: 1px solid rgba(255, 255, 255, 0.3);
+    
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  
+  transition: transform 0.3s ease-in-out;
+
+
+
   align-items: flex-start;
   text-align: left;
   padding: 2rem 0 0 1.5rem;
@@ -192,22 +215,32 @@ footer {
 }
 
 .search-row p {
-  color: white;
+  /* color: white; */
+  color: #1E5077;
   font-size: var(--text-size-xl);
-  margin: 0 0 15px 0; /* Removes top/left margins, adds bottom margin */
+  margin: 0 0 15px 0;
+  font-weight: bold;
 }
 
 
+
 .search-bar {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   /* background-color: #1f5077; */
   /* background-color: rgb(16, 16, 83); */
-  background-color: #F1F2F5;
-  color: rgb(16, 16, 83);;
-  border: none;
-  border-radius: 25px;
+  /* background-color: #F1F2F5; */
+  /* color: rgb(16, 16, 83);; */
+  color: #1E5077;
+  border-radius: 4rem;
   margin-bottom: 2rem;
+
+  background: rgba(255, 255, 255, 0.15); 
+  
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .search-bar::placeholder {
@@ -229,7 +262,7 @@ footer {
   text-decoration: none;
 }
 
-/* style="display: flex; gap: 15px; margin-bottom: 20px;" */
+
 
 .page-header {
   display: flex;
@@ -238,6 +271,54 @@ footer {
   align-items: center;
   margin-bottom: 15px;
 }
+
+.your-circles-wrapper{
+  /* gap: 15px; */
+  scrollbar-width: none;
+  /* background-color: #1f5077; */
+  padding: 1rem;
+  border-radius: 2rem;
+  /* max-width: 80%; */
+  width: 100;
+  height: 250px;
+  margin: 0 auto;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+     
+  border: 1px solid rgba(255, 255, 255, 0.3);
+     
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 20px;
+  box-sizing: border-box;
+
+}
+
+.circles-flex{
+  display: flex;
+  overflow-x: auto;
+  margin-top: 5rem;
+}
+
+
+.your-circles-wrapper{
+  transform: scaleX(1.05);
+}
+
+.your-circles-wrapper h2{
+  font-size: var(--text-size-2xl);
+  color: #f1f2f5;
+}
+
+
 
 
 .chat-list {
@@ -1105,6 +1186,7 @@ background: url(../images/plants-grow.jpg);
 
 
 /* ******************************* MODULE CSS ******************************* */
+/* ******************************* ******************************* */
 
 .module-body{
   /* background-color: #6096ba; */
