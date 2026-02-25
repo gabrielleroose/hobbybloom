@@ -1767,7 +1767,7 @@ background-color: #BDC29D;
 }
 
 /* Button Styling */
-#saveEvent, #cancelEvent {
+#saveEvent, #cancelEvent, #acceptInvite, #declineInvite {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -1777,13 +1777,13 @@ background-color: #BDC29D;
   transition: opacity 0.2s;
 }
 
-#saveEvent {
+#saveEvent, #acceptInvite {
   background-color: #166914;
   color: white;
   margin-right: 4%;
 }
 
-#cancelEvent {
+#cancelEvent, #declineinvite {
   background-color: #e0e0e0;
   color: #333;
 }
