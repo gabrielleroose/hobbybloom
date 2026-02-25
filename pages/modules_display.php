@@ -241,12 +241,19 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
-
-                    <div class="begin-module-wrapper">
-                        <form action="./module.php" method="GET">
-                           <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
-                        </form>
-                    </div>
+                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
+                    <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
+                    <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
+                    <form  action="./module.php" method="POST">
+                        <input type="hidden">
+                       <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                        
+                        <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
+                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                        <?php endif ?>
+                       
+                
+                    </form>
                 </div>
             </div>
         <?php endforeach; ?>
