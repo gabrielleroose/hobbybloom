@@ -65,6 +65,8 @@ $mod_id_list = [];
         $stmt = $conn->prepare($delete_sql);
         $stmt->execute([$_POST['module_delete']]);
     }
+
+
 ?>
 
 
@@ -91,12 +93,14 @@ $mod_id_list = [];
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
-                        
+                    </form>
+
+                    <form action="modules_display.php" method="POST">
+
                         <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
                             <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
                         <?php endif ?>
-                       
-                
+
                     </form>
 
                     <form action="modules_display.php" method="POST">
