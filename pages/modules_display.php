@@ -18,6 +18,12 @@ if (!$googleId) {                   //checking if google id present, sending bac
     exit;
 }
 
+$user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+$stmt = $conn->prepare($user_id_sql);
+$stmt->execute([':gid' => $googleId]);
+
+$user_id = $stmt->fetchColumn();
+
 
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
@@ -42,7 +48,7 @@ $mod_id_list = [];
     $all_mods = [];
     foreach ($mod_id_list as $id) {
     
-        $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
+        $fetch_mod_info = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
         LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
         WHERE m.id = ?";
 
@@ -84,6 +90,12 @@ $mod_id_list = [];
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                        
+                        <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
+                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                        <?php endif ?>
+                       
+                
                     </form>
                 </div>
             </div>
