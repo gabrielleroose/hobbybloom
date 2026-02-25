@@ -238,6 +238,8 @@ answer varchar(255),
 is_correct INT NOT NULL DEFAULT 0,
 ans_num INT NOT NULL,
 FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- MODULE_STAGE_QUESTION_USER_ANSWERS
