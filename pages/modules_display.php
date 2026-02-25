@@ -48,7 +48,7 @@ $mod_id_list = [];
     foreach ($mod_id_list as $id) {
     
         $fetch_mod_info = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
-        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id 
+        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
         WHERE m.id = ?";
 
         $stmt = $pdo->prepare($fetch_mod_info);
@@ -93,6 +93,12 @@ $mod_id_list = [];
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                        
+                        <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
+                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                        <?php endif ?>
+                       
+                
                     </form>
 
                     <form action="modules_display.php" method="POST">
