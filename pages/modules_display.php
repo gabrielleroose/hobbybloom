@@ -67,6 +67,7 @@ $mod_id_list = [];
     }
 
 
+
 ?>
 
 
@@ -93,12 +94,6 @@ $mod_id_list = [];
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
-                        
-                        <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
-                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
-                        <?php endif ?>
-                       
-                
                     </form>
 
                     <form action="modules_display.php" method="POST">
@@ -107,12 +102,6 @@ $mod_id_list = [];
                             <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
                         <?php endif ?>
 
-                    </form>
-
-                    <form action="createForm.php" method="GET">
-                        <?php if ($mod['cid'] == $user_id): ?>
-                            <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
-                        <?php endif ?>
                     </form>
                        
                 
