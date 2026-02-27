@@ -94,7 +94,6 @@ if (!$googleId) {                   //checking if google id present, sending bac
 //     }
 // }
 
-
 $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
 $stmt = $conn->prepare($user_id_sql);
 $stmt->execute([':gid' => $googleId]);
@@ -145,10 +144,10 @@ if (isset($_GET['module_edit'])) {
 
     foreach ($module_stage_questions_info as &$stage) {
         foreach ($stage['question'] as &$question) {
-            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
-            $stmt = $conn->prepare($module_stage_questions_answers_sql);
-            $stmt->execute([$question['id']]);
-            $module_stage_questions_answers_results = $stmt->fetchAll();
+                $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+                $stmt = $conn->prepare($module_stage_questions_answers_sql);
+                $stmt->execute([$question['id']]);
+                $module_stage_questions_answers_results = $stmt->fetchAll();
 
 
             $question['answers'] = $module_stage_questions_answers_results;
