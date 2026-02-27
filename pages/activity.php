@@ -102,9 +102,9 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
         .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
         .tab-btn.active { background-color: #1f5077; color: white; }
-        
+         
         .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; } 
+        .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; }
     </style>
 </head>
 <body class="activity-body">
@@ -133,14 +133,14 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 } elseif ($act['activity_type'] === 'event') {
                     $actionText = "scheduled the event";
                     $targetLink = "calendar.php";
-                }
+                } 
             ?>
                 <div class="activity-feed-item">
                     <div class="activity-main-content">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
                         <div class="activity-text">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
-                            <span style="color: #666;"> <?= $actionText ?> </span>
+                            <span style="color: #666;"> <?= $actionText ?> </span> 
                             <?php if ($act['target_name']): ?>
                                 <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
                             <?php endif; ?>
