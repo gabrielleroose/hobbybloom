@@ -151,80 +151,20 @@ if (isset($_GET['module_edit'])) {
 
 
             $question['answers'] = $module_stage_questions_answers_results;
+            
+                $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
+                                        (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
+                    ";
+                    $stmt = $conn->prepare($user_answers_sql);
+                    $stmt->execute([$user_id, $question['id']]);
+                    $question['user_answers'] = $stmt->fetchAll();
 
         }
     }
 
 }
+
 $circleId = $_GET['circle_id'] ?? null;
-
-
-$user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
-$stmt = $conn->prepare($user_id_sql);
-$stmt->execute([':gid' => $googleId]);
-
-$user_id = $stmt->fetchColumn();
-
-if (isset($_POST['module_edit'])) {
-
-    $module_id = $_POST['module_edit'];
-    $module_info_sql = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
-        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
-        WHERE m.id = ?";
-    $stmt = $conn->prepare($module_info_sql);
-    $stmt->execute([$module_id]);
-    $module_info = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-
-
-
-    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = ?";
-    $stmt = $conn->prepare($module_stage_info);
-    $stmt->execute([$module_id]);
-    $module_stage_info = $stmt->fetchAll();
-
-    $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
-    foreach ($module_stage_info as $stage) {
-
-        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
-        $stmt = $conn->prepare($module_stage_questions_sql);
-        $stmt->execute([$stage['id']]);
-        $module_stage_questions_results = $stmt->fetchAll();
-
-        $module_stage_questions_info[] = [
-        'id' => $stage['id'],
-        'stage_num' => $stage['stage_num'],
-        'title' => $stage['title'],
-        'question' => $module_stage_questions_results
-    ];
-    }
-
-
-    foreach($module_stage_questions_info as &$stage) {
-        foreach ($stage['question'] as &$question) {
-                $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
-                $stmt = $conn->prepare($module_stage_questions_answers_sql);
-                $stmt->execute([$question['id']]);
-                $module_stage_questions_answers_results = $stmt->fetchAll();
-
-
-            $question['answers'] = $module_stage_questions_answers_results;
-                $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
-                                        (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
-                ";
-                    $stmt = $conn->prepare($user_answers_sql);
-                    $stmt->execute([$user_id, $question['id']]);
-                    $question['user_answers'] = $stmt->fetchAll();
-            }
-
-        } 
-    
-
-    
-    
-}
-
 ?>
 
 
@@ -275,7 +215,7 @@ if (isset($_POST['module_edit'])) {
 
             <div>
                 <label>Number of lessons:</label><br>
-                <input type="number" id="stage_num" name="stage_num" min="0" max="5">
+                <input type="number" id="stage_num" name="stage_num" min="0" max="5"> 
             </div>
 
             <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
@@ -287,7 +227,7 @@ if (isset($_POST['module_edit'])) {
             <label>Recomended experience level:</label><br>
             <select id="exp_level" name="exp_level">
                 <option value="beginner" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'beginner') ? 'selected' : '' ?>>Beginner</option> 
-                <option value="intermediate" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'intermediate') ? 'selected' : '' ?>>Intermediate</option>
+                <option value="intermediate" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'intermediate') ? 'selected' : '' ?>>Intermediate</option> 
                 <option value="expert" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'expert') ? 'selected' : '' ?>>Expert</option>
             </select>
             <br><br>
@@ -296,7 +236,7 @@ if (isset($_POST['module_edit'])) {
             <label>Estimated time of completion:</label>
             <!-- maybe do a set time format if possible -->
             <label for="estimate">Estimated time (minutes):</label>
-            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required>
+            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required> 
 
             <p id="formattedOutput"></p>
 
@@ -304,7 +244,7 @@ if (isset($_POST['module_edit'])) {
             <button type="submit" name="create_module">Create Module</button> 
             <?php endif ?>
 
-            <?php if (isset($_GET['module_edit'])): ?>  <!-- EDIT BUTTON IF MODULE_EDIT IS SET -->
+            <?php if (isset($_GET['module_edit'])): ?>  <!-- EDIT BUTTON IF MODULE_EDIT IS SET --> 
             <input type="hidden" name="module_id" value="<?= htmlspecialchars($module_id) ?>">
             
             <button type="submit">Confirm Module Changes</button>
@@ -323,7 +263,7 @@ if (isset($_POST['module_edit'])) {
 </html>
 
 <script>
-    function generateStageVideoInput(stage_num, url = "") {
+    function generateStageVideoInput(stage_num, url = "") { 
     return `
         <div class="stage_video">
         <label>Stage Video URL:</label><br>
@@ -340,7 +280,7 @@ if (isset($_POST['module_edit'])) {
 
 
 <script>
-    document.getElementById("estimate").addEventListener("input", function () {
+    document.getElementById("estimate").addEventListener("input", function () { 
         const minutes = parseInt(this.value, 10);
         const output = document.getElementById("formattedOutput");
 
@@ -365,7 +305,7 @@ if (isset($_POST['module_edit'])) {
    document.addEventListener("DOMContentLoaded", function () {
 
     const stageSelect = document.getElementById("stage_num");
-    const stagesContainer = document.getElementById("stages_container");
+    const stagesContainer = document.getElementById("stages_container"); 
 
     function generateStages(stageCount, data = null) {
 
@@ -377,11 +317,9 @@ if (isset($_POST['module_edit'])) {
             const questionData = stageData?.question?.[0] ?? null;
             const answersData = questionData?.answers ?? []; //effectively the same way you'd access mod_stage_question_info[question][answers]
 
-            let answersHTML = "";
+            let answersHTML = ""; 
 
-
-
-            for (let a = 1; a <= 4; a++) {
+            for (let a = 1; a <= 4; a++) { 
 
                 const answerObj = answersData[a - 1] ?? null; 
 
@@ -398,7 +336,7 @@ if (isset($_POST['module_edit'])) {
                         required>
 
                     <input type="hidden"
-                        name="stages[${i}][answers][${a}][is_correct]"
+                        name="stages[${i}][answers][${a}][is_correct]" 
                         value="${isCorrect}">
                     <br><br>
                 `;
@@ -412,7 +350,7 @@ if (isset($_POST['module_edit'])) {
             stageDiv.innerHTML = `    
                 <h3>Stage ${i}</h3>
 
-                <label>Stage Title:</label><br>
+                <label>Stage Title:</label><br> 
                 <input type="text"
                     name="stages[${i}][title]"
                     value="${stageData?.title ?? ''}"
@@ -453,7 +391,7 @@ if (isset($_POST['module_edit'])) {
 });
 </script>
 
-<?php include __DIR__ . '/../includes/footer.php'; ?> 
+<?php include __DIR__ . '/../includes/footer.php'; ?>  
 <!-- footer -->
 
 
