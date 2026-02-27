@@ -36,6 +36,7 @@ CREATE TABLE circle (
     uid INT NOT NULL,
     description TEXT,
     color VARCHAR(7) DEFAULT '#1f5077',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (circle_id),
     FOREIGN KEY (uid) REFERENCES users(id)
         ON DELETE CASCADE
@@ -95,6 +96,7 @@ CREATE TABLE module (
     num_lessons INT NOT NULL,
     est_comp_time INT NOT NULL,
     notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (cid) REFERENCES users(id) 
     ON DELETE CASCADE
