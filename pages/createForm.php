@@ -131,37 +131,40 @@ if (isset($_POST['module_edit'])) {
         $module_stage_questions_results = $stmt->fetchAll();
 
         $module_stage_questions_info[] = [
-        'id' => $stage['id'],
-        'stage_num' => $stage['stage_num'],
-        'title' => $stage['title'],
-        'question' => $module_stage_questions_results
-    ];
+            'id' => $stage['id'],
+            'stage_num' => $stage['stage_num'],
+            'title' => $stage['title'],
+            'question' => $module_stage_questions_results
+        ];
     }
 
 
-    foreach($module_stage_questions_info as &$stage) {
+    foreach ($module_stage_questions_info as &$stage) {
         foreach ($stage['question'] as &$question) {
-                $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
-                $stmt = $conn->prepare($module_stage_questions_answers_sql);
-                $stmt->execute([$question['id']]);
-                $module_stage_questions_answers_results = $stmt->fetchAll();
+            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+            $stmt = $conn->prepare($module_stage_questions_answers_sql);
+            $stmt->execute([$question['id']]);
+            $module_stage_questions_answers_results = $stmt->fetchAll();
 
 
             $question['answers'] = $module_stage_questions_answers_results;
-                $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
-                                        (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
-                ";
-                    $stmt = $conn->prepare($user_answers_sql);
-                    $stmt->execute([$user_id, $question['id']]);
-                    $question['user_answers'] = $stmt->fetchAll();
-            }
 
-        } 
-    
+//             $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
+//                                     (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
+// ";
+//             $stmt = $conn->prepare($user_answers_sql);
+//             $stmt->execute([$user_id, $question['id']]);
+//             $question['user_answers'] = $stmt->fetchAll();
 
-    
-    
+
+        }
+    }
+
+
+
+
 }
+
 
 ?>
 
@@ -207,29 +210,50 @@ if (isset($_POST['module_edit'])) {
             required><br><br>
 
             <label>Description:</label><br>
-            <textarea name="description" rows="4" cols="40"><?= 
-            htmlspecialchars($module_info['description'] ?? '') 
-            ?></textarea><br><br>
+            <textarea name="description" rows="4" cols="40"
+            value="<?= htmlspecialchars($module_info['description'] ?? '') ?>"></textarea><br><br>
 
             <label>Number of videos:</label><br>
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
             <div id="videoInputs"></div><br>
-            
-            
-            <label class="quiz_check">
-                <input type="checkbox" id="enable_stages">
-                Include Quiz Stages?
-            </label><br><br>
 
-            <div id="stages_section" style="display:none;">
+            <div>
                 <label>Number of lessons:</label><br>
-                <input type="number" id="stage_num" name="stage_num" min="0" max="5"> 
-            
-            
-            <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
-
+                <input type="number" id="stage_num" name="stage_num" min="0" max="5">
             </div>
+
+            <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
+            
+                <!-- THIS PHP DYNAMICALLY GENERATES THE USER'S STAGES IF EDITING FORM. OTHEWRWISE, THE <div> ABOVE IS USED FOR A NEW FORM -->
+            <?php if (!empty($module_stage_questions_info)): ?>
+                <?php foreach ($module_stage_questions_info as $stageIndex => $stage): ?>
+                    <div class="stage-block">
+                        <h3>Stage <?= $stage['stage_num'] ?></h3>
+                        <label>Stage Title:</label>
+                        <input type="text" name="stages[<?= $stage['stage_num'] ?>][title]" 
+                            value="<?= htmlspecialchars($stage['title']) ?>" required><br><br>
+
+                        <?php foreach ($stage['question'] as $questionIndex => $question): ?>
+                            <div class="question-block">
+                                <label>Question:</label>
+                                <input type="text" name="stages[<?= $stage['stage_num'] ?>][question]" 
+                                    value="<?= htmlspecialchars($question['question_text']) ?>" required><br><br>
+
+                                <?php foreach ($question['answers'] as $answer): ?>
+                                    <input type="text" name="stages[<?= $stage['stage_num'] ?>][answers][<?= $answer['ans_num'] ?>][text]" 
+                                        value="<?= htmlspecialchars($answer['answer']) ?>" required>
+
+                                    <input type="hidden" name="stages[<?= $stage['stage_num'] ?>][answers][<?= $answer['ans_num'] ?>][is_correct]" 
+                                        value="<?= $answer['is_correct'] ?>"><br>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+
 
             <label>Notes:</label><br>
             <textarea name="notes" rows="4" cols="40"></textarea><br><br>
@@ -237,78 +261,128 @@ if (isset($_POST['module_edit'])) {
             <label>Recomended experience level:</label><br>
             <select id="exp_level" name="exp_level">
                 <option value="beginner" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'beginner') ? 'selected' : '' ?>>Beginner</option> 
-                <option value="intermediate" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'intermediate') ? 'selected' : '' ?>>Intermediate</option> 
+                <option value="intermediate" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'intermediate') ? 'selected' : '' ?>>Intermediate</option>
                 <option value="expert" <?= (isset($module_info['exp_level']) && $module_info['exp_level'] === 'expert') ? 'selected' : '' ?>>Expert</option>
             </select>
             <br><br>
 
 
             <label>Estimated time of completion:</label>
-           
+            <!-- maybe do a set time format if possible -->
             <label for="estimate">Estimated time (minutes):</label>
-            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required>
+            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['test_comp_time'] ?? '') ?>" required>
 
             <p id="formattedOutput"></p>
 
-            <?php if (!isset($_GET['module_edit'])): ?> <!-- CREATE BUTTON IF MODULE_EDIT ISN'T SET -->
-            <button type="submit" name="create_module">Create Module</button> 
-            <?php endif ?>
-
-            <?php if (isset($_GET['module_edit'])): ?>  <!-- EDIT BUTTON IF MODULE_EDIT IS SET --> 
-            <input type="hidden" name="module_id" value="<?= htmlspecialchars($module_id) ?>">
-            
-            <button type="submit">Confirm Module Changes</button>
+            <?php if (!isset($_POST['module_edit'])): ?>
+            <button type="submit">Create Module</button>
             <?php endif ?>
 
             </div>
 
+
+
             
         </form>
     </div>
-    <script>
-        const existingStages = <?= json_encode($module_stage_questions_info ?? []) ?>;
-        if (existingStages.length > 0) {
-        document.getElementById("enable_stages").checked = true;
-        stageSection.style.display = "block";
-    }
-    </script>
 
 </body>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 
 </html>
+
+<script>
+    function generateVideoInputs() {
+        const count = document.getElementById("videoCount").value;
+        const container = document.getElementById("videoInputs");
+
+        // clear existing inputs
+        container.innerHTML = "";
+
+        for (let i = 1; i <= count; i++) {
+            const input = document.createElement("input");
+            input.type = "url";
+            input.name = "videos[]";
+            input.placeholder = "Video " + i + " link";
+            input.required = true;
+
+            container.appendChild(input);
+            container.appendChild(document.createElement("br"));
+        }
+    }
+</script>
+
+
+<script>
+    document.getElementById("estimate").addEventListener("input", function () {
+        const minutes = parseInt(this.value, 10);
+        const output = document.getElementById("formattedOutput");
+
+        if (isNaN(minutes) || minutes <= 0) {
+            output.textContent = "";
+            return;
+        }
+
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+
+        let formatted = "";
+        if (hours > 0) formatted += `${hours} hour${hours !== 1 ? "s" : ""} `;
+        if (remainingMinutes > 0) formatted += `${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}`;
+
+        output.textContent = `Estimated time: ${formatted}`;
+    });
+</script>
 
 <script>
     const enableStages = document.getElementById("enable_stages");
     const stageSection = document.getElementById("stages_section");
 
-    enableStages.addEventListener("change", function () {
-        if (this.checked) {
-            stageSection.style.display = "block";
-        } else {
-            stageSection.style.display = "none";
-            document.getElementById("stages_container").innerHTML = "";
-            document.getElementById("stage_num").value = "";
-        }
-});
+        const stageSelect = document.getElementById("stage_num");
+        const stagesContainer = document.getElementById("stagesContainer");
 
-</script>
 
-<script>
-    function generateStageVideoInput(stage_num, url = "") { 
-    return `
-        <div class="stage_video">
-        <label>Stage Video URL:</label><br>
-        <input type="url"
-            name="stages[${stage_num}][video_url]"
-            value="${url}"
-            placeholder="Enter video URL"
-            required>
-        <br><br>
-        </div>
+        stageSelect.addEventListener("input", function () {
+            const stageCount = this.valueAsNumber;
+
+            stagesContainer.innerHTML = ""; //wipes data on change. 
+
+            if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
+                stagesContainer.innerHTML = "";
+                return;
+            }
+
+
+
+
+            for (let i = 1; i <= stageCount; i++) { //begin 1st for loop
+
+                const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
+
+                let answersHTML = "";
+
+                // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
+                for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer 
+                    answersHTML += `
+        <input type="text"
+               class="stage_questions_false"
+               name="stages[${i}][answers][${a}][text]"
+               placeholder="False Answer ${a}" required>
+
+        <input type="hidden" 
+               name="stages[${i}][answers][${a}][is_correct]"
+               value="0">
+
+        <br>
     `;
-}
-</script>
+                }
 
+                // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
+                answersHTML += `
+    <input type="text"
+           class="stage_questions_correct"
+           name="stages[${i}][answers][4][text]"
+           placeholder="Correct Answer" required>
 
 <script>
     document.getElementById("estimate").addEventListener("input", function () { 
@@ -393,39 +467,20 @@ if (isset($_POST['module_edit'])) {
                     value="${questionData?.question_text ?? ''}"
                     required><br><br>
 
-                ${answersHTML}
-                
-                ${videoHTML}
-            `;
-
-            stagesContainer.appendChild(stageDiv);
-        }
-    }
 
 
-    if (typeof existingStages !== "undefined" && existingStages.length > 0) { //checks if form is being edited or not
-        stageSelect.value = existingStages.length;
-        generateStages(existingStages.length, existingStages);
-        }
+                stagesContainer.appendChild(stageDiv);
 
-    stageSelect.addEventListener("input", function () { //otherwise, defaults to form creation
-        const count = this.valueAsNumber;
 
-        if (!count || count < 0 || count > 5) { //ensures stage count is within defined parameters
-            stagesContainer.innerHTML = "";
-            return;
-        }
 
-        generateStages(count);
+
+            } //end 1st for loop
+        });
 
     });
-});
 </script>
 
-<?php include __DIR__ . '/../includes/footer.php'; ?>  
-<!-- footer -->
-
-
+<?php
 
 
 
