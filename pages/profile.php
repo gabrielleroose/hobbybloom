@@ -138,11 +138,17 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
         <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <h3 style="margin-top: 0; color: #333;">Interests & Circles</h3>
             <?php if (empty($hobbiesArr)): ?>
-                <p>No interests added yet.</p>
+                <p style="color: #999; font-style: italic;">No interests added yet.</p>
             <?php else: ?>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <?php foreach ($hobbiesArr as $hobby): ?>
-                        <span style="background-color: #eee; padding: 5px 15px; border-radius: 15px; font-size: 14px; font-weight: bold; color: #555;"><?= htmlspecialchars($hobby) ?></span>
+                    <?php foreach ($hobbiesArr as $hobby): 
+                        $trimmedHobby = trim($hobby); 
+                    ?>
+                        <a href="circle_detail.php?hobby=<?= urlencode($trimmedHobby) ?>" style="text-decoration: none;">
+                            <span style="background-color: #eee; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #555; display: inline-block; transition: background-color 0.2s; border: 1px solid #ddd;">
+                                <?= htmlspecialchars($trimmedHobby) ?>
+                            </span>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
