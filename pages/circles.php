@@ -90,12 +90,11 @@ if (!empty($myHobbies)) {
          LEFT JOIN user_profiles p ON u.id = p.user_id
          WHERE l.complete = 1 AND m.name IN ($placeholders))
         UNION
-        (SELECT 'chat' AS type, u.username, c.name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
+        (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
          FROM circle_messages msg
          JOIN users u ON msg.user_id = u.id
-         JOIN circle c ON msg.circle_id = c.circle_id
          LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE c.name IN ($placeholders))
+         WHERE msg.hobby_name IN ($placeholders))
         ORDER BY activity_date DESC
         LIMIT 8
     ");
@@ -165,23 +164,29 @@ if (!empty($myHobbies)) {
     </div>
 
     <div class="page-container">
-        <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
-            <form method="GET" action="circles.php">
-                <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
-            </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px;">+ Create Circle</a>
-        </aside>
 
-        <main class="page-container-inside">
+        <div class="search-row">
+            <p>Circles</p>
+            <form method="GET" action="circles.php" style="margin-bottom: 20px; width: 100%;">
+                <input type="text" name="q" class="search-bar" placeholder="Search Circles... (Press Enter)" value="<?= htmlspecialchars($searchQuery) ?>">
+            </form>
+            <a href="create_circle.php" class="create-new-circle-btn">+ Create New Circle</a>
+        </div>
+
+        <div class="page-container-inside">
             <?php if ($searchQuery): ?>
-                <section class="results-section">
-                    <h2 class="section-heading">Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
-                    <div class="suggested-grid">
-                        <?php foreach ($searchResults as $circle): ?>
-                            <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                                <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                                <p><?= htmlspecialchars($circle['description']) ?></p>
+                <div style="margin-bottom: 30px;">
+                    <h2>Search Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
+                    <div class="horizontal-scroll">
+                        <?php if (empty($searchResults)): ?>
+                            <p style="color: white; font-style: italic;">No circles found matching your search.</p>
+                        <?php else: ?>
+                            <?php foreach ($searchResults as $circle): ?>
+                            <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
+                                <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">
+                                    <strong style="color: white; text-align: center;"><?= htmlspecialchars($circle['name']) ?></strong>
+                                    <span style="color: #eee; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars($circle['description']) ?></span>
+                                </div>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -269,20 +274,27 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
+            </div>
 
-                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
-                    <h2 class="section-heading">Suggested For You</h2>
-                    <div class="suggested-grid">
+            <div class="suggested-circles-wrapper">
+                <h2>Suggested For You</h2>
+                <div class="suggested-flex">
+                    <?php if (empty($suggestedCircles)): ?>
+                        <div class="suggested-item" style="color: white; padding: 10px; text-align: center;">No new circles right now.</div>
+                    <?php else: ?>
                         <?php foreach ($suggestedCircles as $circle): ?>
-                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                            <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                            <p><?= htmlspecialchars($circle['description']) ?></p>
+                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="text-decoration: none; color: inherit;">
+                            <div class="suggested-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background-color: <?= htmlspecialchars($circle['color'] ?? '#1f5077') ?>;">                            
+                                <strong style="color: white; text-align: center;"><?= htmlspecialchars($circle['name']) ?></strong>
+                                <span style="color: #eee; font-size: 10px; text-align: center; margin-top: 5px;"><?= htmlspecialchars($circle['description']) ?></span>
+                            </div>
                         </a>
                         <?php endforeach; ?>
-                    </div>
-                </section>
-            <?php endif; ?>
-        </main>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div>
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
