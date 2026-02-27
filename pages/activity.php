@@ -24,8 +24,14 @@ if ($currentTab === 'global') {
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE p.is_private = 0
         UNION
+        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status
+        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
+        UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
+        UNION
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         UNION
         SELECT DISTINCT 'follow' AS activity_type, u1.id AS user_id, u1.username, p.profile_color, u2.id AS target_id, u2.username AS target_name, '' AS extra_info, uf.created_at AS activity_date, 1 AS status
         FROM user_follows uf JOIN users u1 ON uf.follower_id = u1.id LEFT JOIN user_profiles p ON u1.id = p.user_id JOIN users u2 ON uf.followed_id = u2.id WHERE p.is_private = 0
@@ -50,9 +56,12 @@ if ($currentTab === 'global') {
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE c.uid = ?
+        UNION
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE m.cid = ?
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId]);
+    $feedStmt->execute([$userId, $userId, $userId]);
 
 } else {
     $feedStmt = $conn->prepare("
@@ -61,9 +70,12 @@ if ($currentTab === 'global') {
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        UNION
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId]);
+    $feedStmt->execute([$userId, $userId, $userId]);
 }
 
 $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -83,10 +95,12 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .activity-content { flex-grow: 1; color: #333; }
         .activity-content a { text-decoration: none; font-weight: bold; color: #1f5077; }
         .activity-date { color: #999; font-size: 14px; margin-left: 15px; }
-        .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .tab-btn { padding: 8px 18px; border-radius: 20px; text-decoration: none; font-weight: bold; color: #1f5077; background-color: rgba(255,255,255,0.6); font-size: 14px; }
+        .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; color: #1f5077; background-color: rgba(255,255,255,0.6); font-size: 13px; }
         .tab-btn.active { background-color: #1f5077; color: white; }
-        .follow-back-btn { background-color: #1f5077; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 12px; cursor: pointer; }
+        .follow-back-btn { background-color: #1f5077; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; }
+        
+        .feed-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-left: 5px; text-transform: capitalize; background: #eee; color: #666; }
     </style>
 </head>
 <body class="activity-body">
@@ -108,6 +122,27 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($activities as $act): 
                     $dateStr = date('M j, Y', strtotime($act['activity_date']));
                     $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
+                    
+                    // Action Text Logic
+                    if ($act['activity_type'] === 'module_progress') {
+                        $actionText = $act['status'] == 1 ? "completed the module" : "started the module";
+                        $targetLink = "module.php?id=" . $act['target_id'];
+                    } elseif ($act['activity_type'] === 'module_created') {
+                        $actionText = "published a new module:";
+                        $targetLink = "module.php?id=" . $act['target_id'];
+                    } elseif ($act['activity_type'] === 'circle') {
+                        $actionText = "created a new circle:";
+                        $targetLink = "circle_detail.php?hobby=" . urlencode($act['target_name']);
+                    } elseif ($act['activity_type'] === 'follow') {
+                        $actionText = "started following";
+                        $targetLink = "profile.php?id=" . $act['target_id'];
+                    } elseif ($act['activity_type'] === 'event') {
+                        $actionText = "scheduled a new event:";
+                        $targetLink = "calendar.php";
+                    } else {
+                        $actionText = "is following you!";
+                        $targetLink = "";
+                    }
                 ?>
                     <div class="activity-feed-item">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;">
@@ -115,13 +150,12 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                         <div class="activity-content">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
-                            <?php if ($act['activity_type'] === 'follower_list'): ?>
-                                is following you!
-                            <?php else: ?>
-                                <?= ($act['activity_type'] === 'follow') ? 'started following' : 'performed an action' ?>
-                                <?php if (!empty($act['target_name'])): ?>
-                                    <a href="#"><?= htmlspecialchars($act['target_name']) ?></a>
-                                <?php endif; ?>
+                            <?= $actionText ?> 
+                            <?php if ($targetLink): ?>
+                                <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
+                            <?php endif; ?>
+                            <?php if (!empty($act['extra_info']) && $act['activity_type'] === 'module_progress'): ?>
+                                <span class="feed-badge"><?= htmlspecialchars($act['extra_info']) ?></span>
                             <?php endif; ?>
                         </div>
 
