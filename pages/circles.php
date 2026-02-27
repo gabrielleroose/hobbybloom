@@ -47,26 +47,8 @@ $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
 $profile = $stmt->fetch();
 if ($profile && $profile['hobbies']) {
-    $myHobbies = explode(', ', $profile['hobbies']);
+    $myHobbies = array_filter(array_map('trim', explode(',', $profile['hobbies'])));
 }
-
-$dbCircleColors = [];
-if (!empty($myHobbies)) {
-    $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
-    $colorStmt = $conn->prepare("SELECT name, color FROM circle WHERE name IN ($placeholders)");
-    $colorStmt->execute($myHobbies);
-    while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
-        $dbCircleColors[$row['name']] = $row['color'];
-    }
-}
-
-$hobbyColors = [
-    "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
-    "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
-    "Reading" => "#a8d0e6", "Gardening" => "#3cb371", "Baking" => "#f4a460",
-    "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
-    "Gaming" => "#9370db", "Yoga" => "#ffdead"
-];
 
 $suggestedCircles = [];
 if (!empty($myHobbies)) {
@@ -79,18 +61,23 @@ if (!empty($myHobbies)) {
     $suggestedCircles = $suggestStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$feedStmt = $conn->prepare("
-    SELECT u.username, m.name AS module_name, m.exp_level, l.last_visited
-    FROM log l
-    JOIN users u ON l.uid = u.id
-    JOIN module m ON l.mid = m.id
-    WHERE l.complete = 1
-    ORDER BY l.last_visited DESC
-    LIMIT 10
-");
-$feedStmt->execute();
-$feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
-
+$feedItems = [];
+if (!empty($myHobbies)) {
+    $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
+    $feedStmt = $conn->prepare("
+        (SELECT 'module' AS type, u.username, m.name AS target_name, '' AS message_text, l.last_visited AS activity_date, p.profile_color
+         FROM log l JOIN users u ON l.uid = u.id JOIN module m ON l.mid = m.id LEFT JOIN user_profiles p ON u.id = p.user_id
+         WHERE l.complete = 1 AND m.name IN ($placeholders))
+        UNION
+        (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
+         FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
+         WHERE msg.hobby_name IN ($placeholders))
+        ORDER BY activity_date DESC LIMIT 4
+    ");
+    $params = array_merge($myHobbies, $myHobbies);
+    $feedStmt->execute($params);
+    $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC); 
+}
 ?>
 
 <!DOCTYPE html>
@@ -136,6 +123,41 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
             box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2);
         }
 
+        /* SEARCH SIDEBAR STYLING */
+        .search-row {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(31, 80, 119, 0.2);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        /* NEW: ADDED SEARCH BUTTON STYLE */
+        .search-hub-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #1f5077;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-hub-btn:hover {
+            background-color: #153853;
+        }
+
         .filter-row {
             display: flex;
             gap: 10px;
@@ -171,30 +193,37 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="page-container">
-        <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
+        <aside class="search-row"> 
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 15px;">Circles Hub</p> 
             <form method="GET" action="circles.php">
+                <input type="hidden" name="view" value="<?= htmlspecialchars($viewMode) ?>">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
+                <button type="submit" class="search-hub-btn">Search Circles</button>
             </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px;">+ Create Circle</a>
-        </aside>
+            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none; background: rgba(31, 80, 119, 0.1); border: 1px solid #1f5077; color: #1f5077; border-radius: 25px; font-weight: 600;">+ Create Circle</a>
+        </aside> 
 
-        <main class="page-container-inside">
+        <main class="page-container-inside"> 
             <?php if ($searchQuery): ?>
-                <section class="results-section">
+                <section class="results-section"> 
                     <h2 class="section-heading">Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
                     <div class="suggested-grid">
-                        <?php foreach ($searchResults as $circle): ?>
-                            <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                                <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                                <p><?= htmlspecialchars($circle['description']) ?></p>
-                            </a>
-                        <?php endforeach; ?>
+                        <?php if (empty($searchResults)): ?> 
+                            <p style="font-style: italic; color: #666;">No circles found matching your search.</p>
+                        <?php else: ?>
+                            <?php foreach ($searchResults as $circle): ?>
+                                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                                    <p><?= htmlspecialchars($circle['description']) ?></p> 
+                                </a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </section>
+                <hr style="border: 0; border-top: 1px solid rgba(31, 80, 119, 0.1); margin: 30px 0;">
             <?php endif; ?>
 
-            <?php if ($viewMode === 'all'): ?>
+            <?php if ($viewMode === 'all'): ?> 
                 <section class="results-section">
                     <div class="filter-row">
                         <a href="circles.php?view=all" class="filter-chip <?= !$filterCategory ? 'active' : '' ?>">All Categories</a>
@@ -216,69 +245,52 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                     <section class="your-circles-wrapper">
                         <h2 class="section-heading">Your Circles</h2>
                         <div class="circles-flex">
-                            <?php foreach ($myHobbies as $hobby):
-                                $color = $dbCircleColors[trim($hobby)] ?? '#cccccc';
-                            ?>
-                                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" class="circles-circle">
-                                    <div class="circle-img" style="background-color: <?= $color ?>;"></div>
-                                    <p class="hobby-label"><?= htmlspecialchars($hobby) ?></p>
-                                </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="circles-activity-wrapper">
-                    <h2>Your Feed</h2>
-                    <div class="activity-flex">
-                    <?php if (empty($feedItems)): ?>
-                        <p style="color: white; font-style: italic;">No recent activity in your network. Be the first to complete a module!</p>
-                    <?php else: ?>
-                        <?php foreach ($feedItems as $item): ?>
-                        <div class="feed-card">
-                            <div class="feed-header" style="position: relative; padding-bottom: 5px;">
-                                <div class="feed-avatar" style="background-color: #<?= substr(md5($item['username']), 0, 6) ?>;"></div> 
-                                <span class="feed-username" style="color: white; font-weight: bold;">
-                                    <?= htmlspecialchars($item['username']) ?>
-                                </span>
-                                <span style="color: #ccc; font-size: 12px; margin-left: 10px;">
-                                    completed a module!
-                                </span>
-                            </div>
-                            <div class="feed-image-placeholder" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background-color: #2c6ca3;">
-                                <h3 style="color: white; margin: 0;"><?= htmlspecialchars($item['module_name']) ?></h3>
-                                <p style="color: #e0e0e0; margin: 5px 0 0 0;">Level: <?= htmlspecialchars($item['exp_level']) ?></p>
-                            </div>
+                            <?php if (empty($myHobbies)): ?>
+                                <p style="font-size: 0.9rem; color: #666;">You haven't joined any circles yet.</p>
+                            <?php else: ?>
+                                <?php foreach ($myHobbies as $hobby):
+                                    $color = $dbCircleColors[trim($hobby)] ?? '#cccccc';
+                                ?>
+                                    <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" class="circles-circle">
+                                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                                        <p class="hobby-label"><?= htmlspecialchars($hobby) ?></p>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </section>
 
                     <section class="circles-activity-wrapper">
                         <h2 class="section-heading">Recent Highlights</h2>
-                        <div class="activity-column">
-                            <?php foreach ($feedItems as $item):
-                                $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
-                            ?>
-                                <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
-                                    <div class="highlight-card">
-                                        <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
-                                        <div class="card-body">
-                                            <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
-                                            <?php if ($item['message_text']): ?>
-                                                <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
-                                            <?php endif; ?>
+                        <div class="activity-column"> 
+                            <?php if (empty($feedItems)): ?>
+                                <p style="font-size: 0.85rem; color: #888; font-style: italic;">No recent activity in your circles.</p>
+                            <?php else: ?>
+                                <?php foreach ($feedItems as $item):
+                                    $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
+                                ?>
+                                    <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
+                                        <div class="highlight-card">
+                                            <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
+                                            <div class="card-body">
+                                                <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                                <?php if ($item['message_text']): ?>
+                                                    <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            <?php endforeach; ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </section>
                 </div>
-            <?php endif; ?>
+            <?php endif; ?> 
 
         </main>
-    </div>
+    </div> 
 
-    <?php if ($viewMode !== 'all'): ?>
+    <?php if ($viewMode !== 'all' && !$searchQuery): ?> 
     <section class="suggested-circles-wrapper">
         <h2 class="section-heading">Suggested For You</h2>
         <div class="suggested-grid">
@@ -286,8 +298,8 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
                     <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
                     <p><?= htmlspecialchars($circle['description']) ?></p>
-                </a>
-            <?php endforeach; ?>
+                </a> 
+            <?php endforeach; ?> 
         </div>
     </section>
 <?php endif; ?>
