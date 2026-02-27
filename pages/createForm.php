@@ -96,6 +96,13 @@ if (!$googleId) {                   //checking if google id present, sending bac
 
 $circleId = $_GET['circle_id'] ?? null;
 
+
+$user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+$stmt = $conn->prepare($user_id_sql);
+$stmt->execute([':gid' => $googleId]);
+
+$user_id = $stmt->fetchColumn();
+
 if (isset($_POST['module_edit'])) {
 
     $module_id = $_POST['module_edit'];
@@ -115,7 +122,7 @@ if (isset($_POST['module_edit'])) {
     $stmt->execute([$module_id]);
     $module_stage_info = $stmt->fetchAll();
 
-    $module_stage_question_info = []; //initialize array outside of loop, stops from data being overwritten
+    $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
     foreach ($module_stage_info as $stage) {
 
         $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
@@ -123,28 +130,33 @@ if (isset($_POST['module_edit'])) {
         $stmt->execute([$stage['id']]);
         $module_stage_questions_results = $stmt->fetchAll();
 
-        $module_stage_question_info[] = [
+        $module_stage_questions_info[] = [
         'id' => $stage['id'],
         'stage_num' => $stage['stage_num'],
         'title' => $stage['title'],
         'question' => $module_stage_questions_results
     ];
-
-    
     }
 
-    foreach ($module_stage_info as &$stage) { //& symbol before the variable allows us to reference the existing array and edit it. 
+
+    foreach($module_stage_questions_info as &$stage) {
         foreach ($stage['question'] as &$question) {
-            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
-            $stmt = $conn->prepare($module_stage_questions_answers_sql);
-            $stmt->execute([$question['id']]);
-            $module_stage_questions_answers_results = $stmt->fetchAll();
+                $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+                $stmt = $conn->prepare($module_stage_questions_answers_sql);
+                $stmt->execute([$question['id']]);
+                $module_stage_questions_answers_results = $stmt->fetchAll();
 
 
             $question['answers'] = $module_stage_questions_answers_results;
+                $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
+                                        (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
+                ";
+                    $stmt = $conn->prepare($user_answers_sql);
+                    $stmt->execute([$user_id, $question['id']]);
+                    $question['user_answers'] = $stmt->fetchAll();
             }
 
-        }
+        } 
     
 
     
