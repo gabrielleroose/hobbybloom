@@ -149,7 +149,7 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                         $extraHtml = "<span class='feed-badge badge-circle'>⭕ Circle</span>";
                     } elseif ($act['activity_type'] === 'follow') {
                         $actionText = "started following";
-                        $targetLink = "profile.php?id= ... " . $act['target_id'];
+                        $targetLink = "profile.php?id=" . $act['target_id'];
                         $extraHtml = "<span class='feed-badge badge-follow'>🤝 New Connection</span>";
                     } else {
                         $actionText = "scheduled a new calendar event:";
