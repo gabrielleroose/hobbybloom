@@ -1,4 +1,5 @@
 <?php
+session_start(); 
 require_once 'db.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -10,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $_SESSION['user']['id'];
     
     $username = trim($_POST['username']);
-    $age = $_POST['age'];
+    $age = !empty($_POST['age']) ? $_POST['age'] : null;
     $hometown = $_POST['from']; 
     $bio = $_POST['bio'];
     $hobbies = $_POST['selected_hobbies'] ?? '';
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare("UPDATE users SET username = ?, age = ? WHERE id = ?");
         $stmt->execute([$username, $age, $userId]);
         
-        $_SESSION['user']['name'] = $username;
+        $_SESSION['user']['username'] = $username;
 
         $check = $conn->prepare("SELECT profile_id FROM user_profiles WHERE user_id = ?");
         $check->execute([$userId]);
