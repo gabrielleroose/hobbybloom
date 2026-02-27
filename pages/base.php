@@ -26,12 +26,6 @@ require_once 'db.php';
 <header>
         <div class="navbar">
             <!-- GOOGLE AUTH UI -->
-            <?php if (isset($_SESSION['user'])): ?>
-                <span class="nav-user" style="color: white; margin-left: auto; padding-right: 10px;">
-                    <?= htmlspecialchars($_SESSION['user']['name']) ?>
-                </span>
-                <!-- <a class="nav-link" href="logout.php">Logout</a> -->
-            <?php endif; ?>
 
 
         </div>
