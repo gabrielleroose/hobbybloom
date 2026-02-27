@@ -9,6 +9,12 @@ require_once 'db.php';
 $success = false;
 $error = "";
 
+$googleId = $_SESSION['google_id'] ?? null;
+
+if (!$googleId) {                   //checking if google id present, sending back to index.php if not.
+    header('Location: index.php');
+    exit;
+}
 
 // form submission handling below 
 //strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
@@ -89,6 +95,62 @@ $error = "";
 // }
 
 $circleId = $_GET['circle_id'] ?? null;
+
+if (isset($_POST['module_edit'])) {
+
+    $module_id = $_POST['module_edit'];
+    $module_info_sql = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
+        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+        WHERE m.id = ?";
+    $stmt = $conn->prepare($module_info_sql);
+    $stmt->execute([$module_id]);
+    $module_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+
+
+    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = ?";
+    $stmt = $conn->prepare($module_stage_info);
+    $stmt->execute([$module_id]);
+    $module_stage_info = $stmt->fetchAll();
+
+    $module_stage_question_info = []; //initialize array outside of loop, stops from data being overwritten
+    foreach ($module_stage_info as $stage) {
+
+        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
+        $stmt = $conn->prepare($module_stage_questions_sql);
+        $stmt->execute([$stage['id']]);
+        $module_stage_questions_results = $stmt->fetchAll();
+
+        $module_stage_question_info[] = [
+        'id' => $stage['id'],
+        'stage_num' => $stage['stage_num'],
+        'title' => $stage['title'],
+        'question' => $module_stage_questions_results
+    ];
+
+    
+    }
+
+    foreach ($module_stage_info as &$stage) { //& symbol before the variable allows us to reference the existing array and edit it. 
+        foreach ($stage['question'] as &$question) {
+            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+            $stmt = $conn->prepare($module_stage_questions_answers_sql);
+            $stmt->execute([$question['id']]);
+            $module_stage_questions_answers_results = $stmt->fetchAll();
+
+
+            $question['answers'] = $module_stage_questions_answers_results;
+            }
+
+        }
+    
+
+    
+    
+}
+
 ?>
 
 <form action="save_module.php" method="POST">
