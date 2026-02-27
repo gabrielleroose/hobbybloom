@@ -21,23 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['chat_message'])) {
     exit();
 }
 
-$circleStmt = $conn->prepare("SELECT color FROM circle WHERE name = ? LIMIT 1");
+$circleStmt = $conn->prepare("SELECT * FROM circle WHERE name = ?");
 $circleStmt->execute([$currentHobby]);
 $circleData = $circleStmt->fetch(PDO::FETCH_ASSOC);
 
-$hobbyColors = [
-    "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
-    "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
-    "Reading" => "#a8d0e6", "Gardening" => "#3cb371", "Baking" => "#f4a460",
-    "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
-    "Gaming" => "#9370db", "Yoga" => "#ffdead"
-];
-
-if ($circleData && !empty($circleData['color'])) {
-    $headerColor = $circleData['color'];
-} else {
-    $headerColor = $hobbyColors[$currentHobby] ?? '#1f5077';
-}
+$headerColor = $circleData['color'] ?? '#1f5077';
+$creatorId = $circleData['uid'] ?? null;
+$circleId = $circleData['circle_id'] ?? null;
 
 $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
@@ -62,10 +52,11 @@ $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $memStmt = $conn->prepare("
     SELECT u.id, u.username, 
-           (SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = u.id) as am_following
+           (SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) as am_following
     FROM users u
     JOIN user_profiles p ON u.id = p.user_id
     WHERE p.hobbies LIKE ? AND u.id != ?
+    GROUP BY u.id
 ");
 $memStmt->execute([$userId, "%$currentHobby%", $userId]);
 $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -81,7 +72,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .chat-message.mine { background-color: <?= $headerColor ?>; }
+        .chat-message.mine { background-color: <?= htmlspecialchars($headerColor) ?>; }
         
         .member-list {
             background-color: white;
@@ -112,11 +103,14 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="circle-detail-main-container">
         <div class="detail-container-inside">
         
-            <div style="background-color: <?= $headerColor ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
+            <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;">
                 <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
-                <p style="color: #eee; margin-top: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Connect, share, and learn about <?= htmlspecialchars(strtolower($currentHobby)) ?>!</p>
                 
-                <form action="circle_action.php" method="POST" style="margin-top: 20px;">
+                <p style="color: #eee; margin-top: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+                    <?= htmlspecialchars($circleData['description'] ?? 'Connect, share, and learn about ' . strtolower($currentHobby) . '!') ?>
+                </p>
+                
+                <form action="circle_action.php" method="POST" style="margin-top: 20px; display: inline-block;">
                     <input type="hidden" name="action" value="toggle_circle">
                     <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
                     <?php if ($isMember): ?>
@@ -125,6 +119,10 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <button type="submit" style="background-color: white; color: #333; border: 2px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">+ Join Circle</button>
                     <?php endif; ?>
                 </form>
+
+                <?php if ($circleId && $userId == $creatorId): ?>
+                    <a href="edit_circle.php?id=<?= $circleId ?>" style="background-color: rgba(255,255,255,0.8); color: #333; border: 2px solid #333; padding: 6px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; text-decoration: none; margin-left: 10px; display: inline-block;">✏️ Edit Details</a>
+                <?php endif; ?>
             </div>
 
             <h2>Circle Members</h2>
@@ -166,7 +164,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="info-card" style="background-color: #1f5077; color: white; border: none;">
                             <div class="card-row-between">
                                 <h4 style="color: white; font-size: 20px; margin: 0;"><?= htmlspecialchars($mod['name']) ?></h4>
-                                <span style="background-color: <?= $headerColor ?>; color: #333; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;"><?= htmlspecialchars($mod['exp_level']) ?></span>
+                                <span style="background-color: <?= htmlspecialchars($headerColor) ?>; color: #333; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;"><?= htmlspecialchars($mod['exp_level']) ?></span>
                             </div>
                             <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;"><?= htmlspecialchars($mod['description']) ?></p>
                             <a href="module.php?id=<?= $mod['id'] ?>" class="light-btn" style="text-decoration: none; display: inline-block;">View Module</a>
@@ -193,11 +191,14 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <form method="POST" class="chat-input-row">
                     <input type="text" name="chat_message" class="chat-input" placeholder="Type a message..." required autocomplete="off">
-                    <button type="submit" class="light-btn" style="background-color: <?= $headerColor ?>; border: none; font-weight: bold; padding: 10px 20px; color: #333;">Send</button>
+                    <button type="submit" class="light-btn" style="background-color: <?= htmlspecialchars($headerColor) ?>; border: none; font-weight: bold; padding: 10px 20px; color: #333;">Send</button>
                 </form>
             </div>
 
-        </div> </div> <script>
+        </div> 
+    </div> 
+    
+    <script>
         const chatBox = document.getElementById('chatBox');
         chatBox.scrollTop = chatBox.scrollHeight;
     </script>
