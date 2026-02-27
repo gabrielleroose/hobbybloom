@@ -100,6 +100,7 @@ $mod_id_list = [];
 
                         <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
                             <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                            <button type="submit" class="module_display_edit_button" name="module_edit" value="<?= $mod['id']?>">Delete Module</button>
                         <?php endif ?>
 
                     </form>
