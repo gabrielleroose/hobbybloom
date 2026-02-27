@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
     exit();
 }
 
+// 1. Fetch user data (Added login_streak for the Firestarter badge)
 $stmt = $conn->prepare("
-    SELECT u.username, u.age, p.hometown, p.bio, p.hobbies, p.profile_color 
+    SELECT u.username, u.age, p.hometown, p.bio, p.hobbies, p.profile_color, p.login_streak 
     FROM users u 
     LEFT JOIN user_profiles p ON u.id = p.user_id 
     WHERE u.id = ?
@@ -46,6 +47,34 @@ if ($myId != $targetId) {
     $fStmt->execute([$myId, $targetId]);
     $isFollowing = $fStmt->fetch() ? true : false;
 }
+
+// --- 2. CALCULATE EARNED TROPHIES FOR PUBLIC DISPLAY ---
+$earnedBadges = [];
+
+// Modules Completed
+$stmt = $conn->prepare("SELECT COUNT(*) FROM log WHERE uid = ? AND complete = 1");
+$stmt->execute([$targetId]);
+$modulesCompleted = (int)$stmt->fetchColumn();
+
+// Following Count
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ?");
+$stmt->execute([$targetId]);
+$followingCount = (int)$stmt->fetchColumn();
+
+// Circles Created
+$stmt = $conn->prepare("SELECT COUNT(*) FROM circle WHERE uid = ?");
+$stmt->execute([$targetId]);
+$circlesCreated = (int)$stmt->fetchColumn();
+
+$streak = (int)($profileUser['login_streak'] ?? 0);
+
+// Check which badges they have fully unlocked
+if ($modulesCompleted >= 1) $earnedBadges[] = ['title' => 'First Steps', 'icon' => '🐣', 'color' => '#ff9999'];
+if ($modulesCompleted >= 5) $earnedBadges[] = ['title' => 'Module Master', 'icon' => '🎓', 'color' => '#ffd700'];
+if ($streak >= 7) $earnedBadges[] = ['title' => 'Firestarter', 'icon' => '🔥', 'color' => '#ffb6c1'];
+if ($followingCount >= 5) $earnedBadges[] = ['title' => 'Social Butterfly', 'icon' => '🦋', 'color' => '#a8d0e6'];
+if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'icon' => '👑', 'color' => '#9370db'];
+
 ?>
 
 <!DOCTYPE html>
@@ -77,11 +106,33 @@ if ($myId != $targetId) {
             <?php endif; ?>
         </div>
 
-        <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px;">
-            <h3 style="margin-top: 0; color: #333;">About Me</h3>
-            <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
-            <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
-            <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #333;">About Me</h3>
+                <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
+                <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
+                <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
+            </div>
+
+            <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #333;">Trophy Case 🏆</h3>
+                <?php if (empty($earnedBadges)): ?>
+                    <p style="color: #999; font-style: italic;">No badges earned yet.</p>
+                <?php else: ?>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                        <?php foreach ($earnedBadges as $badge): ?>
+                            <div title="<?= htmlspecialchars($badge['title']) ?>" style="display: flex; flex-direction: column; align-items: center; width: 60px;">
+                                <div style="width: 50px; height: 50px; border-radius: 50%; background-color: <?= $badge['color'] ?>; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                    <?= $badge['icon'] ?>
+                                </div>
+                                <span style="font-size: 10px; text-align: center; margin-top: 5px; font-weight: bold; color: #555;">
+                                    <?= htmlspecialchars($badge['title']) ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
