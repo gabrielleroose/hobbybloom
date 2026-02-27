@@ -47,16 +47,16 @@ nav {
 }
 
 .branding p {
-  margin: 0; 
+  margin: 0;
   /* padding: 1rem 0; Control the vertical space manually here */
 }
 
 .branding p {
-  margin: 0; 
+  margin: 0;
   /* padding: 1rem 0; Control the vertical space manually here */
 }
 
-.bloom{
+.bloom {
   color: #156914;
 }
 
@@ -76,7 +76,7 @@ nav {
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
 }
 
-.wide-view{
+.wide-view {
   display: none;
 }
 
@@ -146,17 +146,17 @@ nav {
     /* padding: 1rem 0 3rem 3rem; */
     margin: 0 auto;
     margin-top: 1.5rem;
-  
+
     /* glassmorphism */
     background: rgba(255, 255, 255, 0.2);
-  
+
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-  
+
     border: 1px solid rgba(255, 255, 255, 0.3);
-  
+
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-  
+
     transition: transform 0.3s ease-in-out;
   }
 
@@ -169,7 +169,7 @@ nav {
     font-size: var(--text-size-md);
   }
 
-  .wide-view{
+  .wide-view {
     display: block;
   }
 
@@ -192,9 +192,9 @@ nav {
   transition: color 0.75s ease-in-out, transform 0.25s ease-in-out;
 }
 
-footer{
-    width: 100%;
-    /* CSS Gradient from: https://cssgradient.io/  */
+footer {
+  width: 100%;
+  /* CSS Gradient from: https://cssgradient.io/  */
   /* background: #a4faa2;
   background: linear-gradient(90deg,
  rgba(164, 250, 162, 1) 0%,
@@ -210,10 +210,10 @@ footer{
 }
 
 .footer-link:hover {
-    /* color: rgb(56, 86, 68); */
-    color: lightblue;
-    transform: scale(1.2);
-  }
+  /* color: rgb(56, 86, 68); */
+  color: lightblue;
+  transform: scale(1.2);
+}
 
 .footer-container {
   display: flex;
@@ -224,7 +224,7 @@ footer{
   color: #e7ecef;
 }
 
-.footer-container-logo{
+.footer-container-logo {
   display: flex;
   width: 100%;
   flex-direction: row;

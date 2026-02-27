@@ -126,10 +126,18 @@ $hobbyColors = [
     </div>
 
     <div class="dash-display">
-        <div class="dash-display-streak">
-            <p class="streaks">Streaks</p>
-            <!-- <p>My Dashboard</p> -->
-            <p class="day-streak">🔥<?= $streak ?> Days</p>
+        
+        <div class="dash-display-streak" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <p class="streaks">Streaks</p>
+                <p class="day-streak" style="padding-top: 2rem;">🔥<?= $streak ?> Days</p>
+            </div>
+            
+            <div style="text-align: center; padding-bottom: 1.5rem;">
+                <a href="achievements.php" style="text-decoration: none; color: #333; font-weight: bold; background-color: #ffd700; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
+                    🏆 View Trophies
+                </a>
+            </div>
         </div>
 
         <div class="dash-calendar" >
@@ -202,10 +210,10 @@ $hobbyColors = [
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar-mini');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'listWeek', // Shows events as a clean list for the week
-        headerToolbar: false,    // Hides navigation to keep it compact
+        initialView: 'listWeek',
+        headerToolbar: false,
         height: 'auto',
-        events: 'load_events.php', // Reuses your existing events loader!
+        events: 'load_events.php',
         eventClick: function(info) {
             alert("Event: " + info.event.title + "\nDescription: " + info.event.extendedProps.description);
         }
