@@ -87,8 +87,7 @@ $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
             <p>Circles</p>
             
             <form method="GET" action="circles.php" style="margin-bottom: 20px; width: 100%;">
-                <input type="text" name="q" class="search-bar" placeholder="Search Circles..." value="<?= htmlspecialchars($searchQuery) ?>">
-                <button type="submit" class="search-circle-btn" style="color: #333; font-weight: bold; background-color: #a8d0e6; border: none;">Search</button>
+                <input type="text" name="q" class="search-bar" placeholder="Search Circles... (Press Enter)" value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
 
             <a href="create_circle.php" class="create-new-circle-btn">+ Create New Circle</a>
