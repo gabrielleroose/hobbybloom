@@ -98,12 +98,26 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($activities as $act): 
                     $dateStr = date('M j, Y', strtotime($act['activity_date']));
                     $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
+                    
+                    if ($act['activity_type'] === 'module_progress') {
+                        $actionText = ($act['status'] == 1) ? "completed the module" : "started the module";
+                    } elseif ($act['activity_type'] === 'module_created') {
+                        $actionText = "published a new module";
+                    } elseif ($act['activity_type'] === 'circle') {
+                        $actionText = "created the circle";
+                    } elseif ($act['activity_type'] === 'event') {
+                        $actionText = "scheduled the event";
+                    } elseif ($act['activity_type'] === 'follow') {
+                        $actionText = "started following";
+                    } else {
+                        $actionText = "is following you!";
+                    }
                 ?>
                     <div class="activity-feed-item">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
                         <div class="activity-content">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
-                            <?= ($act['activity_type'] === 'event') ? 'scheduled' : 'performed action' ?> 
+                            <?= $actionText ?> 
                             <a href="#"><?= htmlspecialchars($act['target_name']) ?></a>
                         </div>
                         
