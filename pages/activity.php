@@ -33,8 +33,9 @@ if ($currentTab === 'global') {
         (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE p.is_private = 0
         UNION
-        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status
-        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
+        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status,
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
+        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0 AND e.created_at >= NOW() - INTERVAL 1 DAY
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status,
         (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
@@ -46,15 +47,47 @@ if ($currentTab === 'global') {
         ORDER BY activity_date DESC LIMIT 50
     ");
     $feedStmt->execute([$userId, $userId, $userId, $userId]);
+
 } elseif ($currentTab === 'followers') {
-    $feedStmt = $conn->prepare("SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following, uf.created_at AS activity_date, '' AS target_name, '' AS target_id, '' AS extra_info, 1 AS status FROM user_follows uf JOIN users u ON uf.follower_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE uf.followed_id = ? ORDER BY uf.created_at DESC");
+    $feedStmt = $conn->prepare("
+        SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following, 
+        uf.created_at AS activity_date, '' AS target_name, '' AS target_id, '' AS extra_info, 1 AS status 
+        FROM user_follows uf JOIN users u ON uf.follower_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
+        WHERE uf.followed_id = ? ORDER BY uf.created_at DESC
+    ");
     $feedStmt->execute([$userId, $userId]);
+
 } elseif ($currentTab === 'me') {
-    $feedStmt = $conn->prepare("SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 0 AS is_following FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE l.uid = ? UNION SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 0 AS is_following FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE c.uid = ? ORDER BY activity_date DESC LIMIT 50");
-    $feedStmt->execute([$userId, $userId]);
+    $feedStmt = $conn->prepare("
+        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 0 AS is_following
+        FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE l.uid = ?
+        UNION
+        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 0 AS is_following
+        FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE c.uid = ?
+        UNION
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 0 AS is_following
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE m.cid = ?
+        ORDER BY activity_date DESC LIMIT 50
+    ");
+    $feedStmt->execute([$userId, $userId, $userId]);
+
 } else {
-    $feedStmt = $conn->prepare("SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? UNION SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 1 AS is_following FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? ORDER BY activity_date DESC LIMIT 50");
-    $feedStmt->execute([$userId, $userId]);
+    $feedStmt = $conn->prepare("
+        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following
+        FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        UNION
+        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status, 1 AS is_following
+        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        UNION
+        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 1 AS is_following
+        FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        UNION
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 1 AS is_following
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        ORDER BY activity_date DESC LIMIT 50
+    ");
+    $feedStmt->execute([$userId, $userId, $userId, $userId]);
 }
 $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
