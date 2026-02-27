@@ -47,8 +47,26 @@ $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
 $profile = $stmt->fetch();
 if ($profile && $profile['hobbies']) {
-    $myHobbies = array_filter(array_map('trim', explode(',', $profile['hobbies'])));
+    $myHobbies = explode(', ', $profile['hobbies']);
 }
+
+$dbCircleColors = [];
+if (!empty($myHobbies)) {
+    $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
+    $colorStmt = $conn->prepare("SELECT name, color FROM circle WHERE name IN ($placeholders)");
+    $colorStmt->execute($myHobbies);
+    while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
+        $dbCircleColors[$row['name']] = $row['color'];
+    }
+}
+
+$hobbyColors = [
+    "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
+    "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
+    "Reading" => "#a8d0e6", "Gardening" => "#3cb371", "Baking" => "#f4a460",
+    "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
+    "Gaming" => "#9370db", "Yoga" => "#ffdead"
+];
 
 $suggestedCircles = [];
 if (!empty($myHobbies)) {
@@ -61,23 +79,18 @@ if (!empty($myHobbies)) {
     $suggestedCircles = $suggestStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$feedItems = [];
-if (!empty($myHobbies)) {
-    $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
-    $feedStmt = $conn->prepare("
-        (SELECT 'module' AS type, u.username, m.name AS target_name, '' AS message_text, l.last_visited AS activity_date, p.profile_color
-         FROM log l JOIN users u ON l.uid = u.id JOIN module m ON l.mid = m.id LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE l.complete = 1 AND m.name IN ($placeholders))
-        UNION
-        (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
-         FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE msg.hobby_name IN ($placeholders))
-        ORDER BY activity_date DESC LIMIT 4
-    ");
-    $params = array_merge($myHobbies, $myHobbies);
-    $feedStmt->execute($params);
-    $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
-}
+$feedStmt = $conn->prepare("
+    SELECT u.username, m.name AS module_name, m.exp_level, l.last_visited
+    FROM log l
+    JOIN users u ON l.uid = u.id
+    JOIN module m ON l.mid = m.id
+    WHERE l.complete = 1
+    ORDER BY l.last_visited DESC
+    LIMIT 10
+");
+$feedStmt->execute();
+$feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -211,6 +224,31 @@ if (!empty($myHobbies)) {
                                     <p class="hobby-label"><?= htmlspecialchars($hobby) ?></p>
                                 </a>
                             <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="circles-activity-wrapper">
+                    <h2>Your Feed</h2>
+                    <div class="activity-flex">
+                    <?php if (empty($feedItems)): ?>
+                        <p style="color: white; font-style: italic;">No recent activity in your network. Be the first to complete a module!</p>
+                    <?php else: ?>
+                        <?php foreach ($feedItems as $item): ?>
+                        <div class="feed-card">
+                            <div class="feed-header" style="position: relative; padding-bottom: 5px;">
+                                <div class="feed-avatar" style="background-color: #<?= substr(md5($item['username']), 0, 6) ?>;"></div> 
+                                <span class="feed-username" style="color: white; font-weight: bold;">
+                                    <?= htmlspecialchars($item['username']) ?>
+                                </span>
+                                <span style="color: #ccc; font-size: 12px; margin-left: 10px;">
+                                    completed a module!
+                                </span>
+                            </div>
+                            <div class="feed-image-placeholder" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background-color: #2c6ca3;">
+                                <h3 style="color: white; margin: 0;"><?= htmlspecialchars($item['module_name']) ?></h3>
+                                <p style="color: #e0e0e0; margin: 5px 0 0 0;">Level: <?= htmlspecialchars($item['exp_level']) ?></p>
+                            </div>
                         </div>
                     </section>
 
