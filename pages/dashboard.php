@@ -15,46 +15,57 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+$userId = $_SESSION['user']['id'];
 $streak = 1;
-if (isset($_SESSION['user']['id'])) {
-    $stmt = $conn->prepare("SELECT last_login, login_streak FROM user_profiles WHERE user_id = ?");
-    $stmt->execute([$_SESSION['user']['id']]);
-    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($userData) {
-        $lastLogin = $userData['last_login'];
-        $currentStreak = (int)$userData['login_streak'];
-        $today = new DateTime();
-        $diff = $lastLogin ? (new DateTime($lastLogin))->diff($today)->days : 999;
+$stmt = $conn->prepare("SELECT last_login, login_streak FROM user_profiles WHERE user_id = ?");
+$stmt->execute([$userId]);
+$userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($diff === 1) {
-            $streak = $currentStreak + 1;
-        } elseif ($diff === 0) {
-            $streak = $currentStreak;
-        } else {
-            $streak = 1;
-        }
+if ($userData) {
+    $lastLogin = $userData['last_login'];
+    $currentStreak = (int)$userData['login_streak'];
+    $today = new DateTime();
+    $diff = $lastLogin ? (new DateTime($lastLogin))->diff($today)->days : 999;
 
-        $update = $conn->prepare("UPDATE user_profiles SET last_login = CURDATE(), login_streak = ? WHERE user_id = ?");
-        $update->execute([$streak, $_SESSION['user']['id']]);
+    if ($diff === 1) {
+        $streak = $currentStreak + 1;
+    } elseif ($diff === 0) {
+        $streak = $currentStreak;
+    } else {
+        $streak = 1;
     }
+
+    $update = $conn->prepare("UPDATE user_profiles SET last_login = CURDATE(), login_streak = ? WHERE user_id = ?");
+    $update->execute([$streak, $userId]);
 }
 
 $myHobbies = [];
-if (isset($_SESSION['user']['id'])) {
-    $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
-    $stmt->execute([$_SESSION['user']['id']]);
-    $res = $stmt->fetch();
-    if ($res && $res['hobbies']) {
-        $myHobbies = explode(', ', $res['hobbies']);
-    }
+$stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
+$stmt->execute([$userId]);
+$res = $stmt->fetch();
+if ($res && $res['hobbies']) {
+    $myHobbies = array_map('trim', explode(',', $res['hobbies']));
 }
 
+$dbCircleColors = [];
+$colorStmt = $conn->query("SELECT name, color FROM circle");
+while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
+    $dbCircleColors[trim($row['name'])] = $row['color'];
+}
+
+$hobbyColors = [
+    "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
+    "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
+    "Reading" => "#a8d0e6", "Gardening" => "#3cb371", "Baking" => "#f4a460",
+    "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
+    "Gaming" => "#9370db", "Yoga" => "#ffdead"
+];
 
 $recommendations = [];
-if (isset($_SESSION['user']['id']) && !empty($myHobbies)) {
+if (!empty($myHobbies)) {
     $stmt = $conn->prepare("SELECT mid FROM log WHERE uid = ? AND complete = 1");
-    $stmt->execute([$_SESSION['user']['id']]);
+    $stmt->execute([$userId]);
     $completedIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     $stmt = $conn->prepare("SELECT id, name, description, exp_level FROM module");
@@ -74,35 +85,15 @@ if (isset($_SESSION['user']['id']) && !empty($myHobbies)) {
 }
 
 $currentModule = null;
-if (isset($_SESSION['user']['id'])) {
-    $stmt = $conn->prepare("
-        SELECT m.name, m.id
-        FROM log l
-        JOIN module m ON l.mid = m.id
-        WHERE l.uid = ? AND l.complete = 0
-        ORDER BY l.last_visited DESC LIMIT 1
-    ");
-    $stmt->execute([$_SESSION['user']['id']]);
-    $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-
-$hobbyColors = [
-    "Cooking" => "#ff9999",
-    "Knitting" => "#e6e6fa",
-    "Lego" => "#ffd700",
-    "Sewing" => "#ffb6c1",
-    "Painting" => "#ffdab9",
-    "Hiking" => "#90ee90",
-    "Reading" => "#a8d0e6",
-    "Gardening" => "#3cb371",
-    "Baking" => "#f4a460",
-    "Meditation" => "#e0ffff",
-    "Music" => "#dda0dd",
-    "Movies" => "#cd5c5c",
-    "Gaming" => "#9370db",
-    "Yoga" => "#ffdead"
-];
+$stmt = $conn->prepare("
+    SELECT m.name, m.id
+    FROM log l
+    JOIN module m ON l.mid = m.id
+    WHERE l.uid = ? AND l.complete = 0
+    ORDER BY l.last_visited DESC LIMIT 1
+");
+$stmt->execute([$userId]);
+$currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -182,11 +173,11 @@ $hobbyColors = [
             <div class="dashboard-circles-flex">
             
                 <?php foreach ($myHobbies as $hobby): 
-                    $color = $hobbyColors[$hobby] ?? '#cccccc'; 
+                    $color = $dbCircleColors[$hobby] ?? $hobbyColors[$hobby] ?? '#cccccc'; 
                 ?>
                 <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
                     <div class="story-circle">
-                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                        <div class="circle-img" style="background-color: <?= htmlspecialchars($color) ?>;"></div>
                         <p><?= htmlspecialchars($hobby) ?></p>
                     </div>
                 </a>
@@ -211,9 +202,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar-mini');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'listWeek',
-        headerToolbar: false,
+        headerToolbar: false,   
         height: 'auto',
-        events: 'load_events.php',
+        events: 'load_events.php', 
         eventClick: function(info) {
             alert("Event: " + info.event.title + "\nDescription: " + info.event.extendedProps.description);
         }
