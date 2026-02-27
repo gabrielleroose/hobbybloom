@@ -50,6 +50,24 @@ if ($profile && $profile['hobbies']) {
     $myHobbies = array_filter(array_map('trim', explode(',', $profile['hobbies'])));
 }
 
+$dbCircleColors = [];
+if (!empty($myHobbies)) {
+    $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
+    $colorStmt = $conn->prepare("SELECT name, color FROM circle WHERE name IN ($placeholders)");
+    $colorStmt->execute($myHobbies);
+    while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
+        $dbCircleColors[$row['name']] = $row['color'];
+    }
+}
+
+$hobbyColors = [
+    "Cooking" => "#ff9999", "Knitting" => "#e6e6fa", "Lego" => "#ffd700",
+    "Sewing" => "#ffb6c1", "Painting" => "#ffdab9", "Hiking" => "#90ee90",
+    "Reading" => "#a8d0e6", "Gardening" => "#3cb371", "Baking" => "#f4a460",
+    "Meditation" => "#e0ffff", "Music" => "#dda0dd", "Movies" => "#cd5c5c",
+    "Gaming" => "#9370db", "Yoga" => "#ffdead"
+];
+
 $suggestedCircles = [];
 if (!empty($myHobbies)) {
     $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
@@ -66,18 +84,27 @@ if (!empty($myHobbies)) {
     $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
     $feedStmt = $conn->prepare("
         (SELECT 'module' AS type, u.username, m.name AS target_name, '' AS message_text, l.last_visited AS activity_date, p.profile_color
-         FROM log l JOIN users u ON l.uid = u.id JOIN module m ON l.mid = m.id LEFT JOIN user_profiles p ON u.id = p.user_id
+         FROM log l
+         JOIN users u ON l.uid = u.id
+         JOIN module m ON l.mid = m.id
+         LEFT JOIN user_profiles p ON u.id = p.user_id
          WHERE l.complete = 1 AND m.name IN ($placeholders))
         UNION
-        (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
-         FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE msg.hobby_name IN ($placeholders))
-        ORDER BY activity_date DESC LIMIT 4
+        (SELECT 'chat' AS type, u.username, c.name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
+         FROM circle_messages msg
+         JOIN users u ON msg.user_id = u.id
+         JOIN circle c ON msg.circle_id = c.circle_id
+         LEFT JOIN user_profiles p ON u.id = p.user_id
+         WHERE c.name IN ($placeholders))
+        ORDER BY activity_date DESC
+        LIMIT 8
     ");
+    
     $params = array_merge($myHobbies, $myHobbies);
     $feedStmt->execute($params);
     $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -212,6 +239,33 @@ if (!empty($myHobbies)) {
                                 </div>
                             </a>
                             <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="circles-activity-wrapper">
+                    <h2>Circle Highlights</h2>
+                    <div class="activity-flex">
+                    <?php if (empty($feedItems)): ?>
+                        <p style="color: white; font-style: italic;">No recent messages or activity in your circles. Join the conversation!</p>
+                    <?php else: ?>
+                        <?php foreach ($feedItems as $item): 
+                            $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
+                        ?>
+                        <div class="feed-card" style="margin-bottom: 12px; border-left: 4px solid <?= ($item['type'] === 'chat') ? '#90ee90' : '#ff9999' ?>; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                            <div class="feed-header" style="display: flex; align-items: center; padding: 8px;">
+                                <div class="feed-avatar" style="background-color: <?= $avatarColor ?>; width: 25px; height: 25px; border-radius: 50%; margin-right: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    <?= strtoupper(substr($item['username'], 0, 1)) ?>
+                                </div>
+                                <span style="color: white; font-size: 13px;"><strong>@<?= htmlspecialchars($item['username']) ?></strong></span>
+                            </div>
+                            <div style="padding: 0 10px 10px 10px;">
+                                <?php if ($item['type'] === 'chat'): ?>
+                                    <p style="color: #eee; font-size: 12px; margin: 0;">💬 <em><?= htmlspecialchars($item['target_name']) ?>:</em> "<?= htmlspecialchars(substr($item['message_text'], 0, 50)) ?><?= strlen($item['message_text']) > 50 ? '...' : '' ?>"</p>
+                                <?php else: ?>
+                                    <p style="color: #ccc; font-size: 12px; margin: 0;">🎓 Mastered <strong><?= htmlspecialchars($item['target_name']) ?></strong></p>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </section>
                 </div>
