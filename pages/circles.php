@@ -226,17 +226,23 @@ if (!empty($myHobbies)) {
         </aside>
 
         <main class="page-container-inside">
+            
             <?php if ($searchQuery): ?>
                 <section class="results-section">
                     <h2 class="section-heading">Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
-                    <div class="suggested-flex">
-                        <?php foreach ($searchResults as $circle): ?>
-                            <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-item" style="background-color: <?= $circle['color'] ?? '#1f5077' ?>;">
-                                <strong><?= htmlspecialchars($circle['name']) ?></strong>
-                                <span><?= htmlspecialchars($circle['description']) ?></span>
-                            </a>
-                        <?php endforeach; ?>
+                    <div class="suggested-grid">
+                        <?php if (empty($searchResults)): ?>
+                            <p class="empty-msg">No circles found matching your search.</p>
+                        <?php else: ?>
+                            <?php foreach ($searchResults as $circle): ?>
+                                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?? '#1f5077' ?>;">
+                                    <strong style="color: <?= $circle['color'] ?? '#1f5077' ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                                    <p><?= htmlspecialchars($circle['description']) ?></p>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
+                    <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 40px; margin-bottom: 20px;">
                 </section>
             <?php endif; ?>
 
@@ -245,7 +251,7 @@ if (!empty($myHobbies)) {
                     <h2 class="section-heading">Your Circles</h2>
                     <div class="circles-flex">
                         <?php if (empty($myHobbies)): ?>
-                            <p class="empty-msg">No interests added yet.</p>
+                            <p class="empty-msg">Add interests in Account settings to see circles.</p>
                         <?php else: ?>
                             <?php foreach ($myHobbies as $hobby): 
                                 $color = $dbCircleColors[$hobby] ?? $hobbyColors[$hobby] ?? '#cccccc'; 
@@ -268,15 +274,19 @@ if (!empty($myHobbies)) {
                             <?php foreach ($feedItems as $item): 
                                 $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
                             ?>
-                            <div class="highlight-card">
-                                <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
-                                <div class="card-body">
-                                    <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
-                                    <?php if ($item['type'] === 'chat'): ?>
-                                        <small>"<?= htmlspecialchars(substr($item['message_text'], 0, 40)) ?>..."</small>
-                                    <?php endif; ?>
+                            <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
+                                <div class="highlight-card">
+                                    <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
+                                    <div class="card-body">
+                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> 
+                                           <?= $item['type'] === 'chat' ? 'messaged' : 'completed' ?> 
+                                           <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                        <?php if ($item['type'] === 'chat'): ?>
+                                            <small>"<?= htmlspecialchars(substr($item['message_text'], 0, 45)) ?>..."</small>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
