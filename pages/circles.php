@@ -105,6 +105,7 @@ if (!empty($myHobbies)) {
             padding: 5px;
             display: flex;
             gap: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .tab-btn {
@@ -266,7 +267,7 @@ if (!empty($myHobbies)) {
                                 <div class="highlight-card">
                                     <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
                                     <div class="card-body">
-                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> messaged <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
                                         <?php if ($item['message_text']): ?>
                                             <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
                                         <?php endif; ?>
@@ -277,6 +278,18 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
+
+                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
+                    <h2 class="section-heading">Suggested For You</h2>
+                    <div class="suggested-grid">
+                        <?php foreach ($suggestedCircles as $circle): ?>
+                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                            <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                            <p><?= htmlspecialchars($circle['description']) ?></p>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
             <?php endif; ?>
         </main>
     </div>
