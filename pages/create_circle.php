@@ -17,15 +17,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = trim($_POST["name"]);
     $description = trim($_POST["description"]);
     $color = $_POST["color"] ?? '#1f5077';
+    $category = $_POST["category"] ?? 'General';
     $userId = $_SESSION['user']['id'];
 
     if (empty($name) || empty($description)) {
         $error = "Please fill out all fields.";
     } else {
         try {
-            // We now insert the color into the database too!
-            $stmt = $conn->prepare("INSERT INTO circle (name, description, uid, color) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$name, $description, $userId, $color]);
+            $stmt = $conn->prepare("INSERT INTO circle (name, description, uid, color, category) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $description, $userId, $color, $category]);
             
             $profStmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
             $profStmt->execute([$userId]);
@@ -85,6 +85,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Description:</label>
                     <textarea name="description" rows="4" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;" placeholder="What is this circle about?"></textarea>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Category:</label>
+                    <select name="category" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; background-color: white; cursor: pointer;">
+                        <option value="General">General / Other</option>
+                        <option value="Arts">Arts & Creativity</option>
+                        <option value="Technical">Technical & Learning</option>
+                        <option value="Wellness">Wellness & Lifestyle</option>
+                    </select>
                 </div>
 
                 <div style="margin-bottom: 20px;">

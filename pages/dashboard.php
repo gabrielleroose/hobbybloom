@@ -177,16 +177,23 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 
             <div class="dashboard-circles-flex">
             
-                <?php foreach ($myHobbies as $hobby): 
-                    $color = $dbCircleColors[$hobby] ?? $hobbyColors[$hobby] ?? '#cccccc'; 
-                ?>
-                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
-                    <div class="story-circle">
-                        <div class="circle-img" style="background-color: <?= htmlspecialchars($color) ?>;"></div>
-                        <p><?= htmlspecialchars($hobby) ?></p>
+                <?php if (empty($myHobbies)): ?>
+                    <div style="padding: 20px; text-align: center; width: 100%;">
+                        <p style="color: #1E5077; font-style: italic; margin-bottom: 10px;">You haven't joined any circles yet!</p>
+                        <a href="circles.php" class="light-btn" style="text-decoration: none; background-color: #1E5077; color: white; padding: 8px 20px; border-radius: 20px;">Browse Circles</a>
                     </div>
-                </a>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($myHobbies as $hobby): 
+                        $color = $dbCircleColors[$hobby] ?? $hobbyColors[$hobby] ?? '#cccccc'; 
+                    ?>
+                    <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
+                        <div class="story-circle">
+                            <div class="circle-img" style="background-color: <?= htmlspecialchars($color) ?>;"></div>
+                            <p><?= htmlspecialchars($hobby) ?></p>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
                     <div class="story-circle">

@@ -127,6 +127,17 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
         .member-row:last-child { border-bottom: none; }
         .member-avatar { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; border: 1px solid rgba(0,0,0,0.1); }
+        
+        .category-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+        }
     </style>
 </head>
 <body class="circle-detail-body">
@@ -134,7 +145,12 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="detail-container-inside">
         
             <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h1 style="color: white; margin: 0; font-size: 32px;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <h1 style="color: white; margin: 0; font-size: 32px;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+                    <span class="category-badge">
+                        <?= htmlspecialchars($circleData['category'] ?? 'General') ?>
+                    </span>
+                </div>
                 <p style="color: #eee; margin-top: 10px;"><?= htmlspecialchars($circleData['description'] ?? 'Connect and share!') ?></p>
                 
                 <form action="circle_action.php" method="POST" style="margin-top: 20px;">
