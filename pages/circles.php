@@ -72,11 +72,11 @@ if (!empty($myHobbies)) {
         (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
          FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
          WHERE msg.hobby_name IN ($placeholders))
-        ORDER BY activity_date DESC LIMIT 4
+        ORDER BY activity_date DESC LIMIT 4 
     ");
     $params = array_merge($myHobbies, $myHobbies);
     $feedStmt->execute($params);
-    $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC); 
+    $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
@@ -85,7 +85,7 @@ if (!empty($myHobbies)) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Circles Hub | HobbyBloom</title>
+    <title>Circles Hub | HobbyBloom</title> 
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
@@ -194,7 +194,7 @@ if (!empty($myHobbies)) {
 
     <div class="page-container">
         <aside class="search-row"> 
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 15px;">Circles Hub</p> 
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 15px;">Circles Hub</p>
             <form method="GET" action="circles.php">
                 <input type="hidden" name="view" value="<?= htmlspecialchars($viewMode) ?>">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
@@ -208,19 +208,19 @@ if (!empty($myHobbies)) {
                 <section class="results-section"> 
                     <h2 class="section-heading">Results for "<?= htmlspecialchars($searchQuery) ?>"</h2>
                     <div class="suggested-grid">
-                        <?php if (empty($searchResults)): ?> 
-                            <p style="font-style: italic; color: #666;">No circles found matching your search.</p>
+                        <?php if (empty($searchResults)): ?>
+                            <p style="font-style: italic; color: #666;">No circles found matching your search.</p> 
                         <?php else: ?>
                             <?php foreach ($searchResults as $circle): ?>
                                 <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                                    <p><?= htmlspecialchars($circle['description']) ?></p> 
+                                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong> 
+                                    <p><?= htmlspecialchars($circle['description']) ?></p>
                                 </a>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
                 </section>
-                <hr style="border: 0; border-top: 1px solid rgba(31, 80, 119, 0.1); margin: 30px 0;">
+                <hr style="border: 0; border-top: 1px solid rgba(31, 80, 119, 0.1); margin: 30px 0;"> 
             <?php endif; ?>
 
             <?php if ($viewMode === 'all'): ?> 
@@ -260,9 +260,9 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
 
-                    <section class="circles-activity-wrapper">
+                    <section class="circles-activity-wrapper"> 
                         <h2 class="section-heading">Recent Highlights</h2>
-                        <div class="activity-column"> 
+                        <div class="activity-column">
                             <?php if (empty($feedItems)): ?>
                                 <p style="font-size: 0.85rem; color: #888; font-style: italic;">No recent activity in your circles.</p>
                             <?php else: ?>
@@ -285,10 +285,10 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
-            <?php endif; ?> 
+            <?php endif; ?>
 
         </main>
-    </div> 
+    </div>
 
     <?php if ($viewMode !== 'all' && !$searchQuery): ?> 
     <section class="suggested-circles-wrapper">
@@ -298,8 +298,8 @@ if (!empty($myHobbies)) {
                 <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
                     <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
                     <p><?= htmlspecialchars($circle['description']) ?></p>
-                </a> 
-            <?php endforeach; ?> 
+                </a>
+            <?php endforeach; ?>
         </div>
     </section>
 <?php endif; ?>
