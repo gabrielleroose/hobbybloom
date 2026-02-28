@@ -41,7 +41,7 @@ $stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
 $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $msgStmt = $conn->prepare("
-    SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color 
+    SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
     LEFT JOIN user_profiles p ON u.id = p.user_id
@@ -74,7 +74,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .chat-container { 
+        .chat-container {
             height: 450px !important;
             display: flex;
             flex-direction: column;
@@ -91,7 +91,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             display: flex;
             gap: 10px;
             padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1); 
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
         .chat-input {
             flex: 1;
@@ -108,7 +108,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .chat-message-container.mine { flex-direction: row-reverse; }
         .chat-avatar {
-            width: 30px; height: 30px; 
+            width: 30px; height: 30px;
             border-radius: 50%;
             margin: 0 10px;
             flex-shrink: 0;
@@ -136,7 +136,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             font-size: 0.8rem;
             font-weight: bold;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            display: inline-block;
+            display: inline-block; 
         }
     </style>
 </head>
@@ -144,7 +144,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="circle-detail-main-container">
         <div class="detail-container-inside">
         
-            <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"> 
+            <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
                     <h1 style="color: white; margin: 0; font-size: 32px;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
                     <span class="category-badge">
@@ -156,7 +156,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 <form action="circle_action.php" method="POST" style="margin-top: 20px;">
                     <input type="hidden" name="action" value="toggle_circle">
                     <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
-                    <button type="submit" class="light-btn" style="background-color: white; color: #333; border-radius: 20px; padding: 8px 20px; font-weight: bold;"> 
+                    <button type="submit" class="light-btn" style="background-color: white; color: #333; border-radius: 20px; padding: 8px 20px; font-weight: bold;">
                         <?= $isMember ? '✓ Member (Leave)' : '+ Join Circle' ?>
                     </button>
                 </form>
@@ -176,7 +176,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <h2>Circle Members</h2>
             <div class="member-list">
-                <?php if (empty($members)): ?> 
+                <?php if (empty($members)): ?>
                     <p style="color: #666; text-align: center; margin: 0;">No other members yet.</p>
                 <?php else: ?>
                     <?php foreach ($members as $mem): 
@@ -196,7 +196,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                                 </button>
                             </form>
                         </div>
-                    <?php endforeach; ?>
+                    <?php endforeach; ?> 
                 <?php endif; ?>
             </div>
 
@@ -204,7 +204,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             <?php if (empty($circleModules)): ?>
                 <div class="info-box" style="background-color: #1f5077; padding: 20px; border-radius: 10px; color: white; text-align: center;">
                     <p>No modules found for this circle yet.</p><br>
-                    <a href="createForm.php" class="light-btn" style="text-decoration: none; background: white; color: #333; padding: 5px 15px; border-radius: 5px;">Create Module</a> 
+                    <a href="createForm.php" class="light-btn" style="text-decoration: none; background: white; color: #333; padding: 5px 15px; border-radius: 5px;">Create Module</a>
                 </div>
             <?php else: ?>
                 <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
@@ -222,9 +222,9 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
 
             <div class="chat-container">
-                <h2 style="margin: 0 0 15px 0; color: white;">Circle Discussion</h2> 
+                <h2 style="margin: 0 0 15px 0; color: white;">Circle Discussion</h2>
                 <div class="chat-box" id="chatBox">
-                    <?php foreach ($chatMessages as $msg):  
+                    <?php foreach ($chatMessages as $msg): 
                         $isMine = ($msg['user_id'] == $userId);
                         $c = !empty($msg['profile_color']) ? $msg['profile_color'] : '#' . substr(md5($msg['username']), 0, 6);
                     ?>
@@ -239,7 +239,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <form method="POST" class="chat-input-row">
                     <input type="text" name="chat_message" class="chat-input" placeholder="Type a message..." required autocomplete="off">
-                    <button type="submit" class="light-btn" style="background-color: white; color: #333; border: none; font-weight: bold; border-radius: 20px; padding: 0 20px;">Send</button> 
+                    <button type="submit" class="light-btn" style="background-color: white; color: #333; border: none; font-weight: bold; border-radius: 20px; padding: 0 20px;">Send</button>
                 </form>
             </div>
 
