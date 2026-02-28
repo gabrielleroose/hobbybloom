@@ -15,10 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['follow_id'])) {
     $toFollow = $_POST['follow_id'];
     $stmt = $conn->prepare("INSERT IGNORE INTO user_follows (follower_id, followed_id) VALUES (?, ?)");
     $stmt->execute([$userId, $toFollow]);
-    header("Location: activity.php?tab=" . $currentTab . "&success=followed");
+    header("Location: activity.php?tab=" . $currentTab);
     exit();
 }
-
 
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
@@ -91,29 +90,18 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/nav.css" rel="stylesheet">
     <style>
         .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
-        .activity-feed-item { background-color: white; border-radius: 12px; padding: 20px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; border: 1px solid rgba(0,0,0,0.05); }
+        .activity-feed-item { background-color: white; border-radius: 12px; padding: 20px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; }
         .activity-content { flex-grow: 1; color: #333; line-height: 1.4; }
         .activity-content a { text-decoration: none; font-weight: 700; color: #1f5077; }
         .activity-content a:hover { text-decoration: underline; }
         .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; white-space: nowrap; }
-        
         .glass-tab-container { display: flex; justify-content: center; margin: 20px 0 35px 0; }
-        .glass-tabs { 
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(10px); 
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 40px; 
-            padding: 5px; 
-            display: flex; 
-            gap: 5px; 
-        }
+        .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
         .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; transition: 0.3s; }
         .tab-btn.active { background-color: #1f5077; color: white; box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); }
-        
         .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-        .following-label { color: #888; font-size: 0.75rem; font-weight: 600; padding: 8px 16px; }
+        .unfollow-btn { background-color: #ddd; color: #555; }
     </style>
 </head>
 <body class="activity-body">
@@ -178,8 +166,8 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="activity-date"><?= $dateStr ?></div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>

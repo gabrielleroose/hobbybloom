@@ -200,12 +200,12 @@ if (!empty($myHobbies)) {
             </div>
         </div>
 
-        <aside class="search-row">
-            <p>Circles Hub</p>
-            <form method="GET" action="circles.php">
+        <aside class="search-row" style="text-align: center;">
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
+            <form method="GET" action="circles.php" style="display: inline-block;">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 20px; display: block; text-align: center;">+ Create Circle</a>
+            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: inline-block; padding: 10px 20px;">+ Create Circle</a>
         </aside>
 
         <main class="page-container-inside">
@@ -231,7 +231,6 @@ if (!empty($myHobbies)) {
                         <a href="circles.php?view=all&category=Technical" class="filter-chip <?= $filterCategory === 'Technical' ? 'active' : '' ?>">Technical</a>
                         <a href="circles.php?view=all&category=Wellness" class="filter-chip <?= $filterCategory === 'Wellness' ? 'active' : '' ?>">Wellness</a>
                     </div>
-                    
                     <div class="suggested-grid">
                         <?php foreach ($allCircles as $circle): ?>
                             <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
@@ -267,7 +266,10 @@ if (!empty($myHobbies)) {
                                 <div class="highlight-card">
                                     <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
                                     <div class="card-body">
-                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> messaged <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                        <?php if ($item['message_text']): ?>
+                                            <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </a>
@@ -275,18 +277,6 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
-
-                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
-                    <h2 class="section-heading">Suggested For You</h2>
-                    <div class="suggested-grid">
-                        <?php foreach ($suggestedCircles as $circle): ?>
-                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                            <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                            <p><?= htmlspecialchars($circle['description']) ?></p>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
-                </section>
             <?php endif; ?>
         </main>
     </div>
