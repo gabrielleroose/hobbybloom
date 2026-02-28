@@ -30,7 +30,7 @@ if ($currentTab === 'global') {
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId, $userId, $userId]); 
+    $feedStmt->execute([$userId, $userId, $userId, $userId]);
 } elseif ($currentTab === 'followers') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
@@ -41,7 +41,7 @@ if ($currentTab === 'global') {
     ");
     $feedStmt->execute([$userId, $userId]);
 } elseif ($currentTab === 'me') {
-    $feedStmt = $conn->prepare(" 
+    $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 0 AS is_following
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE l.uid = ?
         UNION
@@ -82,12 +82,12 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/nav.css" rel="stylesheet">
     <style>
         .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
-        .activity-feed-item { 
+        .activity-feed-item {  
             background-color: white; 
             border-radius: 12px; 
             padding: 20px; 
             display: flex; 
-            align-items: center;  
+            align-items: center; 
             justify-content: space-between; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             flex-wrap: wrap;
@@ -104,7 +104,7 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .tab-btn.active { background-color: #1f5077; color: white; }
         
         .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; }
+        .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; } 
     </style>
 </head>
 <body class="activity-body">
@@ -138,9 +138,9 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="activity-feed-item">
                     <div class="activity-main-content">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
-                        <div class="activity-text"> 
+                        <div class="activity-text">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
-                            <span style="color: #666;"> <?= $actionText ?> </span> 
+                            <span style="color: #666;"> <?= $actionText ?> </span>
                             <?php if ($act['target_name']): ?>
                                 <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
                             <?php endif; ?>

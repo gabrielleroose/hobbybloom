@@ -89,15 +89,13 @@ if (!empty($myHobbies)) {
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .hub-top-nav {
-            width: 100%;
+        .glass-nav-container {
             display: flex;
             justify-content: center;
-            margin: 20px 0 35px 0;
+            margin: 20px 0 30px 0;
         }
-
-        .glass-tabs {
-            background: rgba(255, 255, 255, 0.4); 
+        .glass-hub-nav {
+            background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -116,35 +114,25 @@ if (!empty($myHobbies)) {
             font-size: 0.85rem;
             transition: 0.3s;
         }
-
-        .tab-btn.active {
-            background-color: #1f5077;
+        .hub-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .hub-btn.active {
+            background: #1f5077;
             color: white;
             box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2);
         }
 
-        .filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-chip {
-            padding: 6px 18px;
-            border-radius: 20px;
-            background: white;
-            color: #1f5077;
-            text-decoration: none;
-            font-size: 0.85rem;
+        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-chip { 
+            padding: 6px 18px; 
+            border-radius: 20px; 
+            background: white; 
+            color: #1f5077; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
             border: 1px solid rgba(31, 80, 119, 0.1);
+            transition: 0.2s;
         }
-
-        .filter-chip.active {
-            background: #1f5077;
-            color: white;
-            border-color: #1f5077;
-        }
+        .filter-chip.active { background: #1f5077; color: white; border-color: #1f5077; }
     </style>
 </head>
 
@@ -158,12 +146,19 @@ if (!empty($myHobbies)) {
     </div>
 
     <div class="page-container">
+        <div class="glass-nav-container">
+            <div class="glass-hub-nav">
+                <a href="circles.php" class="hub-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
+                <a href="circles.php?view=all" class="hub-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
+            </div>
+        </div>
+
         <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p> 
+            <p>Circles Hub</p>
             <form method="GET" action="circles.php">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px;">+ Create Circle</a> 
+            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 20px; display: block; text-align: center;">+ Create Circle</a>
         </aside>
 
         <main class="page-container-inside">
@@ -220,40 +215,34 @@ if (!empty($myHobbies)) {
                             <?php foreach ($feedItems as $item):
                                 $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6); 
                             ?>
-                                <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
-                                    <div class="highlight-card">
-                                        <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
-                                        <div class="card-body">
-                                            <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
-                                            <?php if ($item['message_text']): ?>
-                                                <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
-                                            <?php endif; ?>
-                                        </div>
+                            <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
+                                <div class="highlight-card">
+                                    <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
+                                    <div class="card-body">
+                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
                                     </div>
-                                </a>
+                                </div> 
+                            </a>
                             <?php endforeach; ?>
                         </div>
                     </section>
                 </div>
-            <?php endif; ?>
 
+                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
+                    <h2 class="section-heading">Suggested For You</h2>
+                    <div class="suggested-grid">
+                        <?php foreach ($suggestedCircles as $circle): ?>
+                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                            <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                            <p><?= htmlspecialchars($circle['description']) ?></p>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </section> 
+            <?php endif; ?>
         </main>
     </div>
-
-    <?php if ($viewMode !== 'all'): ?>
-    <section class="suggested-circles-wrapper"> 
-        <h2 class="section-heading">Suggested For You</h2>
-        <div class="suggested-grid">
-            <?php foreach ($suggestedCircles as $circle): ?>
-                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                    <p><?= htmlspecialchars($circle['description']) ?></p>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </section>
-<?php endif; ?>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 
 </html>
