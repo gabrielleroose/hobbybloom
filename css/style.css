@@ -406,9 +406,8 @@ footer {
   display: flex;
   overflow-x: auto;
   margin-top: 2rem;
-  /* padding: 1rem; */
-  /* border: 3px solid red; */
   padding-top: 1rem;
+  gap: 25px;
 }
 
 
@@ -522,8 +521,10 @@ footer {
 
 .circles-circle {
   gap: 5px;
-  min-width: 85px;
-  /* border: 3px solid orange; */
+  min-width: 95px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .circles-circle:hover {
@@ -643,7 +644,7 @@ h2 {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  position: absolute;
+  position: relative;
   z-index: 2;
   padding: 10px;
 }
@@ -2147,4 +2148,16 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   color: #1E5077;
   font-style: italic;
   opacity: 0.7;
+}
+
+
+.highlight-link {
+  text-decoration: none;
+  display: block;
+}
+
+.highlight-link:hover .highlight-card {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(8px);
+  transition: 0.2s ease-in-out;
 }
