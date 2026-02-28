@@ -33,12 +33,12 @@ footer {
 /* ************************** INDEX STYLES ***************************** */
 /* ************************** INDEX STYLES ***************************** */
 
-.index-body { 
+.index-body {
   background-color: #BDC29D;
 
 }
 
-.index-main-container { 
+.index-main-container {
   border-radius: 2rem;
   padding: 1rem 0 3rem 3rem;
   width: 80%;
@@ -245,7 +245,7 @@ footer {
   width: 100%;
 }
 
-.search-row { 
+.search-row {
   display: flex;
   flex-direction: column;
   width: 20%;
@@ -1903,6 +1903,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 
 /* ************************************* SHARE STYLES ************************************* */
+/* ************************************* SHARE STYLES ************************************* */
 .share-body {
   background-color: #BDC29D;
 }
@@ -1939,7 +1940,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .create-module-main:hover {
-   transform: scale(1.05); 
+  /* transform: scale(1.05); */
 }
 
 .create-module-main h2 {
@@ -2074,7 +2075,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .your-circles-wrapper,
 .circles-activity-wrapper {
-  /* width: 50% !important; */
+  width: 50% !important;
   height: auto !important;
   min-height: 280px;
 }
@@ -2088,14 +2089,10 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .highlight-card {
   display: flex;
   align-items: center;
-  justify-content: center;
   background: rgba(255, 255, 255, 0.5);
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  /* border: 4px solid yellow; */
-  width: 92%;
-  /* margin: 0 auto; */
 }
 
 .card-avatar {
@@ -2158,16 +2155,4 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   color: #1E5077;
   font-style: italic;
   opacity: 0.7;
-}
-
-
-.highlight-link {
-  text-decoration: none;
-  display: block;
-}
-
-.highlight-link:hover .highlight-card {
-  background: rgba(255, 255, 255, 0.7);
-  transform: translateX(2px);
-  transition: 0.2s ease-in-out;
 }
