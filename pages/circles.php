@@ -96,23 +96,25 @@ if (!empty($myHobbies)) {
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 40px;
             padding: 5px;
-            display: flex;
-            gap: 5px;
+            display: flex; gap: 5px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         .hub-btn {
             padding: 10px 25px;
             border-radius: 35px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1f5077;
-            transition: all 0.3s ease;
+            font-weight: 600; font-size: 0.9rem;
+            color: #1f5077; transition: all 0.3s ease;
         }
         .hub-btn:hover { background: rgba(255, 255, 255, 0.3); }
         .hub-btn.active { background: #1f5077; color: white; box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); }
+        
         .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-chip { padding: 6px 18px; border-radius: 20px; background: white; color: #1f5077; text-decoration: none; font-size: 0.85rem; border: 1px solid rgba(31, 80, 119, 0.1); }
+        .filter-chip { 
+            padding: 6px 18px; border-radius: 20px; background: white; 
+            color: #1f5077; text-decoration: none; font-size: 0.85rem; 
+            border: 1px solid rgba(31, 80, 119, 0.1); 
+        }
         .filter-chip.active { background: #1f5077; color: white; border-color: #1f5077; }
     </style>
 </head>
@@ -199,7 +201,7 @@ if (!empty($myHobbies)) {
                                 <div class="highlight-card">
                                     <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
                                     <div class="card-body">
-                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> messaged <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
                                         <?php if ($item['message_text']): ?>
                                             <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
                                         <?php endif; ?>
@@ -210,6 +212,18 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
+
+                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
+                    <h2 class="section-heading">Suggested For You</h2>
+                    <div class="suggested-grid">
+                        <?php foreach ($suggestedCircles as $circle): ?>
+                        <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                            <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                            <p><?= htmlspecialchars($circle['description']) ?></p>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
             <?php endif; ?>
         </main>
     </div>
