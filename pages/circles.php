@@ -18,8 +18,8 @@ $viewMode = $_GET['view'] ?? 'suggested';
 $dbCircleColors = [];
 $colorStmt = $conn->query("SELECT name, color FROM circle");
 while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
-    $dbCircleColors[trim($row['name'])] = $row['color'];
-} 
+    $dbCircleColors[trim($row['name'])] = $row['color']; 
+}
 
 $searchResults = [];
 if ($searchQuery) {
@@ -96,8 +96,8 @@ if (!empty($myHobbies)) {
             margin: 20px 0 35px 0;
         }
 
-        .glass-tabs { 
-            background: rgba(255, 255, 255, 0.4);
+        .glass-tabs {
+            background: rgba(255, 255, 255, 0.4); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -159,7 +159,7 @@ if (!empty($myHobbies)) {
 
     <div class="page-container">
         <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p> 
             <form method="GET" action="circles.php">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
@@ -174,7 +174,7 @@ if (!empty($myHobbies)) {
                         <?php foreach ($searchResults as $circle): ?>
                             <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
                                 <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                                <p><?= htmlspecialchars($circle['description']) ?></p>
+                                <p><?= htmlspecialchars($circle['description']) ?></p> 
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -183,11 +183,11 @@ if (!empty($myHobbies)) {
 
             <?php if ($viewMode === 'all'): ?>
                 <section class="results-section">
-                    <div class="filter-row"> 
+                    <div class="filter-row">
                         <a href="circles.php?view=all" class="filter-chip <?= !$filterCategory ? 'active' : '' ?>">All Categories</a>
                         <a href="circles.php?view=all&category=Arts" class="filter-chip <?= $filterCategory === 'Arts' ? 'active' : '' ?>">Arts</a>
                         <a href="circles.php?view=all&category=Technical" class="filter-chip <?= $filterCategory === 'Technical' ? 'active' : '' ?>">Technical</a>
-                        <a href="circles.php?view=all&category=Wellness" class="filter-chip <?= $filterCategory === 'Wellness' ? 'active' : '' ?>">Wellness</a>
+                        <a href="circles.php?view=all&category=Wellness" class="filter-chip <?= $filterCategory === 'Wellness' ? 'active' : '' ?>">Wellness</a> 
                     </div>
                     <div class="suggested-grid">
                         <?php foreach ($allCircles as $circle): ?>
@@ -206,7 +206,7 @@ if (!empty($myHobbies)) {
                             <?php foreach ($myHobbies as $hobby):
                                 $color = $dbCircleColors[trim($hobby)] ?? '#cccccc';
                             ?>
-                                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" class="circles-circle">
+                                <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" class="circles-circle"> 
                                     <div class="circle-img" style="background-color: <?= $color ?>;"></div>
                                     <p class="hobby-label"><?= htmlspecialchars($hobby) ?></p>
                                 </a>
@@ -218,7 +218,7 @@ if (!empty($myHobbies)) {
                         <h2 class="section-heading">Recent Highlights</h2>
                         <div class="activity-column">
                             <?php foreach ($feedItems as $item):
-                                $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
+                                $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6); 
                             ?>
                                 <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
                                     <div class="highlight-card">
@@ -238,10 +238,10 @@ if (!empty($myHobbies)) {
             <?php endif; ?>
 
         </main>
-    </div> 
+    </div>
 
     <?php if ($viewMode !== 'all'): ?>
-    <section class="suggested-circles-wrapper">
+    <section class="suggested-circles-wrapper"> 
         <h2 class="section-heading">Suggested For You</h2>
         <div class="suggested-grid">
             <?php foreach ($suggestedCircles as $circle): ?>
@@ -253,7 +253,7 @@ if (!empty($myHobbies)) {
         </div>
     </section>
 <?php endif; ?>
-<?php include __DIR__ . '/../includes/footer.php'; ?> 
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 
 </html>
