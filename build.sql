@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS module_user_completion;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS event_invites;
 DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -34,13 +35,14 @@ CREATE TABLE users (
 CREATE TABLE circle (
     circle_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL,
-    uid INT NOT NULL,
+    uid INT,
     description TEXT,
     color VARCHAR(7) DEFAULT '#1f5077',
+    category VARCHAR(50) DEFAULT 'General',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (circle_id),
     FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -62,6 +64,7 @@ CREATE TABLE user_profiles (
     hobbies TEXT,
     last_login DATE,
     login_streak INT DEFAULT 0,
+    is_private TINYINT(1) DEFAULT 0, 
     FOREIGN KEY (user_id) REFERENCES users(id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE
@@ -225,8 +228,6 @@ CREATE TABLE module_stage_videos (
 ) ENGINE=InnoDB;
 
 
--- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
-
 CREATE TABLE module_stage (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 mid INT NOT NULL,
@@ -238,7 +239,6 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
 CREATE TABLE module_stage_questions (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 msid INT NOT NULL,
@@ -249,8 +249,6 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-
--- MODULE_STAGE_QUESTIONS_ANSWERS
 CREATE TABLE module_stage_questions_answers (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 msqid INT NOT NULL,
@@ -262,7 +260,6 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- MODULE_STAGE_QUESTION_USER_ANSWERS
 CREATE TABLE module_stage_questions_user_answers (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     uid INT NOT NULL, 
@@ -273,10 +270,7 @@ CREATE TABLE module_stage_questions_user_answers (
     FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
-
 ) ENGINE=InnoDB;
-
-
 
 
 
@@ -298,8 +292,6 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-
-------------- calendar tables below ---------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -309,13 +301,11 @@ CREATE TABLE events (
     location VARCHAR(255),
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     CONSTRAINT fk_events_user
     FOREIGN KEY (created_by) REFERENCES users(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE event_invites (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -327,10 +317,8 @@ CREATE TABLE event_invites (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-
-
-
 -- TEST DATA --
+INSERT INTO users (id, username, email, password) VALUES (1, 'Admin', 'admin@hobbybloom.com', 'password123');
 
 INSERT INTO module (id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
 VALUES
@@ -362,9 +350,16 @@ VALUES
 (1, 'CREATE', 0, 3),
 (1, 'GRAB', 0, 4);
 
-INSERT INTO circle (name, uid, description) VALUES 
-('Cooking', 1, 'Share recipes, tips, and culinary masterpieces.'),
-('Knitting', 1, 'Yarn lovers unite. Share your latest patterns.'),
-('Lego', 1, 'Brick by brick, show off your awesome builds.'),
-('Gaming', 1, 'Discuss the latest releases and find teammates.'),
-('Hiking', 1, 'Trail recommendations and gear discussions.');
+INSERT INTO circle (name, uid, description, color, category) VALUES 
+('Cooking', 1, 'A place for beginners and chefs to share recipes, tips, and culinary adventures.', '#ff9999', 'Wellness'),
+('Knitting', 1, 'Yarn lovers unite!! Share your latest patterns, stitches, and cozy creations.', '#e6e6fa', 'Arts'),
+('Lego', 1, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
+('Gaming', 1, 'Discuss new releases, find teammates for multiplayer games, and talk strategy across all platforms.', '#9370db', 'Technical'),
+('Hiking', 1, 'Let\'s hit the trails! Come share gear reviews and the best scenic paths in the area.', '#90ee90', 'Wellness'),
+('Bird Watching', 1, 'A peaceful space to look up! Share your sightings and best local birding spots.', '#9ed3ff', 'Wellness'),
+('Gardening', 1, 'Come grow your own food and flowers! Share tips for healthy soil and happy plants.', '#26f749', 'Wellness'),
+('Rug Tufting', 1, 'Making rugs and art with yarn! Share your tufting frames and finished rugs.', '#178c08', 'Arts'),
+('Diving', 1, 'Take the plunge! A community for those who love diving, from the board to the deep blue.', '#1f5077', 'Wellness'),
+('Design', 1, 'For the visually inspired. Discuss UI/UX, graphic design, and artistic theory.', '#5cacee', 'Arts'),
+('Piano', 1, 'Whether you are a beginner or an experienced pianist, connect through the keys and share your progress.', '#ac58ca', 'Arts'),
+('Crocheting', 1, 'From blankets to clothes, join a community of creators who love the hook and yarn.', '#ff881a', 'Arts');
