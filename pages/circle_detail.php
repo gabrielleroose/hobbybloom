@@ -126,15 +126,31 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         .member-list { background-color: white; border-radius: 10px; padding: 15px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .member-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
         .member-row:last-child { border-bottom: none; }
-        .member-avatar { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
+        .member-avatar { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; border: 1px solid rgba(0,0,0,0.1); }
+        
+        .category-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem; 
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+        }
     </style>
 </head>
 <body class="circle-detail-body">
     <div class="circle-detail-main-container">
         <div class="detail-container-inside">
         
-            <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px;">
-                <h1 style="color: white; margin: 0; font-size: 32px;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+            <div style="background-color: <?= htmlspecialchars($headerColor) ?>; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <h1 style="color: white; margin: 0; font-size: 32px;"><?= htmlspecialchars($currentHobby) ?> Circle</h1>
+                    <span class="category-badge">
+                        <?= htmlspecialchars($circleData['category'] ?? 'General') ?> 
+                    </span>
+                </div>
                 <p style="color: #eee; margin-top: 10px;"><?= htmlspecialchars($circleData['description'] ?? 'Connect and share!') ?></p>
                 
                 <form action="circle_action.php" method="POST" style="margin-top: 20px;">
@@ -144,33 +160,38 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?= $isMember ? '✓ Member (Leave)' : '+ Join Circle' ?>
                     </button>
                 </form>
+                <?php if ($creatorId != $userId):?>
+                    <button id="reportCircleBtn" 
+                        style="margin-top: 10px; background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                        Report Circle
+                    </button>
+                <?php endif; ?>
+            </div>
 
-                <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
-                    <?php if ($creatorId == $userId): ?>
-                        <a href="edit_circle.php?id=<?= $circleId ?>" 
-                            style="background: #1f5077; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 14px;">
-                            Edit Circle
-                        </a>
-                    <?php else: ?>
-                        <button id="reportCircleBtn" 
-                            style="background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
-                            Report Circle
-                        </button>
-                    <?php endif; ?>
-                </div>
             <h2>Circle Members</h2>
             <div class="member-list">
-                <?php foreach ($members as $mem): 
-                    $mColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
-                ?>
-                    <div class="member-row">
-                        <div style="display: flex; align-items: center;">
-                            <div class="member-avatar" style="background-color: <?= $mColor ?>;"></div>
-                            <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
+                <?php if (empty($members)): ?>
+                    <p style="color: #666; text-align: center; margin: 0;">No other members yet.</p>
+                <?php else: ?>
+                    <?php foreach ($members as $mem): 
+                        $mColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
+                    ?>
+                        <div class="member-row">
+                            <div style="display: flex; align-items: center;">
+                                <div class="member-avatar" style="background-color: <?= $mColor ?>;"></div>
+                                <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
+                            </div>
+                            <form action="circle_action.php" method="POST" style="margin: 0;">
+                                <input type="hidden" name="action" value="toggle_follow">
+                                <input type="hidden" name="target_id" value="<?= $mem['id'] ?>">
+                                <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
+                                <button type="submit" class="light-btn" style="font-size: 12px;">
+                                    <?= $mem['am_following'] ? 'Following' : 'Follow' ?>
+                                </button>
+                            </form>
                         </div>
-                        <button class="light-btn" style="font-size: 12px;"><?= $mem['am_following'] ? 'Following' : 'Follow' ?></button>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
 
             <h2>Modules in this Circle</h2>

@@ -28,7 +28,7 @@ if ($action === 'toggle_circle') {
 }
 
 if ($action === 'toggle_follow') {
-    $targetId = $_POST['target_id'] ?? 0;
+    $targetId = $_POST['target_id'] ?? 0; 
     if ($targetId > 0 && $targetId != $userId) {
         $stmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
         $stmt->execute([$userId, $targetId]);
