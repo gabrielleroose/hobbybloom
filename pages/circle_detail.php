@@ -41,9 +41,10 @@ $stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
 $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $msgStmt = $conn->prepare("
-    SELECT cm.message, cm.created_at, u.id AS user_id, u.username 
+    SELECT cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
+    LEFT JOIN user_profiles p ON u.id = p.user_id
     WHERE cm.hobby_name = ?
     ORDER BY cm.created_at ASC
 ");
@@ -51,7 +52,7 @@ $msgStmt->execute([$currentHobby]);
 $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $memStmt = $conn->prepare("
-    SELECT u.id, u.username, 
+    SELECT u.id, u.username, p.profile_color,
            (SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) as am_following
     FROM users u
     JOIN user_profiles p ON u.id = p.user_id
@@ -72,7 +73,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .chat-message.mine { background-color: <?= htmlspecialchars($headerColor) ?>; }
+        .chat-message.mine { background-color: <?= htmlspecialchars($headerColor) ?>; color: white; }
         
         .member-list {
             background-color: white;
@@ -95,6 +96,23 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             display: inline-block;
             vertical-align: middle;
             margin-right: 10px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .chat-message-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .chat-message-container.mine {
+            flex-direction: row-reverse;
+        }
+        .chat-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin: 0 10px;
+            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -130,10 +148,12 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php if (empty($members)): ?>
                     <p style="color: #666; margin: 0; text-align: center;">You are the only member so far! Invite some friends.</p>
                 <?php else: ?>
-                    <?php foreach ($members as $mem): ?>
+                    <?php foreach ($members as $mem): 
+                        $memAvatarColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
+                    ?>
                         <div class="member-row">
-                            <div>
-                                <div class="member-avatar" style="background-color: #<?= substr(md5($mem['username']), 0, 6) ?>;"></div>
+                            <div style="display: flex; align-items: center;">
+                                <div class="member-avatar" style="background-color: <?= $memAvatarColor ?>;"></div>
                                 <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
                             </div>
                             
@@ -154,9 +174,9 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
 
             <h2>Modules in this Circle</h2>
             <?php if (empty($circleModules)): ?>
-                <div class="info-box" style="background-color: #1f5077;">
+                <div class="info-box" style="background-color: #1f5077; padding: 20px; border-radius: 10px; color: white; text-align: center;">
                     <p>No modules found for this circle yet. Be the first to create one!</p><br>
-                    <a href="createForm.php" class="light-btn" style="text-decoration: none; color: #333;">Create Module</a>
+                    <a href="createForm.php" class="light-btn" style="text-decoration: none; color: #333; background-color: white; padding: 10px 20px; border-radius: 5px;">Create Module</a>
                 </div>
             <?php else: ?>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -181,10 +201,16 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php else: ?>
                         <?php foreach ($chatMessages as $msg): 
                             $isMine = ($msg['username'] === $_SESSION['user']['name']) ? 'mine' : '';
+                            $chatAvatarColor = !empty($msg['profile_color']) ? $msg['profile_color'] : '#' . substr(md5($msg['username']), 0, 6);
                         ?>
-                            <div class="chat-message <?= $isMine ?>">
-                                <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-author" style="text-decoration: none; color: inherit; display: block;"><?= htmlspecialchars($msg['username']) ?></a>
-                                <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                            <div class="chat-message-container <?= $isMine ?>">
+                                <div class="chat-avatar" style="background-color: <?= $chatAvatarColor ?>;"></div>
+                                <div class="chat-message <?= $isMine ?>">
+                                    <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-author" style="text-decoration: none; color: inherit; display: block; font-weight: bold; font-size: 11px; margin-bottom: 3px;">
+                                        <?= htmlspecialchars($msg['username']) ?>
+                                    </a>
+                                    <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
