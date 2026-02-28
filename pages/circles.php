@@ -194,10 +194,11 @@ if (!empty($myHobbies)) {
     </div>
 
     <div class="page-container">
-        <div class="glass-nav-container">
-            <div class="glass-hub-nav">
-                <a href="circles.php" class="hub-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
-                <a href="circles.php?view=all" class="hub-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
+        
+        <div class="glass-tab-container">
+            <div class="glass-tabs">
+                <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
+                <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
             </div>
         </div>
 
