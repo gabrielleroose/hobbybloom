@@ -137,6 +137,8 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: bold;
             border: 1px solid rgba(255, 255, 255, 0.3);
             display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -174,11 +176,11 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                     <p style="color: #666; text-align: center; margin: 0;">No other members yet.</p>
                 <?php else: ?>
                     <?php foreach ($members as $mem): 
-                        $mColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
+                        $memAvatarColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
                     ?>
                         <div class="member-row">
                             <div style="display: flex; align-items: center;">
-                                <div class="member-avatar" style="background-color: <?= $mColor ?>;"></div>
+                                <div class="member-avatar" style="background-color: <?= $memAvatarColor ?>;"></div>
                                 <a href="profile.php?id=<?= $mem['id'] ?>" style="color: #333; text-decoration: none;"><strong><?= htmlspecialchars($mem['username']) ?></strong></a>
                             </div>
                             <form action="circle_action.php" method="POST" style="margin: 0;">
@@ -197,8 +199,8 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             <h2>Modules in this Circle</h2>
             <?php if (empty($circleModules)): ?>
                 <div class="info-box" style="background-color: #1f5077; padding: 20px; border-radius: 10px; color: white; text-align: center;">
-                    <p>No modules found for this circle yet.</p><br>
-                    <a href="createForm.php" class="light-btn" style="text-decoration: none; background: white; color: #333; padding: 5px 15px; border-radius: 5px;">Create Module</a>
+                    <p>No modules found for this circle yet. Be the first to create one!</p><br>
+                    <a href="createForm.php" class="light-btn" style="text-decoration: none; color: #333; background-color: white; padding: 10px 20px; border-radius: 5px;">Create Module</a>
                 </div>
             <?php else: ?>
                 <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
@@ -218,18 +220,24 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="chat-container">
                 <h2 style="margin: 0 0 15px 0; color: white;">Circle Discussion</h2>
                 <div class="chat-box" id="chatBox">
-                    <?php foreach ($chatMessages as $msg): 
-                        $isMine = ($msg['user_id'] == $userId);
-                        $c = !empty($msg['profile_color']) ? $msg['profile_color'] : '#' . substr(md5($msg['username']), 0, 6);
-                    ?>
-                        <div class="chat-message-container <?= $isMine ? 'mine' : '' ?>">
-                            <div class="chat-avatar" style="background-color: <?= $c ?>;"></div>
-                            <div class="chat-content">
-                                <small style="display: block; font-weight: bold; font-size: 10px; margin-bottom: 2px; opacity: 0.8;"><?= htmlspecialchars($msg['username']) ?></small>
-                                <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                    <?php if (empty($chatMessages)): ?>
+                        <p style="text-align: center; color: #999; margin-top: 20px;">No messages yet. Say hello!</p>
+                    <?php else: ?>
+                        <?php foreach ($chatMessages as $msg): 
+                            $isMine = ($msg['username'] === $_SESSION['user']['name']) ? 'mine' : '';
+                            $chatAvatarColor = !empty($msg['profile_color']) ? $msg['profile_color'] : '#' . substr(md5($msg['username']), 0, 6);
+                        ?>
+                            <div class="chat-message-container <?= $isMine ?>">
+                                <div class="chat-avatar" style="background-color: <?= $chatAvatarColor ?>;"></div>
+                                <div class="chat-message <?= $isMine ?>">
+                                    <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-author" style="text-decoration: none; color: inherit; display: block; font-weight: bold; font-size: 11px; margin-bottom: 3px;">
+                                        <?= htmlspecialchars($msg['username']) ?>
+                                    </a>
+                                    <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <form method="POST" class="chat-input-row">
                     <input type="text" name="chat_message" class="chat-input" placeholder="Type a message..." required autocomplete="off">
