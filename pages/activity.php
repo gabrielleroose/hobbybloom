@@ -19,13 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['follow_id'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_event_id'])) {
-    $eventId = $_POST['join_event_id'];
-    $stmt = $conn->prepare("INSERT IGNORE INTO user_events (uid, eid) VALUES (?, ?)");
-    $stmt->execute([$userId, $eventId]);
-    header("Location: activity.php?tab=" . $currentTab . "&success=joined");
-    exit();
-}
 
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
@@ -47,7 +40,6 @@ if ($currentTab === 'global') {
         ORDER BY activity_date DESC LIMIT 50
     ");
     $feedStmt->execute([$userId, $userId, $userId, $userId]);
-
 } elseif ($currentTab === 'followers') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
@@ -57,7 +49,6 @@ if ($currentTab === 'global') {
         WHERE uf.followed_id = ? ORDER BY uf.created_at DESC
     ");
     $feedStmt->execute([$userId, $userId]);
-
 } elseif ($currentTab === 'me') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 0 AS is_following
@@ -71,7 +62,6 @@ if ($currentTab === 'global') {
         ORDER BY activity_date DESC LIMIT 50
     ");
     $feedStmt->execute([$userId, $userId, $userId]);
-
 } else {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following
@@ -100,72 +90,87 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .activity-feed-list { display: flex; flex-direction: column; gap: 15px; }
-        .activity-feed-item { background-color: white; border-radius: 10px; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .activity-avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; }
-        .activity-content { flex-grow: 1; color: #333; }
-        .activity-content a { text-decoration: none; font-weight: bold; color: #1f5077; }
-        .activity-date { color: #999; font-size: 14px; margin-left: 15px; }
-        .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; }
-        .tab-btn { padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; color: #1f5077; background-color: rgba(255,255,255,0.6); font-size: 13px; }
-        .tab-btn.active { background-color: #1f5077; color: white; }
-        .action-btn { background-color: #1f5077; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; transition: 0.3s; }
-        .action-btn:hover { opacity: 0.8; }
-        .join-btn { background-color: #28a745; }
-        .following-label { color: #888; font-size: 11px; font-weight: bold; }
+        .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
+        .activity-feed-item { background-color: white; border-radius: 12px; padding: 20px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; border: 1px solid rgba(0,0,0,0.05); }
+        .activity-content { flex-grow: 1; color: #333; line-height: 1.4; }
+        .activity-content a { text-decoration: none; font-weight: 700; color: #1f5077; }
+        .activity-content a:hover { text-decoration: underline; }
+        .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; white-space: nowrap; }
+        
+        .glass-tab-container { display: flex; justify-content: center; margin: 20px 0 35px 0; }
+        .glass-tabs { 
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 40px; 
+            padding: 5px; 
+            display: flex; 
+            gap: 5px; 
+        }
+        .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; transition: 0.3s; }
+        .tab-btn.active { background-color: #1f5077; color: white; box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); }
+        
+        .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .following-label { color: #888; font-size: 0.75rem; font-weight: 600; padding: 8px 16px; }
     </style>
 </head>
 <body class="activity-body">
     <div class="activity-page-container">
-        <div class="tab-container">
-            <a href="activity.php?tab=friends" class="tab-btn <?= $currentTab === 'friends' ? 'active' : '' ?>">My Friends</a>
-            <a href="activity.php?tab=global" class="tab-btn <?= $currentTab === 'global' ? 'active' : '' ?>">Global Activity</a>
-            <a href="activity.php?tab=followers" class="tab-btn <?= $currentTab === 'followers' ? 'active' : '' ?>">New Followers</a>
-            <a href="activity.php?tab=me" class="tab-btn <?= $currentTab === 'me' ? 'active' : '' ?>">My Activity</a>
+        <div class="glass-tab-container">
+            <div class="glass-tabs">
+                <a href="activity.php?tab=friends" class="tab-btn <?= $currentTab === 'friends' ? 'active' : '' ?>">My Friends</a>
+                <a href="activity.php?tab=global" class="tab-btn <?= $currentTab === 'global' ? 'active' : '' ?>">Global Activity</a>
+                <a href="activity.php?tab=followers" class="tab-btn <?= $currentTab === 'followers' ? 'active' : '' ?>">New Followers</a>
+                <a href="activity.php?tab=me" class="tab-btn <?= $currentTab === 'me' ? 'active' : '' ?>">My Activity</a>
+            </div>
         </div>
 
         <div class="activity-feed-list">
             <?php if (empty($activities)): ?>
-                <div style="background-color: white; padding: 40px; border-radius: 10px; text-align: center;"><h3>No activity found.</h3></div>
+                <div style="background-color: white; padding: 60px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <h3 style="color: #1f5077;">No activity yet.</h3>
+                    <p style="color: #777;">Follow more people to see what they're up to!</p>
+                </div>
             <?php else: ?>
                 <?php foreach ($activities as $act): 
                     $dateStr = date('M j, Y', strtotime($act['activity_date']));
                     $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
                     
-                    if ($act['activity_type'] === 'module_progress') {
-                        $actionText = ($act['status'] == 1) ? "completed the module" : "started the module";
-                    } elseif ($act['activity_type'] === 'module_created') {
-                        $actionText = "published a new module";
+                    $targetLink = "#";
+                    if ($act['activity_type'] === 'module_progress' || $act['activity_type'] === 'module_created') {
+                        $actionText = ($act['activity_type'] === 'module_created') ? "published module" : (($act['status'] == 1) ? "completed module" : "started module");
+                        $targetLink = "module.php?id=" . $act['target_id'];
                     } elseif ($act['activity_type'] === 'circle') {
                         $actionText = "created the circle";
+                        $targetLink = "circle_detail.php?hobby=" . urlencode($act['target_name']);
                     } elseif ($act['activity_type'] === 'event') {
-                        $actionText = "scheduled the event";
-                    } elseif ($act['activity_type'] === 'follow') {
-                        $actionText = "started following";
+                        $actionText = "scheduled event";
+                        $targetLink = "calendar.php";
                     } else {
                         $actionText = "is following you!";
                     }
                 ?>
                     <div class="activity-feed-item">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
+                        
                         <div class="activity-content">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
-                            <?= $actionText ?> 
-                            <a href="#"><?= htmlspecialchars($act['target_name']) ?></a>
+                            <span style="color: #666;"> <?= $actionText ?> </span>
+                            <?php if ($act['target_name']): ?>
+                                <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
+                            <?php endif; ?>
                         </div>
                         
-                        <div class="activity-actions" style="margin-left: 15px;">
+                        <div class="activity-actions">
                             <?php if ($act['user_id'] !== $userId): ?>
-                                <?php if ($act['activity_type'] === 'event'): ?>
-                                    <form method="POST" style="margin: 0;">
-                                        <input type="hidden" name="join_event_id" value="<?= $act['target_id'] ?>">
-                                        <button type="submit" class="action-btn join-btn">Join Event</button>
-                                    </form>
-                                <?php elseif ($act['is_following'] > 0): ?>
+                                <?php if ($act['is_following'] > 0): ?>
                                     <span class="following-label">Following ✓</span>
                                 <?php else: ?>
-                                    <form method="POST" style="margin: 0;">
-                                        <input type="hidden" name="follow_id" value="<?= $act['user_id'] ?>">
+                                    <form action="circle_action.php" method="POST" style="margin: 0;">
+                                        <input type="hidden" name="action" value="toggle_follow">
+                                        <input type="hidden" name="target_id" value="<?= $act['user_id'] ?>">
                                         <button type="submit" class="action-btn">Follow</button>
                                     </form>
                                 <?php endif; ?>
