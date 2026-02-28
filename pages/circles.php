@@ -202,12 +202,13 @@ if (!empty($myHobbies)) {
             </div>
         </div>
 
-        <aside class="search-row" style="text-align: center;">
+    <div class="page-container">
+        <aside class="search-row">
             <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
-            <form method="GET" action="circles.php" style="display: inline-block;">
+            <form method="GET" action="circles.php">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: inline-block; padding: 10px 20px;">+ Create Circle</a>
+            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px;">+ Create Circle</a>
         </aside>
 
         <main class="page-container-inside">
