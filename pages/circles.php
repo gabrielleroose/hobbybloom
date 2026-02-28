@@ -89,10 +89,11 @@ if (!empty($myHobbies)) {
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .glass-tab-container { 
-            display: flex; 
-            justify-content: center; 
-            margin: 20px 0 35px 0; 
+        .hub-top-nav {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 35px 0;
         }
         .glass-tabs { 
             background: rgba(255, 255, 255, 0.4); 
@@ -130,21 +131,21 @@ if (!empty($myHobbies)) {
 </head>
 
 <body class="circles-body">
-    <div class="page-container">
-        
-        <div class="glass-tab-container">
-            <div class="glass-tabs">
-                <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
-                <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
-            </div>
+    
+    <div class="hub-top-nav">
+        <div class="glass-tabs">
+            <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
+            <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
         </div>
+    </div>
 
-        <aside class="search-row" style="text-align: center;">
+    <div class="page-container">
+        <aside class="search-row">
             <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 10px;">Circles Hub</p>
-            <form method="GET" action="circles.php" style="display: inline-block;">
+            <form method="GET" action="circles.php">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
             </form>
-            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: inline-block; padding: 10px 20px;">+ Create Circle</a>
+            <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px;">+ Create Circle</a>
         </aside>
 
         <main class="page-container-inside">
