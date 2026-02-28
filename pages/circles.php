@@ -89,27 +89,36 @@ if (!empty($myHobbies)) {
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .glass-nav-container { display: flex; justify-content: center; margin: 20px 0 30px 0; }
-        .glass-hub-nav {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
+        .glass-tab-container { 
+            display: flex; 
+            justify-content: center; 
+            margin: 20px 0 35px 0; 
+        }
+        .glass-tabs { 
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px); 
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 40px;
-            padding: 5px;
-            display: flex; gap: 5px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 40px; 
+            padding: 5px; 
+            display: flex; 
+            gap: 5px; 
         }
-        .hub-btn {
-            padding: 10px 25px;
-            border-radius: 35px;
-            text-decoration: none;
-            font-weight: 600; font-size: 0.9rem;
-            color: #1f5077; transition: all 0.3s ease;
+        .tab-btn { 
+            padding: 10px 25px; 
+            border-radius: 35px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            color: #1f5077; 
+            font-size: 0.85rem; 
+            transition: 0.3s; 
         }
-        .hub-btn:hover { background: rgba(255, 255, 255, 0.3); }
-        .hub-btn.active { background: #1f5077; color: white; box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); }
-        
+        .tab-btn.active { 
+            background-color: #1f5077; 
+            color: white; 
+            box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); 
+        }
+
         .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .filter-chip { 
             padding: 6px 18px; border-radius: 20px; background: white; 
@@ -122,10 +131,11 @@ if (!empty($myHobbies)) {
 
 <body class="circles-body">
     <div class="page-container">
-        <div class="glass-nav-container">
-            <div class="glass-hub-nav">
-                <a href="circles.php" class="hub-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
-                <a href="circles.php?view=all" class="hub-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
+        
+        <div class="glass-tab-container">
+            <div class="glass-tabs">
+                <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
+                <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
             </div>
         </div>
 
