@@ -1714,11 +1714,15 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 /* ── Modal overlay ── */
 #modalOverlay {
   display: none;
+  /* Keep it hidden until JS turns it on */
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
-  z-index: 900;
+  z-index: 100;
 }
 
 /* ── Modal shell ── */
@@ -1728,15 +1732,15 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000;
-  width: min(560px, 95vw);
-  max-height: 90vh;
-  overflow-y: auto;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.18);
-  padding: 28px 32px 24px;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  z-index: 1001;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  /* Deep shadow for "lift" */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #eventModal h3 {
@@ -1758,77 +1762,52 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   margin: 14px 0 5px;
 }
 
-#eventModal input[type="text"],
-#eventModal input[type="time"],
+/* Input & Textarea Styling */
+#eventModal input,
 #eventModal textarea {
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid #e0e0e0;
   border-radius: 8px;
-  padding: 9px 12px;
-  font-size: .93rem;
-  color: #222;
-  background: #fafafa;
-  transition: border-color .2s;
-  outline: none;
+  box-sizing: border-box;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
 
 #eventModal input:focus,
 #eventModal textarea:focus {
-  border-color: #1f5077;
-  background: #fff;
+  outline: none;
 }
 
-#eventModal textarea {
-  resize: vertical;
-  min-height: 72px;
-}
-
-/* ── Invite section wrapper ── */
-.invite-section {
-  margin-top: 18px;
-  border: 1.5px solid #e8e8e8;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.invite-tabs {
-  display: flex;
-  border-bottom: 1.5px solid #e8e8e8;
-  background: #f5f5f5;
-}
-
-.invite-tab {
-  flex: 1;
-  padding: 9px 0;
-  font-size: .8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: #888;
-  background: none;
+/* Button Styling */
+#saveEvent,
+#cancelEvent,
+#acceptInvite,
+#declineInvite {
+  padding: 12px 20px;
   border: none;
   cursor: pointer;
-  transition: color .15s, background .15s;
+  font-weight: bold;
+  width: 47%;
+  transition: opacity 0.2s;
 }
 
-.invite-tab.active {
-  color: #1f5077;
-  background: #fff;
-  border-bottom: 2px solid #1f5077;
-  margin-bottom: -1.5px;
+#saveEvent,
+#acceptInvite {
+  background-color: #166914;
+  color: white;
+  margin-right: 4%;
 }
 
-.invite-panel {
-  display: none;
-  padding: 14px;
+#cancelEvent,
+#declineinvite {
+  background-color: #e0e0e0;
+  color: #333;
 }
 
-.invite-panel.active { display: block; }
-
-/* ── Search box ── */
-.user-search-wrap {
-  position: relative;
+#saveEvent:hover,
+#cancelEvent:hover {
+  opacity: 0.8;
 }
 
 .user-search-wrap input {
@@ -2230,7 +2209,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .create-module-main:hover {
-   /* transform: scale(1.05);  */
+  /* transform: scale(1.05); */
 }
 
 .create-module-main h2 {
@@ -2365,7 +2344,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .your-circles-wrapper,
 .circles-activity-wrapper {
-  /* width: 50% !important; */
+  width: 50% !important;
   height: auto !important;
   min-height: 280px;
 }
@@ -2379,14 +2358,10 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .highlight-card {
   display: flex;
   align-items: center;
-  justify-content: center;
   background: rgba(255, 255, 255, 0.5);
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  /* border: 4px solid yellow; */
-  width: 92%;
-  /* margin: 0 auto; */
 }
 
 .card-avatar {
@@ -2449,16 +2424,4 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   color: #1E5077;
   font-style: italic;
   opacity: 0.7;
-}
-
-
-.highlight-link {
-  text-decoration: none;
-  display: block;
-}
-
-.highlight-link:hover .highlight-card {
-  background: rgba(255, 255, 255, 0.7);
-  transform: translateX(2px);
-  transition: 0.2s ease-in-out;
 }
