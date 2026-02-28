@@ -16,6 +16,11 @@ if (!isset($_SESSION['user'])) {
 }
 
 $userId = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
+$stmt->execute([$userId]);
+$chosenUsername = $stmt->fetchColumn();
+
 $streak = 1;
 
 $stmt = $conn->prepare("SELECT last_login, login_streak FROM user_profiles WHERE user_id = ?");
@@ -113,7 +118,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 <main class="main-dashboard">
 
     <div class="my-dashboard">
-        <p> Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? 'there') ?> </p>
+        <p> Hello, <?= htmlspecialchars($chosenUsername ?? 'there') ?> </p>
     </div>
 
     <div class="dash-display">
