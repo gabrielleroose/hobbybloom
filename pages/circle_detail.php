@@ -41,7 +41,7 @@ $stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
 $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $msgStmt = $conn->prepare("
-    SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color
+    SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color 
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
     LEFT JOIN user_profiles p ON u.id = p.user_id
@@ -160,14 +160,20 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?= $isMember ? '✓ Member (Leave)' : '+ Join Circle' ?>
                     </button>
                 </form>
-                <?php if ($creatorId != $userId):?>
-                    <button id="reportCircleBtn" 
-                        style="margin-top: 10px; background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
-                        Report Circle
-                    </button>
-                <?php endif; ?>
-            </div>
 
+                <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+                    <?php if ($creatorId == $userId): ?>
+                        <a href="edit_circle.php?id=<?= $circleId ?>" 
+                            style="background: #1f5077; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 14px;">
+                            Edit Circle
+                        </a>
+                    <?php else: ?>
+                        <button id="reportCircleBtn" 
+                            style="background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                            Report Circle
+                        </button>
+                    <?php endif; ?>
+                </div>
             <h2>Circle Members</h2>
             <div class="member-list">
                 <?php if (empty($members)): ?>
