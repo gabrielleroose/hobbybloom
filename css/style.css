@@ -2033,3 +2033,137 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
   transition: transform 0.3s ease-in-out;
 }
+
+
+/* Circles Layout Overhaul */
+.page-container {
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.search-row {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 2rem;
+  padding: 2rem 1.5rem;
+}
+
+.page-container-inside {
+  flex: 1;
+  padding-left: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section-heading {
+  color: #1E5077 !important;
+  font-size: var(--text-size-xl) !important;
+  font-weight: 800 !important;
+  margin-bottom: 1rem !important;
+}
+
+.main-circles-activity-wrapper {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+}
+
+.your-circles-wrapper,
+.circles-activity-wrapper {
+  width: 50% !important;
+  height: auto !important;
+  min-height: 280px;
+}
+
+.activity-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.highlight-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.card-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.card-body p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.card-body small {
+  color: #666;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.suggested-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.suggested-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.suggested-card:hover {
+  transform: translateY(-5px);
+}
+
+.suggested-card p {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.hobby-label {
+  color: #1E5077;
+  font-weight: bold;
+}
+
+.empty-msg {
+  color: #1E5077;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+
+.highlight-link {
+  text-decoration: none;
+  display: block;
+}
+
+.highlight-link:hover .highlight-card {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(8px);
+  transition: 0.2s ease-in-out;
+}
