@@ -19,11 +19,21 @@ $stmt = $conn->prepare("
 $stmt->execute([$userId]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$followerStmt = $conn->prepare("SELECT u.id, u.username FROM users u JOIN user_follows f ON u.id = f.follower_id WHERE f.followed_id = ?");
+$followerStmt = $conn->prepare("
+    SELECT u.id, u.username 
+    FROM users u 
+    JOIN user_follows f ON u.id = f.follower_id 
+    WHERE f.followed_id = ?
+");
 $followerStmt->execute([$userId]);
 $followers = $followerStmt->fetchAll(PDO::FETCH_ASSOC);
 
-$followingStmt = $conn->prepare("SELECT u.id, u.username FROM users u JOIN user_follows f ON u.id = f.followed_id WHERE f.follower_id = ?");
+$followingStmt = $conn->prepare("
+    SELECT u.id, u.username 
+    FROM users u 
+    JOIN user_follows f ON u.id = f.followed_id 
+    WHERE f.follower_id = ?
+");
 $followingStmt->execute([$userId]);
 $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -89,6 +99,49 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
             </form>
+
+            <hr style="margin: 40px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.2);">
+
+            <div style="display: flex; gap: 40px; margin-bottom: 40px;">
+                <div style="flex: 1;">
+                    <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 5px;">Followers (<?= count($followers) ?>)</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                        <?php if (empty($followers)): ?>
+                            <li style="color: #333; font-style: italic;">No followers yet.</li>
+                        <?php else: ?>
+                            <?php foreach ($followers as $f): ?>
+                                <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <a href="profile.php?id=<?= $f['id'] ?>" style="color: #1f5077; text-decoration: none; font-weight: bold;"><?= htmlspecialchars($f['username']) ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 5px;">Following (<?= count($following) ?>)</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                        <?php if (empty($following)): ?>
+                            <li style="color: #333; font-style: italic;">You aren't following anyone yet.</li>
+                        <?php else: ?>
+                            <?php foreach ($following as $f): ?>
+                                <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <a href="profile.php?id=<?= $f['id'] ?>" style="color: #1f5077; text-decoration: none; font-weight: bold;"><?= htmlspecialchars($f['username']) ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.2);">
+
+            <div style="background-color: rgba(255, 0, 0, 0.1); padding: 20px; border-radius: 10px; border: 1px solid red;">
+                <h3 style="color: #ff4d4d; margin-top: 0;">Danger Zone</h3>
+                <p style="color: #333; font-size: 14px;">Once you delete your account, there is no going back. Please be certain.</p>
+                <form action="delete_account.php" method="POST" onsubmit="return confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.');">
+                    <button type="submit" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;">Delete Account</button>
+                </form>
+            </div>
         </div>
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
