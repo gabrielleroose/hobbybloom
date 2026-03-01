@@ -104,7 +104,7 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                     <?php endif; ?>
                 </form>
             <?php endif; ?>
-            <?php if ($myId != $targetId): ?>
+            <<?php if ($myId != $targetId): ?>
                 <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;">
                     Report User
                 </button>
@@ -162,38 +162,34 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const reportBtn = document.getElementById('reportUserBtn');
         if (!reportBtn) return;
 
-        reportBtn.addEventListener('click', async () => {
+        reportBtn.addEventListener('click', () => {
             const reason = prompt("Please enter a reason for reporting this user:");
             if (!reason || reason.trim() === "") {
                 alert("Report cancelled. You must enter a reason.");
                 return;
             }
 
-            try {
-                const res = await fetch('submit_report.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        type: 'user',                    // same as PHP expects
-                        item_id: <?= json_encode($targetId) ?>,  // matches submit_report.php
-                        reason: reason.trim()
-                    })
-                });
+            const formData = new FormData();
+            formData.append('type', 'user');           // exactly what PHP expects
+            formData.append('target_id', '<?= $targetId ?>');
+            formData.append('reason', reason.trim());
 
-                const data = await res.json();
-                if(data.status === 'success'){
-                    alert("Report submitted to moderation.");
-                } else {
-                    alert("Error submitting report: " + (data.message || 'Unknown error'));
-                }
-            } catch (err) {
+            fetch('submit_report.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(err => {
                 console.error(err);
-                alert("Network error. Please try again.");
-            }
+                alert("Error submitting report. Please try again.");
+            });
         });
     });
     </script>

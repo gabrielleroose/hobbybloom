@@ -160,6 +160,12 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?= $isMember ? '✓ Member (Leave)' : '+ Join Circle' ?>
                     </button>
                 </form>
+                <?php if ($creatorId != $userId):?>
+                    <button id="reportCircleBtn" 
+                        style="margin-top: 10px; background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                        Report Circle
+                    </button>
+                <?php endif; ?>
             </div>
 
             <h2>Circle Members</h2>
