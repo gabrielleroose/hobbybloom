@@ -123,7 +123,12 @@ $googleId = $_SESSION['google_id'] ?? null;
         echo "Error: " . $e->getMessage();
     }
     ?>
-
+    <?php if (isset($user_id)): ?>
+    <button id="reportModuleBtn" 
+        style="margin-top: 15px; background:#ff4d4d; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
+        Report Module
+    </button>
+    <?php endif; ?>
 </div>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
@@ -133,6 +138,35 @@ $googleId = $_SESSION['google_id'] ?? null;
     </script>
 
     <script src="../js/module.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const reportBtn = document.getElementById('reportModuleBtn');
+        if (!reportBtn) return;
+
+        reportBtn.addEventListener('click', function() {
+            const reason = prompt("Why are you reporting this module?");
+            if (!reason || reason.trim() === "") return alert("You must enter a reason.");
+
+            fetch('submit_report.php', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    type: 'module',
+                    item_id: <?= json_encode($mod_id) ?>,
+                    reason: reason.trim()
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message || "Report submitted.");
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error submitting report. Try again.");
+            });
+        });
+    });
+    </script>
 
 
 
