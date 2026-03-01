@@ -104,7 +104,7 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                     <?php endif; ?>
                 </form>
             <?php endif; ?>
-            <?php if ($myId != $targetId): ?> 
+            <?php if ($myId != $targetId): ?>
                 <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;">
                     Report User
                 </button>
