@@ -314,6 +314,7 @@ CREATE TABLE event_invites (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+<<<<<<< HEAD
 CREATE TABLE circle_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
     circle_id INT NOT NULL,
@@ -330,6 +331,8 @@ CREATE TABLE circle_members (
         ON DELETE CASCADE
 );
 
+=======
+>>>>>>> ba4f9b50 (added report button on circles, linked to email. Report button on evens donesnt work, working on figuring out profile and module reports)
 -------------------- report table ----------------
 CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -344,7 +347,7 @@ CREATE TABLE reports (
     FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
-    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE 
 );
 
 -- TEST DATA --

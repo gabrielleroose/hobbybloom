@@ -105,7 +105,7 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                 </form>
             <?php endif; ?>
             <?php if ($myId != $targetId): ?>
-                <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;">
+                <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;"> 
                     Report User
                 </button>
             <?php endif; ?>
@@ -173,7 +173,7 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                 return;
             }
 
-            try {
+            try { 
                 const res = await fetch('submit_report.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},

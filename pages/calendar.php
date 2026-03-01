@@ -53,6 +53,18 @@
             ?>
         </select>
     </div>
+    <button onclick="openReportModal(<?= $module_id ?>)">Report</button>
+    <div id="reportModal" class="modal">
+    <div class="modal-content">
+        <h3>Report Module</h3>
+        <form id="reportForm">
+            <input type="hidden" name="module_id" id="reportModuleId">
+            <textarea name="reason" placeholder="Describe the issue..." required></textarea>
+            <button type="submit">Submit Report</button>
+            <button type="button" onclick="closeReportModal()">Cancel</button>
+        </form>
+    </div>
+</div>
 
     <div id="inviteActions" style="display:none;">
         <button id="acceptInvite">Accept</button>
