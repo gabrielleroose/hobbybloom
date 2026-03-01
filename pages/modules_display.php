@@ -105,7 +105,7 @@ $mod_id_list = [];
 
                     </form>
 
-                    <form action="createForm.php" method="POST">
+                    <form action="createForm.php" method="GET">
                         <?php if ($mod['cid'] == $user_id): ?>
                             <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
                         <?php endif ?>

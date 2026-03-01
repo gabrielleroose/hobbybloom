@@ -101,21 +101,26 @@ $stmt->execute([':gid' => $googleId]);
 
 $user_id = $stmt->fetchColumn();
 
-if (isset($_POST['module_edit'])) {
+$module_id = NULL; //null until changed a few lines below.
+if (isset($_GET['module_edit'])) {
 
-    $module_id = $_POST['module_edit'];
-    $module_info_sql = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
+    $module_id =  (int) $_GET['module_edit']; //changes global variable so we can set value of edit button, pull it in to form_processing.php
+
+    $module_info_sql = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, m.est_comp_time, msp.msid FROM module as m
         LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
-        WHERE m.id = ?";
+        WHERE m.id = ? AND m.cid = ?";
     $stmt = $conn->prepare($module_info_sql);
-    $stmt->execute([$module_id]);
+    $stmt->execute([$module_id, $user_id]);
     $module_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if (!$module_info) {
+        header("Location: dashboard.php");
+        exit("Invalid Module Information.");
+       
+    }
 
 
-
-
-    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = ?";
+    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = ?"    ;
     $stmt = $conn->prepare($module_stage_info);
     $stmt->execute([$module_id]);
     $module_stage_info = $stmt->fetchAll();
@@ -147,19 +152,8 @@ if (isset($_POST['module_edit'])) {
 
             $question['answers'] = $module_stage_questions_answers_results;
 
-//             $user_answers_sql = "SELECT msqua.id, msqua.msqaid FROM module_stage_questions_user_answers AS msqua WHERE msqua.uid = ? AND msqua.msqaid IN 
-//                                     (SELECT msqa.id FROM module_stage_questions_answers AS msqa WHERE msqa.msqid = ?);
-// ";
-//             $stmt = $conn->prepare($user_answers_sql);
-//             $stmt->execute([$user_id, $question['id']]);
-//             $question['user_answers'] = $stmt->fetchAll();
-
-
         }
     }
-
-
-
 
 }
 
@@ -198,8 +192,9 @@ if (isset($_POST['module_edit'])) {
             required><br><br>
 
             <label>Description:</label><br>
-            <textarea name="description" rows="4" cols="40"
-            value="<?= htmlspecialchars($module_info['description'] ?? '') ?>"></textarea><br><br>
+            <textarea name="description" rows="4" cols="40"><?= 
+            htmlspecialchars($module_info['description'] ?? '') 
+            ?></textarea><br><br>
 
             <label>Number of videos:</label><br>
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
@@ -213,10 +208,6 @@ if (isset($_POST['module_edit'])) {
 
             <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
             
-                
-           
-            
-
 
             <label>Notes:</label><br>
             <textarea name="notes" rows="4" cols="40"></textarea><br><br>
@@ -233,17 +224,21 @@ if (isset($_POST['module_edit'])) {
             <label>Estimated time of completion:</label>
             <!-- maybe do a set time format if possible -->
             <label for="estimate">Estimated time (minutes):</label>
-            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['test_comp_time'] ?? '') ?>" required>
+            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required>
 
             <p id="formattedOutput"></p>
 
-            <?php if (!isset($_POST['module_edit'])): ?>
-            <button type="submit">Create Module</button>
+            <?php if (!isset($_GET['module_edit'])): ?> <!-- CREATE BUTTON IF MODULE_EDIT ISN'T SET -->
+            <button type="submit" name="create_module">Create Module</button> 
+            <?php endif ?>
+
+            <?php if (isset($_GET['module_edit'])): ?>  <!-- EDIT BUTTON IF MODULE_EDIT IS SET -->
+            <input type="hidden" name="module_id" value="<?= htmlspecialchars($module_id) ?>">
+            
+            <button type="submit">Confirm Module Changes</button>
             <?php endif ?>
 
             </div>
-
-
 
             
         </form>
@@ -252,7 +247,6 @@ if (isset($_POST['module_edit'])) {
         const existingStages = <?= json_encode($module_stage_questions_info ?? []) ?>;
     </script>
 </body>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
 
 </html>
 
@@ -297,6 +291,7 @@ if (isset($_POST['module_edit'])) {
 
         output.textContent = `Estimated time: ${formatted}`;
     });
+
 </script>
 
 <script>
@@ -384,6 +379,9 @@ if (isset($_POST['module_edit'])) {
     });
 });
 </script>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?> 
+<!-- footer -->
 
 
 
