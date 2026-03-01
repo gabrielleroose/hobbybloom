@@ -104,6 +104,11 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                     <?php endif; ?>
                 </form>
             <?php endif; ?>
+            <<?php if ($myId != $targetId): ?>
+                <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;">
+                    Report User
+                </button>
+            <?php endif; ?>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
@@ -156,5 +161,37 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
 
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const reportBtn = document.getElementById('reportUserBtn');
+        if (!reportBtn) return;
+
+        reportBtn.addEventListener('click', () => {
+            const reason = prompt("Please enter a reason for reporting this user:");
+            if (!reason || reason.trim() === "") {
+                alert("Report cancelled. You must enter a reason.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('type', 'user');           // exactly what PHP expects
+            formData.append('target_id', '<?= $targetId ?>');
+            formData.append('reason', reason.trim());
+
+            fetch('submit_report.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error submitting report. Please try again.");
+            });
+        });
+    });
+    </script>
 </body>
 </html>
