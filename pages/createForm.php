@@ -211,35 +211,10 @@ if (isset($_POST['module_edit'])) {
                 <input type="number" id="stage_num" name="stage_num" min="0" max="5">
             </div>
 
-            <div id="stagesContainer"></div> <!-- this is where the contents of the javascript below are loaded. -->
+            <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
             
-                <!-- THIS PHP DYNAMICALLY GENERATES THE USER'S STAGES IF EDITING FORM. OTHEWRWISE, THE <div> ABOVE IS USED FOR A NEW FORM -->
-            <?php if (!empty($module_stage_questions_info)): ?>
-                <?php foreach ($module_stage_questions_info as $stageIndex => $stage): ?>
-                    <div class="stage-block">
-                        <h3>Stage <?= $stage['stage_num'] ?></h3>
-                        <label>Stage Title:</label>
-                        <input type="text" name="stages[<?= $stage['stage_num'] ?>][title]" 
-                            value="<?= htmlspecialchars($stage['title']) ?>" required><br><br>
-
-                        <?php foreach ($stage['question'] as $questionIndex => $question): ?>
-                            <div class="question-block">
-                                <label>Question:</label>
-                                <input type="text" name="stages[<?= $stage['stage_num'] ?>][question]" 
-                                    value="<?= htmlspecialchars($question['question_text']) ?>" required><br><br>
-
-                                <?php foreach ($question['answers'] as $answer): ?>
-                                    <input type="text" name="stages[<?= $stage['stage_num'] ?>][answers][<?= $answer['ans_num'] ?>][text]" 
-                                        value="<?= htmlspecialchars($answer['answer']) ?>" required>
-
-                                    <input type="hidden" name="stages[<?= $stage['stage_num'] ?>][answers][<?= $answer['ans_num'] ?>][is_correct]" 
-                                        value="<?= $answer['is_correct'] ?>"><br>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                
+           
             
 
 
@@ -273,7 +248,9 @@ if (isset($_POST['module_edit'])) {
             
         </form>
     </div>
-
+    <script>
+        const existingStages = <?= json_encode($module_stage_questions_info ?? []) ?>;
+    </script>
 </body>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
@@ -323,110 +300,92 @@ if (isset($_POST['module_edit'])) {
 </script>
 
 <script>
-    //ensures all content is loaded before attempting to load JS- ensures necessary values are present.
-    document.addEventListener("DOMContentLoaded", function () {
+   document.addEventListener("DOMContentLoaded", function () {
 
-        const stageSelect = document.getElementById("stage_num");
-        const stagesContainer = document.getElementById("stagesContainer");
+    const stageSelect = document.getElementById("stage_num");
+    const stagesContainer = document.getElementById("stages_container");
+
+    function generateStages(stageCount, data = null) {
+
+        stagesContainer.innerHTML = "";
+
+        for (let i = 1; i <= stageCount; i++) {
+
+            const stageData = data ? data[i - 1] : null; //necessary to subtract 1 because I formed the loop weird
+            const questionData = stageData?.question?.[0] ?? null;
+            const answersData = questionData?.answers ?? []; //effectively the same way you'd access mod_stage_question_info[question][answers]
+
+            let answersHTML = "";
+
+            for (let a = 1; a <= 4; a++) {
+
+                const answerObj = answersData[a - 1] ?? null; 
+
+                const answerText = answerObj ? answerObj.answer : ""; //mod_stage_question_info[question][answers][answer]
+                const isCorrect = answerObj ? answerObj.is_correct : (a === 4 ? 1 : 0);
 
 
-        stageSelect.addEventListener("input", function () {
-            const stageCount = this.valueAsNumber;
+                //shortened from previous iteration; now handles correct and false answer values within one <input> tag
+                answersHTML += `
+                    <input type="text"
+                        name="stages[${i}][answers][${a}][text]"
+                        value="${answerText}"
+                        placeholder="${a === 4 ? 'Correct Answer' : 'False Answer ' + a}"
+                        required>
 
-            stagesContainer.innerHTML = ""; //wipes data on change. 
-
-            if (isNaN(stageCount) || stageCount < 0 || stageCount > 5) { //checks if stageCount is a number, below 0, or above 5 (limit).
-                stagesContainer.innerHTML = "";
-                return;
+                    <input type="hidden"
+                        name="stages[${i}][answers][${a}][is_correct]"
+                        value="${isCorrect}">
+                    <br>
+                `;
             }
 
+            const stageDiv = document.createElement("div");
 
 
+            stageDiv.innerHTML = `    
+                <h3>Stage ${i}</h3>
 
-            for (let i = 1; i <= stageCount; i++) { //begin 1st for loop
+                <label>Stage Title:</label><br>
+                <input type="text"
+                    name="stages[${i}][title]"
+                    value="${stageData?.title ?? ''}"
+                    required><br><br>
 
-                const stageDiv = document.createElement("div"); //loops through values from i=1 to stageCount.
+                <label>Question:</label><br>
+                <input type="text"
+                    name="stages[${i}][question]"
+                    value="${questionData?.question_text ?? ''}"
+                    required><br><br>
 
-                let answersHTML = "";
+                ${answersHTML}
+            `;
 
-                // second inner loop specifically for answers, since there's 4 multiple choice answers per question.
-                for (let a = 1; a <= 3; a++) { //necessary to add hidden input type to track correct answer 
-                    answersHTML += `
-        <input type="text"
-               class="stage_questions_false"
-               name="stages[${i}][answers][${a}][text]"
-               placeholder="False Answer ${a}" required>
-
-        <input type="hidden" 
-               name="stages[${i}][answers][${a}][is_correct]"
-               value="0">
-
-        <br>
-    `;
-                }
-
-                // correct answer (note the [4] index to indicate position of correct input. gonna have to use a function to randomize the order of questions on module.php)
-                answersHTML += `
-    <input type="text"
-           class="stage_questions_correct"
-           name="stages[${i}][answers][4][text]"
-           placeholder="Correct Answer" required>
-
-    <input type="hidden"
-           name="stages[${i}][answers][4][is_correct]"
-           value="1">
-`;
-
-                stageDiv.innerHTML = `
-                <div class="stage_number"> 
-                        <h3>Stage ${i}</h3>
-                    </div>
-
-                    <br><br>
-
-        <div class="stage_title">
-            <label>Stage Title:</label><br>
-            <input type="text" name="stages[${i}][title]" required />
-        </div>
-
-        <br><br>
-
-        <div class="stage_questions">
-            <!-- question -->
-            <label>Question:</label><br>
-            <input type="text" name="stages[${i}][question]" id="${i}" required> <!--NOTICE: this is an array. stages>stage_num>question. PHP processing is gonna be FUN. -->
-        </div>
-                <br><br>
-
-                    <div class="stage_image">
-                        <!-- img upload -->
-                        <label>Upload Image:</label><br>
-                        <input type="file" 
-                        name="stages[${i}][image]">
-                    </div>
-
-                    <br><br>
-
-        <div class="stage_answers">
-            <strong>False Answers:</strong><br>
-            ${answersHTML}
-        </div>
-      `;
+            stagesContainer.appendChild(stageDiv);
+        }
+    }
 
 
+    if (typeof existingStages !== "undefined" && existingStages.length > 0) { //checks if form is being edited or not
+        stageSelect.value = existingStages.length;
+        generateStages(existingStages.length, existingStages);
+        }
 
-                stagesContainer.appendChild(stageDiv);
+    stageSelect.addEventListener("input", function () { //otherwise, defaults to form creation
+        const count = this.valueAsNumber;
 
+        if (!count || count < 0 || count > 5) { //ensures stage count is within defined parameters
+            stagesContainer.innerHTML = "";
+            return;
+        }
 
-
-
-            } //end 1st for loop
-        });
+        generateStages(count);
 
     });
+});
 </script>
 
-<?php
+
 
 
 
