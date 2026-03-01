@@ -56,6 +56,18 @@
         <button id="deleteEvent" style="display:none;">Delete</button>
         <button id="cancelEvent">Cancel</button>
     </div>
+    <button onclick="openReportModal(<?= $module_id ?>)">Report</button>
+    <div id="reportModal" class="modal">
+    <div class="modal-content">
+        <h3>Report Module</h3>
+        <form id="reportForm">
+            <input type="hidden" name="module_id" id="reportModuleId">
+            <textarea name="reason" placeholder="Describe the issue..." required></textarea>
+            <button type="submit">Submit Report</button>
+            <button type="button" onclick="closeReportModal()">Cancel</button>
+        </form>
+    </div>
+</div>
 
     <script>
 document.addEventListener('DOMContentLoaded', function() {

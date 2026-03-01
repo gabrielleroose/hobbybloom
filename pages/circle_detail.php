@@ -160,6 +160,12 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?= $isMember ? '✓ Member (Leave)' : '+ Join Circle' ?>
                     </button>
                 </form>
+                <?php if ($creatorId != $userId):?>
+                    <button id="reportCircleBtn" 
+                        style="margin-top: 10px; background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                        Report Circle
+                    </button>
+                <?php endif; ?>
             </div>
 
             <h2>Circle Members</h2>
@@ -238,5 +244,34 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
         chatBox.scrollTop = chatBox.scrollHeight;
     </script>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const reportBtn = document.getElementById('reportCircleBtn');
+    if(!reportBtn) return;
+
+    reportBtn.addEventListener('click', function() {
+        const reason = prompt("Why are you reporting this circle?");
+        if(!reason) return;
+
+        fetch('submit_report.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                type: 'circle',
+                item_id: <?= json_encode($circleId) ?>,
+                reason: reason
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success'){
+                alert("Report submitted to moderation.");
+            } else {
+                alert("Error submitting report: " + (data.message || 'Unknown error'));
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
