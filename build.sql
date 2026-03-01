@@ -314,6 +314,23 @@ CREATE TABLE event_invites (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-------------------- report table ----------------
+CREATE TABLE reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reporter_id INT NOT NULL,
+    reported_user_id INT NULL,
+    module_id INT NULL,
+    circle_id INT NULL,
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending','reviewed','resolved') DEFAULT 'pending',
+
+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE
+);
+
 -- TEST DATA --
 INSERT INTO users (id, username, email, password) VALUES (1, 'Admin', 'admin@hobbybloom.com', 'password123');
 
