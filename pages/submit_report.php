@@ -51,10 +51,10 @@ if ($isLocal) {
     );
 } else {
     // Send email using PHP's mail() function (simpler than PHPMailer)
-    $to      = 'MODERATION_EMAIL@gmail.com';
+    $to      = 'HobbyBloomadm@gmail.com';
     $subject = 'New Report Submitted';
     $message = "Type: $type\nItem ID: $item_id\nReporter ID: $reporter_id\nReason:\n$reason";
-    $headers = 'From: YOUR_EMAIL@gmail.com' . "\r\n";
+    $headers = 'From: HobbyBloomadm@gmail.com' . "\r\n";
 
     // This will attempt to send email; may require server mail setup
     @mail($to, $subject, $message, $headers);
