@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS module_stage_questions;
 DROP TABLE IF EXISTS module_stage_questions_answers;
 DROP TABLE IF EXISTS module_stage_questions_user_answers;
 DROP TABLE IF EXISTS module_stage_videos;
+DROP TABLE IF EXISTS module_user_completion;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS users;
@@ -167,7 +168,7 @@ CREATE TABLE module_user_completion (
     id INT NOT NULL AUTO_INCREMENT,
     mid INT NOT NULL,
     uid INT NOT NULL,
-    is_correct INT DEFAULT 0,
+    is_complete INT DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY (mid) REFERENCES module(id) 
     ON DELETE CASCADE
