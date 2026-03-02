@@ -52,11 +52,12 @@
             }
             ?>
         </select>
+    </div>
 
-        <div id="inviteActions" style="display:none;">
-            <button id="acceptInvite">Accept</button>
-            <button id="declineInvite">Decline</button>
-        </div>
+    <div id="inviteActions" style="display:none;">
+        <button id="acceptInvite">Accept</button>
+        <button id="declineInvite">Decline</button>
+    </div>
 
         <button id="saveEvent">Save</button>
         <button id="deleteEvent" style="display:none;">Delete</button>
