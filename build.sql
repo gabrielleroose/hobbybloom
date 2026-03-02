@@ -163,6 +163,20 @@ CREATE TABLE module_stage_progress (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE module_user_completion (
+    id INT NOT NULL AUTO_INCREMENT,
+    mid INT NOT NULL,
+    uid INT NOT NULL,
+    is_correct INT DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (mid) REFERENCES module(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES users(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE log (
     id INT NOT NULL AUTO_INCREMENT,
     mid INT NOT NULL,
@@ -257,6 +271,8 @@ CREATE TABLE module_stage_questions_user_answers (
     ON UPDATE CASCADE
 
 ) ENGINE=InnoDB;
+
+
 
 
 
