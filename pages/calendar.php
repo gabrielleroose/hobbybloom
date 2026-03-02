@@ -52,8 +52,17 @@
             }
             ?>
         </select>
+
+        <div id="inviteActions" style="display:none;">
+            <button id="acceptInvite">Accept</button>
+            <button id="declineInvite">Decline</button>
+        </div>
+
+        <button id="saveEvent">Save</button>
+        <button id="deleteEvent" style="display:none;">Delete</button>
+        <button id="cancelEvent">Cancel</button>
     </div>
-    <button onclick="openReportModal(<?= $module_id ?>)">Report</button>
+    <button onclick="openReportModal(<?= $module_id ?>)">Report</button> 
     <div id="reportModal" class="modal">
     <div class="modal-content">
         <h3>Report Module</h3>

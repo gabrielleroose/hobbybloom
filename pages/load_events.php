@@ -16,7 +16,7 @@ $stmt = $conn->prepare("
         e.title,
         e.event_date,
         e.event_time,
-        e.description,
+        e.description, 
         e.location,
         e.created_by,
         ei.status AS invite_status
@@ -36,21 +36,18 @@ $stmt->execute([$user_id, $user_id, $user_id]);
 $events = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $date = $row['event_date'];
+    $time = $row['event_time'];
 
-    $start = $row['event_date'];
-    if (!empty($row['event_time'])) {
-        $start .= 'T' . $row['event_time'];
+    // Handle all-day events (no time) or timed events
+    $start = $date;
+    if (!empty($time)) {
+        // Ensure time is in HH:MM:SS format
+        if (strlen($time) <= 5) $time .= ':00'; 
+        $start .= 'T' . $time;
     }
 
-    // Fetch all invitees for this event
-    $inviteStmt = $conn->prepare("
-        SELECT u.username, ei.status
-        FROM event_invites ei
-        JOIN users u ON u.id = ei.user_id
-        WHERE ei.event_id = ?
-    ");
-    $inviteStmt->execute([$row['id']]);
-    $invites = $inviteStmt->fetchAll(PDO::FETCH_ASSOC);
+    $status = $row['invite_status'] ?? null;
 
     $events[] = [
         'id' => $row['id'],
@@ -60,9 +57,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         'extendedProps' => [
             'description' => $row['description'],
             'location' => $row['location'],
-            'status' => $row['invite_status'],
-            'isOwner' => $row['created_by'] == $user_id,
-            'inviteList' => $invites
+            'status' => $status,
+            'isOwner' => $row['created_by'] == $user_id 
         ]
     ];
 }
