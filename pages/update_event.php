@@ -4,63 +4,66 @@ require_once 'db.php';
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user']['id'])) {
-    echo json_encode(['error' => 'Not authenticated']);
+    echo json_encode(['success' => false, 'error' => 'Not authenticated']);
     exit;
 }
-
-$user_id = $_SESSION['user']['id'];
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$id = $data['id'] ?? null;
-$title = trim($data['title'] ?? '');
-$date = $data['date'] ?? '';
-$time = $data['time'] ?? null;
-$description = trim($data['description'] ?? '');
-$location = trim($data['location'] ?? '');
-$invitees = $data['invitees'] ?? [];
+$user_id    = $_SESSION['user']['id'];
+$id         = $data['id'] ?? null;
+$title      = trim($data['title'] ?? '');
+$date       = $data['date'] ?? '';
+$time       = $data['time'] ?: null;
+$description= trim($data['description'] ?? '');
+$location   = trim($data['location'] ?? '');
+$invitees   = $data['invitees'] ?? [];
 
 if (!$id || !$title || !$date) {
-    echo json_encode(['error' => 'Missing required fields']);
+    echo json_encode(['success' => false, 'error' => 'Missing required fields']);
     exit;
 }
 
-// Update event if user owns it
-$stmt = $conn->prepare("
-    UPDATE events
-    SET title = ?, event_date = ?, event_time = ?, description = ?, location = ?
-    WHERE id = ? AND created_by = ?
-");
-$stmt->execute([$title, $date, $time, $description, $location, $id, $user_id]);
+try {
 
-// Remove old invites
-$stmtDel = $conn->prepare("DELETE FROM event_invites WHERE event_id = ?");
-$stmtDel->execute([$id]);
+    $conn->beginTransaction();
 
-// Add new invites
-if (!empty($invitees)) {
-    $stmtInvite = $conn->prepare("INSERT INTO event_invites (event_id, user_id, status) VALUES (?, ?, 'pending')");
-    foreach ($invitees as $invitee_id) {
-        if ($invitee_id != $user_id) {
-            $stmtInvite->execute([$id, $invitee_id]);
+
+    $stmt = $conn->prepare("
+        UPDATE events
+        SET title = ?, event_date = ?, event_time = ?, description = ?, location = ?
+        WHERE id = ? AND created_by = ?
+    ");
+
+    $stmt->execute([$title, $date, $time, $description, $location, $id, $user_id]);
+
+    if ($stmt->rowCount() === 0) {
+        throw new Exception("Not owner");
+    }
+
+
+    $conn->prepare("DELETE FROM event_invites WHERE event_id = ?")
+         ->execute([$id]);
+
+    if (!empty($invitees)) {
+
+        $invite_stmt = $conn->prepare("
+            INSERT INTO event_invites (event_id, user_id, status)
+            VALUES (?, ?, 'pending')
+        ");
+
+        foreach ($invitees as $invitee_id) {
+            if ($invitee_id != $user_id) {
+                $invite_stmt->execute([$id, $invitee_id]);
+            }
         }
     }
+
+    $conn->commit();
+
+    echo json_encode(['success' => true]);
+
+} catch (Exception $e) {
+    $conn->rollBack();
+    echo json_encode(['success' => false, 'error' => 'Update failed']);
 }
-
-// Return updated event in FullCalendar format
-$start = $date . 'T' . ($time ?: '00:00:00');
-
-echo json_encode([
-    'success' => true,
-    'event' => [
-        'id' => $id,
-        'title' => $title,
-        'start' => $start,
-        'extendedProps' => [
-            'description' => $description,
-            'location' => $location,
-            'status' => null,
-            'isOwner' => true
-        ]
-    ]
-]);
