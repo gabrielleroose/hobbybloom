@@ -217,6 +217,8 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
+
+    </div>
             </main>
                  <section class="suggested-circles-wrapper">
                     <h2 class="section-heading">Suggested For You</h2>
@@ -230,22 +232,7 @@ if (!empty($myHobbies)) {
                     </div>
                 </section>
             <?php endif; ?>
-    </div>
-
-    <?php if ($viewMode !== 'all' && !$searchQuery): ?>
-    <section class="suggested-circles-wrapper">
-        <h2 class="section-heading">Suggested For You</h2>
-        <div class="suggested-grid">
-            <?php foreach ($suggestedCircles as $circle): ?>
-                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                    <p><?= htmlspecialchars($circle['description']) ?></p>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </section>
-<?php endif; ?>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 
 </html>
