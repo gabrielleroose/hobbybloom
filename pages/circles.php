@@ -217,8 +217,8 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
-
-                <section class="suggested-circles-wrapper" style="margin-top: 40px;">
+            </main>
+                 <section class="suggested-circles-wrapper">
                     <h2 class="section-heading">Suggested For You</h2>
                     <div class="suggested-grid">
                         <?php foreach ($suggestedCircles as $circle): ?>
@@ -230,7 +230,6 @@ if (!empty($myHobbies)) {
                     </div>
                 </section>
             <?php endif; ?>
-        </main>
     </div>
 
     <?php if ($viewMode !== 'all' && !$searchQuery): ?>
