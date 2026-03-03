@@ -280,6 +280,8 @@ if (!empty($myHobbies)) {
                         </div>
                     </section>
                 </div>
+
+    </div>
             </main>
                  <section class="suggested-circles-wrapper">
                     <h2 class="section-heading">Suggested For You</h2>
@@ -293,7 +295,6 @@ if (!empty($myHobbies)) {
                     </div>
                 </section>
             <?php endif; ?>
-    </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 
