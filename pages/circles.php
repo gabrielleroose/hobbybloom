@@ -89,55 +89,73 @@ if (!empty($myHobbies)) {
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .glass-tab-container { 
-            display: flex; 
-            justify-content: center; 
-            margin: 20px 0 35px 0; 
+        .hub-top-nav {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 35px 0;
         }
-        .glass-tabs { 
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(10px); 
+
+        .glass-tabs {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 40px;
             padding: 5px;
-            display: flex; gap: 5px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 5px;
         }
-        .hub-btn {
+
+        .tab-btn {
             padding: 10px 25px;
             border-radius: 35px;
             text-decoration: none;
-            font-weight: 600; font-size: 0.9rem;
-            color: #1f5077; transition: all 0.3s ease;
+            font-weight: 600;
+            color: #1f5077;
+            font-size: 0.85rem;
+            transition: 0.3s;
         }
-        .hub-btn:hover { background: rgba(255, 255, 255, 0.3); }
-        .hub-btn.active { background: #1f5077; color: white; box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2); }
-        
-        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-chip { 
-            padding: 6px 18px; border-radius: 20px; background: white; 
-            color: #1f5077; text-decoration: none; font-size: 0.85rem; 
-            border: 1px solid rgba(31, 80, 119, 0.1); 
+
+        .tab-btn.active {
+            background-color: #1f5077;
+            color: white;
+            box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: white;
+            color: #1f5077;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid rgba(31, 80, 119, 0.1);
         }
 
         .filter-chip.active {
             background: #1f5077;
             color: white;
             border-color: #1f5077;
-        } 
+        }
     </style>
 </head>
 
 <body class="circles-body">
-    <div class="page-container">
-        
-        <div class="glass-tab-container">
-            <div class="glass-tabs">
-                <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
-                <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
-            </div>
+
+    <div class="hub-top-nav">
+        <div class="glass-tabs">
+            <a href="circles.php" class="tab-btn <?= $viewMode === 'suggested' ? 'active' : '' ?>">My Feed</a>
+            <a href="circles.php?view=all" class="tab-btn <?= $viewMode === 'all' ? 'active' : '' ?>">Explore Circles</a>
         </div>
+    </div>
 
     <div class="page-container">
         <aside class="search-row">
@@ -202,17 +220,17 @@ if (!empty($myHobbies)) {
                             <?php foreach ($feedItems as $item):
                                 $avatarColor = !empty($item['profile_color']) ? $item['profile_color'] : '#' . substr(md5($item['username']), 0, 6);
                             ?>
-                            <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
-                                <div class="highlight-card">
-                                    <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
-                                    <div class="card-body">
-                                        <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> messaged <span><?= htmlspecialchars($item['target_name']) ?></span></p>
-                                        <?php if ($item['message_text']): ?>
-                                            <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
-                                        <?php endif; ?>
+                                <a href="circle_detail.php?hobby=<?= urlencode($item['target_name']) ?>" class="highlight-link">
+                                    <div class="highlight-card">
+                                        <div class="card-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($item['username'], 0, 1)) ?></div>
+                                        <div class="card-body">
+                                            <p><strong>@<?= htmlspecialchars($item['username']) ?></strong> <?= $item['type'] === 'chat' ? 'messaged' : 'completed module' ?> <span><?= htmlspecialchars($item['target_name']) ?></span></p>
+                                            <?php if ($item['message_text']): ?>
+                                                <p style="font-size: 0.8rem; font-style: italic; color: #666; margin-top: 4px;">"<?= htmlspecialchars($item['message_text']) ?>"</p>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
                             <?php endforeach; ?>
                         </div>
                     </section>
