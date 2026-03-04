@@ -55,7 +55,8 @@ $googleId = $_SESSION['google_id'] ?? null;
         // get mod_id
         $mod_id = $_POST['module_id'];
 
-        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = :mid";
+        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id
+        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         
@@ -75,6 +76,8 @@ $googleId = $_SESSION['google_id'] ?? null;
             
             echo "<div class='stage_title'>";
             echo $stage['title'];
+            echo "<br><br>";
+            echo '<iframe width="560" height="315" src=' . $stage['video_url'] . ' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
             echo "</div><br><br>";
             
             

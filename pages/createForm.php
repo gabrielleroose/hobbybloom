@@ -128,7 +128,7 @@ if (isset($_GET['module_edit'])) {
     $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
     foreach ($module_stage_info as $stage) {
 
-        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
+        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num, msv.video_url FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id JOIN module_stage_videos AS msv ON msq.msid = msv.msid WHERE msq.msid = ?";
         $stmt = $conn->prepare($module_stage_questions_sql);
         $stmt->execute([$stage['id']]);
         $module_stage_questions_results = $stmt->fetchAll();
@@ -137,7 +137,8 @@ if (isset($_GET['module_edit'])) {
             'id' => $stage['id'],
             'stage_num' => $stage['stage_num'],
             'title' => $stage['title'],
-            'question' => $module_stage_questions_results
+            'question' => $module_stage_questions_results,
+            'video_url' => $stage['video_url']
         ];
     }
 
@@ -251,24 +252,19 @@ if (isset($_GET['module_edit'])) {
 </html>
 
 <script>
-    function generateVideoInputs() {
-        const count = document.getElementById("videoCount").value;
-        const container = document.getElementById("videoInputs");
-
-        // clear existing inputs
-        container.innerHTML = "";
-
-        for (let i = 1; i <= count; i++) {
-            const input = document.createElement("input");
-            input.type = "url";
-            input.name = "videos[]";
-            input.placeholder = "Video " + i + " link";
-            input.required = true;
-
-            container.appendChild(input);
-            container.appendChild(document.createElement("br"));
-        }
-    }
+    function generateStageVideoInput(stage_num, url = "") {
+    return `
+        <div class="stage_video">
+        <label>Stage Video URL:</label><br>
+        <input type="url"
+            name="stages[${stage_num}][video_url]"
+            value="${url}"
+            placeholder="Enter video URL"
+            required>
+        <br><br>
+        </div>
+    `;
+}
 </script>
 
 
@@ -312,6 +308,8 @@ if (isset($_GET['module_edit'])) {
 
             let answersHTML = "";
 
+
+
             for (let a = 1; a <= 4; a++) {
 
                 const answerObj = answersData[a - 1] ?? null; 
@@ -331,12 +329,14 @@ if (isset($_GET['module_edit'])) {
                     <input type="hidden"
                         name="stages[${i}][answers][${a}][is_correct]"
                         value="${isCorrect}">
-                    <br>
+                    <br><br>
                 `;
             }
 
+
             const stageDiv = document.createElement("div");
 
+            const videoHTML = generateStageVideoInput(i, stageData?.video_url ?? ""); 
 
             stageDiv.innerHTML = `    
                 <h3>Stage ${i}</h3>
@@ -354,6 +354,8 @@ if (isset($_GET['module_edit'])) {
                     required><br><br>
 
                 ${answersHTML}
+                
+                ${videoHTML}
             `;
 
             stagesContainer.appendChild(stageDiv);

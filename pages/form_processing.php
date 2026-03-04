@@ -75,6 +75,7 @@ try {
             $user_id
         ]);
 
+
         $delete_sql = "DELETE FROM module_stage WHERE mid = ?"; //deletes old stage info. this 'editing' is actually just deleting and re-inserting data. only happens AFTER user has submitted editing of form
         $stmt = $conn->prepare($delete_sql);
         $stmt->execute([$module_id]);
@@ -115,6 +116,8 @@ try {
         if (!empty($_POST['stages'])) { //checks if stage empty
 
             foreach ($_POST['stages'] as $stage_num => $stage_data) {
+                $video_url = $stage_data['video_url'] ?? '';
+                
 
                 // insert stage
                 $module_stages_insert_sql = "
@@ -130,6 +133,13 @@ try {
                 ]);
 
                 $msid = $conn->lastInsertId();
+
+                $module_stage_video_update_sql = "INSERT INTO module_stage_videos (mid, msid, video_url) VALUES (:mid, :msid, :video_url)";
+                $stmt = $conn->prepare($module_stage_video_update_sql);
+                $stmt->execute([
+                    ':mid' =>$mid, 
+                    ':msid' => $msid,
+                    ':video_url' => $video_url]);
 
                 // insert question
                 $question = $stage_data['question'];

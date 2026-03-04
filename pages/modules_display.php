@@ -48,7 +48,7 @@ $mod_id_list = [];
     foreach ($mod_id_list as $id) {
     
         $fetch_mod_info = "SELECT m.id, m.cid, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
-        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id 
         WHERE m.id = ?";
 
         $stmt = $pdo->prepare($fetch_mod_info);
@@ -65,8 +65,6 @@ $mod_id_list = [];
         $stmt = $conn->prepare($delete_sql);
         $stmt->execute([$_POST['module_delete']]);
     }
-
-    
 ?>
 
 
@@ -79,8 +77,6 @@ $mod_id_list = [];
 <link href="../css/style.css" rel="stylesheet">
 <link href="../css/nav.css" rel="stylesheet">
 </head>
-
-<body class="module-body">
     <div class="module_back_container">
         <?php foreach ($all_mods as $mod): ?>
             <div class="module_outter_card">
@@ -124,6 +120,7 @@ $mod_id_list = [];
 
         </div>
     </div>
+    
 </body>    
 
 </html>
