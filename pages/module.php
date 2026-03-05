@@ -39,10 +39,7 @@ $googleId = $_SESSION['google_id'] ?? null;
             throw new Exception("User session not found. Please log in again.");
         }
 
-        $mod_id = $_REQUEST['module_id'] ?? null;
-        if (!$mod_id) {
-            throw new Exception("No module selected.");
-        }
+        $mod_id = $_REQUEST['module_id'];
 
         $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id
         LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
@@ -50,15 +47,18 @@ $googleId = $_SESSION['google_id'] ?? null;
         $stmt->execute(['mid' => $mod_id]);
         $mod_stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
+        $mod_stages = $stmt->fetchAll();
+        
+        $module_stage_info = [];
+
         foreach ($mod_stages as $stage) {
             $stage_id = $stage['id'];
+            $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
+            $stmt = $conn->prepare($module_stage_questions_sql);
+            $stmt->execute([$stage_id]);
+            $module_stage_questions = $stmt->fetchAll();
             
-            $q_sql = "SELECT id, question_text FROM module_stage_questions WHERE msid = ?";
-            $q_stmt = $conn->prepare($q_sql);
-            $q_stmt->execute([$stage_id]);
-            $questions = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
+        $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
             echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
             
             echo "<div class='stage_title'>";
@@ -74,10 +74,21 @@ $googleId = $_SESSION['google_id'] ?? null;
                 $question_id = $question['id'];
                 echo "<p><strong>Question:</strong> " . htmlspecialchars($question['question_text']) . "</p>";
 
-                $a_sql = "SELECT id, answer, is_correct FROM module_stage_questions_answers WHERE msqid = ?";
-                $a_stmt = $conn->prepare($a_sql);
-                $a_stmt->execute([$question_id]);
-                $answers = $a_stmt->fetchAll(PDO::FETCH_ASSOC); 
+                $question_id = $question['id'];
+                $question_text = $question['question_text'];
+
+                $module_stage_questions_answers_sql = "SELECT msqa.id, answer, is_correct from module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+                $stmt = $conn->prepare($module_stage_questions_answers_sql);
+                $stmt->execute([$question_id]);
+                
+                $module_stage_answers = $stmt->fetchAll(); 
+                echo $question['question_text'];
+
+                foreach ($module_stage_answers as $answer) {
+
+                    $module_stage_info[$stage_id]['questions'][$question_id]['answers'][] = 
+                    ['answer' => $answer['answer'], 
+                    'is_correct' => $answer['is_correct']];
 
                 shuffle($answers);
 
