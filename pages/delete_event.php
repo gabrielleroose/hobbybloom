@@ -1,10 +1,15 @@
 <?php
+
 session_start();
 require_once 'db.php';
+
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user']['id'])) {
-    echo json_encode(['error' => 'Not authenticated']);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Not authenticated'
+    ]);
     exit;
 }
 
@@ -14,16 +19,66 @@ $data = json_decode(file_get_contents('php://input'), true);
 $event_id = $data['id'] ?? null;
 
 if (!$event_id) {
-    echo json_encode(['error' => 'Missing event ID']);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Missing event ID'
+    ]);
     exit;
 }
 
-// Delete event only if the current user is the owner
-$stmt = $conn->prepare("DELETE FROM events WHERE id = ? AND created_by = ?");
-$stmt->execute([$event_id, $user_id]);
+try {
 
-// Optionally, delete all invites for this event (cascade in DB may handle this)
-$stmtInvites = $conn->prepare("DELETE FROM event_invites WHERE event_id = ?");
-$stmtInvites->execute([$event_id]);
+    $conn->beginTransaction();
 
-echo json_encode(['success' => true, 'id' => $event_id]);
+
+    $check = $conn->prepare("
+        SELECT id
+        FROM events
+        WHERE id = ? AND created_by = ?
+    ");
+
+    $check->execute([$event_id, $user_id]);
+
+    if (!$check->fetch()) {
+
+        $conn->rollBack();
+
+        echo json_encode([
+            'success' => false,
+            'error' => 'Event not found or permission denied'
+        ]);
+        exit;
+    }
+
+
+    $stmtInvites = $conn->prepare("
+        DELETE FROM event_invites
+        WHERE event_id = ?
+    ");
+
+    $stmtInvites->execute([$event_id]);
+
+
+    $stmt = $conn->prepare("
+        DELETE FROM events
+        WHERE id = ?
+    ");
+
+    $stmt->execute([$event_id]);
+
+    $conn->commit();
+
+    echo json_encode([
+        'success' => true,
+        'id' => $event_id
+    ]);
+
+} catch (Exception $e) {
+
+    $conn->rollBack();
+
+    echo json_encode([
+        'success' => false,
+        'error' => 'Database error'
+    ]);
+}
