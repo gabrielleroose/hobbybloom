@@ -98,7 +98,6 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .activity-text a { text-decoration: none; font-weight: 700; color: #1f5077; }
         .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; white-space: nowrap; }
         
-        /* Glass Tabs */
         .glass-tab-container { display: flex; justify-content: center; margin: 20px 0 35px 0; }
         .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
         .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
