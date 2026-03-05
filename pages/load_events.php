@@ -42,6 +42,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $start .= 'T' . $row['event_time'];
     }
 
+    // Fetch all invitees for this event
+    $inviteStmt = $conn->prepare("
+        SELECT u.username, ei.status
+        FROM event_invites ei
+        JOIN users u ON u.id = ei.user_id
+        WHERE ei.event_id = ?
+    ");
+    $inviteStmt->execute([$row['id']]);
+    $invites = $inviteStmt->fetchAll(PDO::FETCH_ASSOC);
+
     $events[] = [
         'id' => $row['id'],
         'title' => $row['title'],
@@ -51,7 +61,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             'description' => $row['description'],
             'location' => $row['location'],
             'status' => $row['invite_status'],
-            'isOwner' => $row['created_by'] == $user_id
+            'isOwner' => $row['created_by'] == $user_id,
+            'inviteList' => $invites
         ]
     ];
 }
