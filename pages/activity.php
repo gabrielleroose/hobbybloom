@@ -84,7 +84,7 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
         .activity-feed-item { 
             background-color: white; 
-            border-radius: 12px;  
+            border-radius: 12px; 
             padding: 20px; 
             display: flex; 
             align-items: center; 
@@ -95,13 +95,12 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         .activity-main-content { display: flex; align-items: center; flex: 1; min-width: 300px; }
         .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; flex-shrink: 0; }
         .activity-text { color: #333; line-height: 1.4; }
-        .activity-text a { text-decoration: none; font-weight: 700; color: #1f5077; } 
+        .activity-text a { text-decoration: none; font-weight: 700; color: #1f5077; }
         .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; white-space: nowrap; }
-         
         .glass-tab-container { display: flex; justify-content: center; margin: 20px 0 35px 0; }
         .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
         .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
-        .tab-btn.active { background-color: #1f5077; color: white; } 
+        .tab-btn.active { background-color: #1f5077; color: white; }
         
         .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
         .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; }
