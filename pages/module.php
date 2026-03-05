@@ -31,7 +31,6 @@ $googleId = $_SESSION['google_id'] ?? null;
 
 
     <?php
-    // check if they're logged in
     if (!$googleId) {
         header('Location: index.php');
         exit;
@@ -52,15 +51,14 @@ $googleId = $_SESSION['google_id'] ?? null;
             throw new Exception("User not found in database.");
         }
 
-        // get mod_id
-        $mod_id = $_POST['module_id'];
+        $mod_id = $_REQUEST['module_id'];
 
         $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id
         LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         
-        $mod_stages = $stmt->fetchAll(); //gets an array of all module stage nums where module_stage.module_id = module.id, ensuring user receives relevant info
+        $mod_stages = $stmt->fetchAll();
         
         $module_stage_info = [];
 
@@ -69,9 +67,9 @@ $googleId = $_SESSION['google_id'] ?? null;
             $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
             $stmt = $conn->prepare($module_stage_questions_sql);
             $stmt->execute([$stage_id]);
-            $module_stage_questions = $stmt->fetchAll(); //grabs all selected info, arranges into array as seen in mod_id statements
+            $module_stage_questions = $stmt->fetchAll();
             
-        $hidden = ($stage['stage_num'] == 1) ? "" : "hidden"; //if stage['stage_num' == 1, set $hidden to "". otherwise, set to "hidden"]
+        $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
             echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
             
             echo "<div class='stage_title'>";
@@ -85,8 +83,8 @@ $googleId = $_SESSION['google_id'] ?? null;
 
             foreach($module_stage_questions as $question){
 
-                $question_id = $question['id'];  // question id
-                $question_text = $question['question_text']; //question text
+                $question_id = $question['id'];
+                $question_text = $question['question_text'];
 
                 $module_stage_questions_answers_sql = "SELECT msqa.id, answer, is_correct from module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
                 $stmt = $conn->prepare($module_stage_questions_answers_sql);
