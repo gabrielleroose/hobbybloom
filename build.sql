@@ -308,6 +308,7 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+---------------- calendar tables --------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
