@@ -314,6 +314,23 @@ CREATE TABLE event_invites (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE circle_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    circle_id INT NOT NULL,
+    user_id INT NOT NULL,
+    role ENUM('member','admin') DEFAULT 'member',
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE(circle_id, user_id),
+
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
 <<<<<<< HEAD
 CREATE TABLE circle_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
