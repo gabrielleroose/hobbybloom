@@ -81,132 +81,116 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 35px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             width: 450px !important; 
-            height: 650px !important;
-            padding: 30px !important;
+            height: 720px !important; 
+            padding: 35px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
-        }
-        
-        .module_inner_card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            align-items: center !important;
+            position: relative;
         }
 
-        .mod_description {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            line-height: 1.4;
-            color: #153853;
+        .module_inner_card {
+            width: 100% !important;
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding-left: 0 !important; 
         }
 
         .module-comments-container {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
             padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            height: 220px !important;
-            display: flex;
-            flex-direction: column;
+            height: 280px !important; 
             margin: 15px 0;
-            box-sizing: border-box;
+            display: flex !important;
+            flex-direction: column !important;
+            box-sizing: border-box !important;
         }
 
         .comments-scroll-box {
-            flex: 1;
-            overflow-y: auto !important;
-            margin-bottom: 10px;
-            padding-right: 8px;
+            flex: 1 !important;
+            overflow-y: auto !important; 
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column; 
+            text-align: left;
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             padding: 10px 12px;
-            border-radius: 12px;
+            border-radius: 15px;
             margin-bottom: 10px;
             font-size: 0.85rem;
-            word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-        }
-
-        .comment-item strong {
-            display: block;
-            color: #1f5077;
-            font-size: 0.75rem;
-            margin-bottom: 2px;
-        }
-
-        .comment-input-form {
+            word-wrap: break-word;
             display: flex;
+            align-items: flex-start;
             gap: 8px;
         }
 
-        .comment-input-field {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(31, 80, 119, 0.2);
-            font-size: 0.8rem;
+        .profile-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: inherit;
+            transition: opacity 0.2s;
         }
 
-        .comment-btn {
-            background: #1f5077;
-            color: white;
-            border: none;
-            padding: 0 15px;
-            border-radius: 20px;
-            cursor: pointer;
+        .profile-link:hover {
+            opacity: 0.7;
+        }
+
+        .user-color-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
         .begin-module-wrapper {
-            margin-top: auto;
-            width: 100%;
+            width: 100% !important;
+            margin-top: auto !important;
         }
 
         .module_display_entry_button {
-            width: 100%;
-            padding: 15px;
-            font-weight: bold;
-            border-radius: 15px;
-            background: #1f5077;
-            color: white;
-            border: none;
-            cursor: pointer;
+            width: 100% !important;
+            padding: 16px !important;
+            font-weight: bold !important;
+            border-radius: 20px !important;
+            background: #1f5077 !important;
+            color: white !important;
+            border: none !important;
+            cursor: pointer !important;
+            margin: 0 !important;
         }
 
         .create-button-wrapper {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
+            margin-top: 50px;
             padding-bottom: 60px;
-            grid-column: 1 / -1;
+            text-align: center;
         }
 
         .create-module-button {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(5px);
+            background: white;
             padding: 15px 40px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .create-module-button a {
-            text-decoration: none;
-            color: #1f5077;
-            font-weight: bold;
-            font-size: 1.1rem;
+            border-radius: 35px;
+            border: 1px solid #1f5077;
+            cursor: pointer;
         }
     </style>
 </head>
     <div class="module_back_container">
         <?php foreach ($all_mods as $mod): 
             $c_stmt = $pdo->prepare("
-                SELECT mc.*, u.username 
+                SELECT mc.*, u.username, up.profile_color, u.id as user_actual_id
                 FROM module_comments mc 
                 JOIN users u ON mc.user_id = u.id 
+                LEFT JOIN user_profiles up ON u.id = up.user_id
                 WHERE mc.module_id = ? 
                 ORDER BY mc.created_at ASC
             ");
@@ -215,35 +199,46 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
             <div class="module_outter_card">
                 <div class="module_inner_card">
-                    <div class="module_header">
-                        <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div>
-                        <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+                    <div class="module_header" style="text-align: center; width: 100%;">
+                        <h3><?= htmlspecialchars($mod['name'] ?? '')?></h3>
+                        <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
+                    
                     <div class="mod_description">
                         <p><?= htmlspecialchars($mod['description'] ?? '')?></p>
                         <p style="font-size: 0.85rem; font-style: italic; margin-top: 5px;">
-                            Level: <?= htmlspecialchars($mod['exp_level'] ?? '') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '') ?>
+                            Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
                         </p>
                     </div>
                     
                     <div class="module-comments-container">
-                        <div class="comments-scroll-box">
+                        <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
                             <?php if (empty($comments)): ?>
-                                <p style="font-size: 0.85rem; color: #666; font-style: italic; text-align: center; margin-top: 60px;">No comments yet.</p>
+                                <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
                             <?php else: ?>
                                 <?php foreach ($comments as $c): ?>
                                     <div class="comment-item">
-                                        <strong>@<?= htmlspecialchars($c['username']) ?></strong> 
-                                        <?= htmlspecialchars($c['comment_text']) ?>
+                                        <a href="profile.php?user_id=<?= $c['user_actual_id'] ?>" class="profile-link">
+                                            <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>;"></div>
+                                            <strong>@<?= htmlspecialchars($c['username']) ?></strong>
+                                        </a>
+                                        <div style="flex: 1; margin-left: 5px;">
+                                            <?= htmlspecialchars($c['comment_text']) ?>
+                                        </div>
                                     </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
                         
-                        <form method="POST" class="comment-input-form">
+                        <script>
+                            var d = document.getElementById("box-<?= $mod['id'] ?>");
+                            d.scrollTop = d.scrollHeight;
+                        </script>
+
+                        <form method="POST" class="comment-input-form" style="display: flex; gap: 8px; margin-top: 10px;">
                             <input type="hidden" name="module_id" value="<?= $mod['id'] ?>">
-                            <input type="text" name="comment_text" class="comment-input-field" placeholder="Write a comment..." required>
-                            <button type="submit" name="submit_comment" class="comment-btn">Post</button>
+                            <input type="text" name="comment_text" class="comment-input-field" placeholder="Write a comment..." required style="flex:1; padding:10px; border-radius:20px; border:1px solid #ccc;">
+                            <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
 
@@ -257,8 +252,8 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
 
         <div class="create-button-wrapper">
-            <button class="create-module-button">
-                <a href="createForm.php">Create New Module</a>
+            <button class="create-module-button" onclick="location.href='createForm.php'">
+                <a href="createForm.php" style="text-decoration:none; color:#1f5077; font-weight:bold;">Create New Module</a>
             </button>
         </div>
     </div>
