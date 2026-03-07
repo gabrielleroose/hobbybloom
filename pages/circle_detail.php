@@ -164,11 +164,19 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                     </button>
                 </form>
 
-                <?php if ($circleId && $userId == $creatorId): ?>
-                    <a href="edit_circle.php?id=<?= $circleId ?>" style="background-color: rgba(255,255,255,0.8); color: #333; border: 2px solid #333; padding: 6px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; text-decoration: none; margin-left: 10px; display: inline-block;">✏️ Edit Details</a>
-                <?php endif; ?>
-            </div> 
-
+                <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+                    <?php if ($creatorId == $userId): ?>
+                        <a href="edit_circle.php?id=<?= $circleId ?>" 
+                            style="background: #1f5077; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 14px;">
+                            Edit Circle
+                        </a>
+                    <?php else: ?>
+                        <button id="reportCircleBtn" 
+                            style="background:#ff4d4d; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                            Report Circle
+                        </button>
+                    <?php endif; ?>
+                </div>
             <h2>Circle Members</h2>
             <div class="member-list">
                 <?php if (empty($members)): ?> 
