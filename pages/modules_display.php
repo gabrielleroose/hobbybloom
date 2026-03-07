@@ -59,9 +59,13 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <style>
         .module_back_container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .module_outter_card {
@@ -69,41 +73,40 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            height: 650px !important; 
+            min-height: 600px; 
             padding: 25px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s;
+        }
+
+        .module_outter_card:hover {
+            transform: translateY(-5px);
         }
         
         .module_inner_card {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-        }
-
-        .module_header {
-            margin-bottom: 10px;
         }
 
         .mod_description {
             font-size: 0.9rem;
-            margin-bottom: 15px;
-            height: 45px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.4;
         }
 
         .module-comments-container {
             flex: 1;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             flex-direction: column;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             min-height: 250px;
         }
 
@@ -111,11 +114,11 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             flex: 1;
             overflow-y: auto;
             margin-bottom: 12px;
-            padding-right: 8px;
+            padding-right: 5px;
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             padding: 10px 14px;
             border-radius: 12px;
             margin-bottom: 10px;
@@ -123,6 +126,7 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             color: #153853;
             line-height: 1.4;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .comment-item strong {
@@ -130,7 +134,6 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: block;
             margin-bottom: 3px;
             font-size: 0.75rem;
-            text-transform: lowercase;
         }
 
         .comment-input-form {
@@ -151,15 +154,10 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background: #1f5077;
             color: white;
             border: none;
-            padding: 0 18px;
-            border-radius: 25px;
+            padding: 0 15px;
+            border-radius: 20px;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .comment-btn:hover {
-            background: #153853;
         }
 
         .begin-module-wrapper {
@@ -171,6 +169,7 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin: 0;
             padding: 12px;
             font-weight: bold;
+            border-radius: 10px;
         }
     </style>
 </head>
