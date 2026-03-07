@@ -5,8 +5,22 @@ ini_set('display_errors', 1);
 
 require_once 'db.php';
 
-header('Content-Type: application/json');
-$json_data = file_get_contents('php://input');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    header('Content-Type: application/json');
+
+    $json_data = file_get_contents('php://input');
+    $isChecked = json_decode($json_data, true);
+
+    if (isset($isChecked['checkboxStatus'])) {
+
+        echo json_encode([
+            "quiz" => $isChecked['checkboxStatus']
+        ]);
+
+        exit;
+    }
+}
 
 
 $success = false;
@@ -58,12 +72,14 @@ if (isset($_GET['module_edit'])) {
         $stmt->execute([$stage['id']]);
         $module_stage_questions_results = $stmt->fetchAll();
 
+        $video_url = $module_stage_questions_results[0]['video_url'] ?? null;
+
         $module_stage_questions_info[] = [
             'id' => $stage['id'],
             'stage_num' => $stage['stage_num'],
             'title' => $stage['title'],
             'question' => $module_stage_questions_results,
-            'video_url' => $stage['video_url']
+            'video_url' => $video_url
         ];
     }
 
@@ -124,23 +140,18 @@ if (isset($_GET['module_edit'])) {
         
             <input type="checkbox" id="if_quiz" name="quiz_check">
             <label for="if_quiz"> Would you like to post a quiz for this module?</label>
+            
+            
+            <div id="videoInputs"></div><br>
+            
+                    <div>
+                        <label>Number of lessons:</label><br>
+                        <input type="number" id="stage_num" name="stage_num" min="0" max="5">
+                    </div>
 
-        <?php if(isset($isChecked['checkboxStatus'])): ?>
-            <?php $is_true = $isChecked['checkboxStatus'] ?>
+                    <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
 
-            <?php if($is_true == 'true'):?>
 
-                <div id="videoInputs"></div><br>
-
-                <div>
-                    <label>Number of lessons:</label><br>
-                    <input type="number" id="stage_num" name="stage_num" min="0" max="5">
-                </div>
-
-                <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
-                <?php endif ?>
-                
-        <?php endif ?>
             
 
             <label>Notes:</label><br>
@@ -186,28 +197,40 @@ if (isset($_GET['module_edit'])) {
 
 <script>
 
-const quizCheck = document.getElementById('if_quiz')
+const quizCheck = document.getElementById('if_quiz');
 
-function sendCheckboxStatus() {
-    const quizCheck = document.getElementById('if_quiz');
-    const yesQuiz = checkbox.checked; // This is a boolean (true/false)
+quizCheck.addEventListener("change", function () {
 
-    // Create a data object to send
-    const isChecked = {
-        checkboxStatus: yesQuiz
-    };
-}
+    fetch('createForm.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            checkboxStatus: this.checked
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
 
-// if (quizCheck.checked) {
-//     const yesQuiz = "isChecked"
-fetch('createForm.php', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(quizCheck)
-})
+        const container = document.getElementById("videoInputs");
 
+        if (data.quiz === true) {
+
+            container.innerHTML = `
+                <label>Number of lessons:</label><br>
+                <input type="number" id="stage_num" name="stage_num" min="0" max="5">
+                <div id="stages_container"></div>
+            `;
+
+        } else {
+            container.innerHTML = "";
+        }
+
+    })
+    .catch(err => console.error(err));
+
+});
 
         
 </script>
@@ -255,10 +278,10 @@ fetch('createForm.php', {
 <script>
    document.addEventListener("DOMContentLoaded", function () {
 
-    const stageSelect = document.getElementById("stage_num");
-    const stagesContainer = document.getElementById("stages_container");
-
+    
     function generateStages(stageCount, data = null) {
+
+        const stagesContainer = document.getElementById("stages_container");
 
         stagesContainer.innerHTML = "";
 
@@ -325,16 +348,25 @@ fetch('createForm.php', {
     }
 
 
-    if (typeof existingStages !== "undefined" && existingStages.length > 0) { //checks if form is being edited or not
-        stageSelect.value = existingStages.length;
-        generateStages(existingStages.length, existingStages);
+    if (typeof existingStages !== "undefined" && existingStages.length > 0) {
+
+        const stageSelect = document.getElementById("stage_num");
+
+        if (stageSelect) {
+            stageSelect.value = existingStages.length;
         }
 
-    stageSelect.addEventListener("input", function () { //otherwise, defaults to form creation
-        const count = this.valueAsNumber;
+        generateStages(existingStages.length, existingStages);
+    }
 
-        if (!count || count < 0 || count > 5) { //ensures stage count is within defined parameters
-            stagesContainer.innerHTML = "";
+        document.addEventListener("input", function (e) {
+
+        if (e.target.id !== "stage_num") return;
+
+        const count = e.target.valueAsNumber;
+
+        if (!count || count < 0 || count > 5) {
+            document.getElementById("stages_container").innerHTML = "";
             return;
         }
 
