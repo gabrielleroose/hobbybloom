@@ -139,7 +139,7 @@ if (isset($_POST['module_delete'])) {
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             padding: 10px 14px;
             border-radius: 12px;
             margin-bottom: 10px;
@@ -147,6 +147,7 @@ if (isset($_POST['module_delete'])) {
             color: #153853;
             line-height: 1.4;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .comment-item strong {
@@ -154,7 +155,6 @@ if (isset($_POST['module_delete'])) {
             display: block;
             margin-bottom: 3px;
             font-size: 0.75rem;
-            text-transform: lowercase;
         }
 
         .profile-link {
