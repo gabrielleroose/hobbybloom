@@ -30,10 +30,10 @@ $googleId = $_SESSION['google_id'] ?? null;
     }
 
     try {
-        $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
-        $stmt = $conn->prepare($user_id_sql);
-        $stmt->execute([':gid' => $googleId]);
-        $user_id = $stmt->fetchColumn();
+
+        $conn->beginTransaction();
+
+        $user_id = $_SESSION['user']['id'] ?? null;
 
         if (!$user_id) {
             throw new Exception("User session not found. Please log in again.");
