@@ -11,7 +11,6 @@ require_once __DIR__ . '/../config/twig.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/base.php';
 
-// get user's google_id
 $googleId = $_SESSION['google_id'] ?? null;
 ?>
 <!DOCTYPE html>
@@ -40,15 +39,10 @@ $googleId = $_SESSION['google_id'] ?? null;
 
         $conn->beginTransaction();
 
-
-        $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
-        $stmt = $conn->prepare($user_id_sql);
-        $stmt->execute([':gid' => $googleId]);
-
-        $user_id = $stmt->fetchColumn();
+        $user_id = $_SESSION['user']['id'] ?? null;
 
         if (!$user_id) {
-            throw new Exception("User not found in database.");
+            throw new Exception("User session not found. Please log in again.");
         }
 
         $mod_id = $_REQUEST['module_id'];
