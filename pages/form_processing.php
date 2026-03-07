@@ -92,8 +92,8 @@ try {
 
     $stmt = $conn->prepare($module_insert_sql);
     $stmt->execute([
-        ':module_name'  => $module_name,
-        ':cid'          => $cid,
+        ':module_name'   => $module_name,
+        ':cid'           => $cid,
         ':mod_description' => $mod_description,
         ':exp_level'    => $exp_level,
         ':num_lessons'  => $num_lessons,
@@ -101,27 +101,21 @@ try {
         ':notes'        => $notes 
     ]);
 
-   
-    $mid = $conn->lastInsertId(); //gets module id
+    $mid = $conn->lastInsertId();
 
-    
-    if (!empty($_POST['stages'])) { //checks if stage empty
-
+    if (!empty($_POST['stages'])) {
         foreach ($_POST['stages'] as $stage_num => $stage_data) {
-
             // insert stage
             $module_stages_insert_sql = "
                 INSERT INTO module_stage (mid, stage_num, title)
                 VALUES (:mid, :stage_num, :title)
             ";
-
             $stmt = $conn->prepare($module_stages_insert_sql);
             $stmt->execute([
                 ':mid'       => $mid,
                 ':stage_num' => $stage_num,
                 ':title'     => $stage_data['title']
             ]);
-
             $msid = $conn->lastInsertId();
 
             $video_url = $stage_data['video_url'] ?? null;
@@ -146,10 +140,8 @@ try {
                 (msid, question_text, order_num)
                 VALUES (?, ?, ?)
             ";
-
             $stmt = $conn->prepare($module_stage_question_sql);
             $stmt->execute([$msid, $question, $stage_num]);
-
             $msqid = $conn->lastInsertId();
 
             // insert answers
@@ -162,14 +154,12 @@ try {
                     (msqid, answer, is_correct, ans_num)
                     VALUES (?, ?, ?, ?)
                 ");
-
                 $stmt->execute([
                     $msqid,
                     $answer['text'],
                     $answer['is_correct'],
                     $ans_num
                 ]);
-
                 $ans_num++;
             }
         }
@@ -190,4 +180,3 @@ try {
     $conn->rollBack();
     echo "Error: " . $e->getMessage();
 }
-
