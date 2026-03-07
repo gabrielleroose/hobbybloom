@@ -13,7 +13,6 @@ $circleId = $_GET['id'] ?? null;
 $error = "";
 $success = false;
 
-// Fetch the circle to make sure it exists AND the current user owns it
 $stmt = $conn->prepare("SELECT * FROM circle WHERE circle_id = ? AND uid = ?");
 $stmt->execute([$circleId, $userId]);
 $circle = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,17 +24,19 @@ if (!$circle) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $description = trim($_POST["description"]);
     $color = $_POST["color"] ?? '#1f5077';
+    $category = $_POST["category"] ?? 'General';
 
     if (empty($description)) {
         $error = "Description cannot be empty.";
     } else {
         try {
-            $upd = $conn->prepare("UPDATE circle SET description = ?, color = ? WHERE circle_id = ? AND uid = ?");
-            $upd->execute([$description, $color, $circleId, $userId]);
+            $upd = $conn->prepare("UPDATE circle SET description = ?, color = ?, category = ? WHERE circle_id = ? AND uid = ?");
+            $upd->execute([$description, $color, $category, $circleId, $userId]);
             $success = true;
-            // Update the local variable so the form shows the new data instantly
+            
             $circle['description'] = $description;
             $circle['color'] = $color;
+            $circle['category'] = $category;
         } catch (PDOException $e) {
             $error = "Something went wrong saving your changes.";
         }
@@ -74,6 +75,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Circle Name (Locked):</label>
                     <input type="text" value="<?= htmlspecialchars($circle['name']) ?>" disabled style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #f5f5f5;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Category:</label>
+                    <select name="category" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: white;">
+                        <option value="General" <?= $circle['category'] == 'General' ? 'selected' : '' ?>>General</option>
+                        <option value="Arts" <?= $circle['category'] == 'Arts' ? 'selected' : '' ?>>Arts</option>
+                        <option value="Technical" <?= $circle['category'] == 'Technical' ? 'selected' : '' ?>>Technical</option>
+                        <option value="Wellness" <?= $circle['category'] == 'Wellness' ? 'selected' : '' ?>>Wellness</option>
+                    </select>
                 </div>
 
                 <div style="margin-bottom: 20px;">
