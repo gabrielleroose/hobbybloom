@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         }
     } else if (!$uid) {
         header("Location: login.php");
+        exit();
     }
 }
 
@@ -80,12 +81,11 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 35px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             width: 450px !important; 
-            min-height: 620px !important;
-            padding: 35px !important;
+            height: 650px !important;
+            padding: 30px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
         
         .module_inner_card {
@@ -96,86 +96,108 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         .mod_description {
             font-size: 1rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            line-height: 1.4;
             color: #153853;
         }
 
         .module-comments-container {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            padding: 20px;
+            padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            height: 240px !important;
+            height: 220px !important;
             display: flex;
             flex-direction: column;
-            margin: 20px 0;
+            margin: 15px 0;
             box-sizing: border-box;
         }
 
         .comments-scroll-box {
             flex: 1;
             overflow-y: auto !important;
-            margin-bottom: 12px;
-            padding-right: 10px;
+            margin-bottom: 10px;
+            padding-right: 8px;
         }
 
         .comment-item {
             background: rgba(255, 255, 255, 0.5);
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 0.85rem;
-            color: #153853;
-            line-height: 1.4;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
         }
 
         .comment-item strong {
-            color: #1f5077;
             display: block;
-            margin-bottom: 3px;
+            color: #1f5077;
             font-size: 0.75rem;
+            margin-bottom: 2px;
         }
 
         .comment-input-form {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .comment-input-field {
             flex: 1;
-            padding: 10px 15px;
-            border-radius: 25px;
+            padding: 8px 12px;
+            border-radius: 20px;
             border: 1px solid rgba(31, 80, 119, 0.2);
-            font-size: 0.85rem;
-            background: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
         }
 
         .comment-btn {
             background: #1f5077;
             color: white;
             border: none;
-            padding: 0 20px;
-            border-radius: 25px;
-            font-size: 0.85rem;
+            padding: 0 15px;
+            border-radius: 20px;
             cursor: pointer;
         }
 
         .begin-module-wrapper {
             margin-top: auto;
+            width: 100%;
         }
 
         .module_display_entry_button {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             font-weight: bold;
             border-radius: 15px;
             background: #1f5077;
             color: white;
             border: none;
             cursor: pointer;
+        }
+
+        .create-button-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            padding-bottom: 60px;
+            grid-column: 1 / -1;
+        }
+
+        .create-module-button {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 15px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .create-module-button a {
+            text-decoration: none;
+            color: #1f5077;
+            font-weight: bold;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -197,7 +219,12 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div>
                         <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
-                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
+                    <div class="mod_description">
+                        <p><?= htmlspecialchars($mod['description'] ?? '')?></p>
+                        <p style="font-size: 0.85rem; font-style: italic; margin-top: 5px;">
+                            Level: <?= htmlspecialchars($mod['exp_level'] ?? '') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '') ?>
+                        </p>
+                    </div>
                     
                     <div class="module-comments-container">
                         <div class="comments-scroll-box">
@@ -228,6 +255,12 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         <?php endforeach; ?>
+
+        <div class="create-button-wrapper">
+            <button class="create-module-button">
+                <a href="createForm.php">Create New Module</a>
+            </button>
+        </div>
     </div>
     
 </body>    
