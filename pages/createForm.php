@@ -5,9 +5,6 @@ ini_set('display_errors', 1);
 
 require_once 'db.php';
 
-header('Content-Type: application/json');
-$json_data = file_get_contents('php://input');
-
 
 $success = false;
 $error = "";
@@ -18,6 +15,84 @@ if (!$googleId) {                   //checking if google id present, sending bac
     header('Location: index.php');
     exit;
 }
+
+// form submission handling below 
+//strtolower used on xpLevel to fit DB constraints (actually need to update db constraints such that CHECK xpLevel in ["beginner", "intermediate", "expert"]
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+//     $name = trim($_POST["name"]);
+//     $description = trim($_POST["description"]);
+//     $NumOfLessons = $_POST["videoCount"] ?? 0;
+//     $notes = $_POST["notes"] ?? "";
+//     $xpLevel = strtolower($_POST["xpLevel"]) ?? "";
+//     $compTime = $_POST["estimate"] ?? 0;
+
+
+//     if (empty($name)) {
+//         $error = "Module name is required.";
+//     } else {
+//         try {
+//             $pdo = new PDO(
+//                 "mysql:host=$host;dbname=$dbname;charset=utf8",
+//                 $username,
+//                 $password
+//             );
+//             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//             $sql = "INSERT INTO module
+//             (name, description, created_by, number_of_lessons, notes, xpLevel, compTime)
+//             VALUES
+//             (:name, :description, :created_by, :Number_of_lessons, :notes, :xpLevel, :compTime)";
+
+
+//             $stmt = $pdo->prepare($sql);
+//             $stmt->execute([
+//                 ":name" => $name,
+//                 ":description" => $description,
+//                 ":created_by" => $_SESSION['user_id'],
+//                 ":Number_of_lessons" => $NumOfLessons,
+//                 ":notes" => $notes,
+//                 ":xpLevel" => $xpLevel,
+//                 ":compTime" => $compTime,
+//             ]);
+
+
+//     $module_id = $pdo->lastInsertId();
+
+
+
+
+//     if (!empty($_POST['videos'])) {
+
+//         $videoSQL = "
+//             INSERT INTO module_videos
+//             (module_id, video_url, lesson_number)
+//             VALUES (?, ?, ?)
+//         ";
+
+//         $videoStmt = $pdo->prepare($videoSQL);
+
+//         foreach ($_POST['videos'] as $index => $url) {
+
+//             $url = trim($url);
+//             if ($url !== "") {
+//                 $videoStmt->execute([
+//                     $module_id,
+//                     $url,
+//                     $index + 1
+//                 ]);
+//             }
+//         }
+//     }
+
+
+//             $success = true;
+
+//         } catch (PDOException $e) {
+//             $error = "Something went wrong saving the module.";
+//         }
+//     }
+// }
 
 $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
 $stmt = $conn->prepare($user_id_sql);
@@ -49,7 +124,6 @@ if (isset($_GET['module_edit'])) {
     $stmt->execute([$module_id]);
     $module_stage_info = $stmt->fetchAll();
 
-    if (!empty($module_stage_info)) {
     $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
     foreach ($module_stage_info as $stage) {
 
@@ -78,9 +152,9 @@ if (isset($_GET['module_edit'])) {
 
             $question['answers'] = $module_stage_questions_answers_results;
 
-            }
         }
     }
+
 }
 
 
@@ -121,26 +195,18 @@ if (isset($_GET['module_edit'])) {
             <textarea name="description" rows="4" cols="40"><?= 
             htmlspecialchars($module_info['description'] ?? '') 
             ?></textarea><br><br>
-        
-            <input type="checkbox" id="if_quiz" name="quiz_check">
-            <label for="if_quiz"> Would you like to post a quiz for this module?</label>
 
-        <?php if(isset($isChecked['checkboxStatus'])): ?>
-            <?php $is_true = $isChecked['checkboxStatus'] ?>
+            <label>Number of videos:</label><br>
+            <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
-            <?php if($is_true == 'true'):?>
+            <div id="videoInputs"></div><br>
 
-                <div id="videoInputs"></div><br>
+            <div>
+                <label>Number of lessons:</label><br>
+                <input type="number" id="stage_num" name="stage_num" min="0" max="5">
+            </div>
 
-                <div>
-                    <label>Number of lessons:</label><br>
-                    <input type="number" id="stage_num" name="stage_num" min="0" max="5">
-                </div>
-
-                <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
-                <?php endif ?>
-                
-        <?php endif ?>
+            <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
             
 
             <label>Notes:</label><br>
@@ -183,35 +249,6 @@ if (isset($_GET['module_edit'])) {
 </body>
 
 </html>
-
-<script>
-
-const quizCheck = document.getElementById('if_quiz')
-
-function sendCheckboxStatus() {
-    const quizCheck = document.getElementById('if_quiz');
-    const yesQuiz = checkbox.checked; // This is a boolean (true/false)
-
-    // Create a data object to send
-    const isChecked = {
-        checkboxStatus: yesQuiz
-    };
-}
-
-// if (quizCheck.checked) {
-//     const yesQuiz = "isChecked"
-fetch('createForm.php', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(quizCheck)
-})
-
-
-        
-</script>
-
 
 <script>
     function generateStageVideoInput(stage_num, url = "") {

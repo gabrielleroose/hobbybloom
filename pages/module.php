@@ -111,7 +111,6 @@ $googleId = $_SESSION['google_id'] ?? null;
             }
             echo "</div>";
         }
-            
         
         $conn->commit();
         
@@ -122,7 +121,6 @@ $googleId = $_SESSION['google_id'] ?? null;
         echo "Error: " . $e->getMessage();
     }
     ?>
-    
     <?php if (isset($user_id)): ?>
     <button id="reportModuleBtn" 
         style="margin-top: 15px; background:#ff4d4d; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
