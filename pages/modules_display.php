@@ -30,13 +30,21 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     $mid = $_POST['module_id'];
-    $uid = $_SESSION['user']['id'];
+    
+    $uid = $_SESSION['user']['id'] ?? $_SESSION['user_id'] ?? null;
     $commentText = trim($_POST['comment_text']);
     
-    if (!empty($commentText)) {
-        $ins = $pdo->prepare("INSERT INTO module_comments (module_id, user_id, comment_text) VALUES (?, ?, ?)");
-        $ins->execute([$mid, $uid, $commentText]);
-        header("Location: modules_display.php");
+    if ($uid && !empty($commentText)) {
+        try {
+            $ins = $pdo->prepare("INSERT INTO module_comments (module_id, user_id, comment_text) VALUES (?, ?, ?)");
+            $ins->execute([$mid, $uid, $commentText]);
+            header("Location: modules_display.php");
+            exit();
+        } catch (PDOException $e) {
+            error_log("Comment submission error: " . $e->getMessage());
+        }
+    } else if (!$uid) {
+        header("Location: login.php");
         exit();
     }
 }
