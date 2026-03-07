@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         }
     } else if (!$uid) {
         header("Location: login.php");
+        exit();
     }
 }
 
@@ -99,8 +100,8 @@ if (isset($_POST['module_delete'])) {
             border-radius: 35px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             width: 450px !important; 
-            height: 720px !important; 
-            padding: 35px !important;
+            height: 650px !important;
+            padding: 30px !important;
             box-sizing: border-box !important;
             display: flex !important;
             flex-direction: column !important;
@@ -109,76 +110,80 @@ if (isset($_POST['module_delete'])) {
         }
 
         .module_inner_card {
-            width: 100% !important;
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding-left: 0 !important; 
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mod_description {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: #153853;
         }
 
         .module-comments-container {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             padding: 15px;
-            height: 280px !important; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 220px !important;
+            display: flex;
+            flex-direction: column;
             margin: 15px 0;
-            display: flex !important;
-            flex-direction: column !important;
-            box-sizing: border-box !important;
+            box-sizing: border-box;
         }
 
         .comments-scroll-box {
-            flex: 1 !important;
-            overflow-y: auto !important; 
-            padding-right: 10px;
-            display: flex;
-            flex-direction: column; 
-            text-align: left;
+            flex: 1;
+            overflow-y: auto !important;
+            margin-bottom: 10px;
+            padding-right: 8px;
         }
 
         .comment-item {
             background: rgba(255, 255, 255, 0.5);
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 0.85rem;
-            color: #153853;
-            line-height: 1.4;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
         }
 
         .comment-item strong {
-            color: #1f5077;
             display: block;
-            margin-bottom: 3px;
+            color: #1f5077;
             font-size: 0.75rem;
+            margin-bottom: 2px;
         }
 
         .profile-link {
             text-decoration: none;
             display: flex;
-            align-items: center;
             gap: 8px;
-            color: inherit;
-            transition: opacity 0.2s;
         }
 
-        .profile-link:hover {
-            opacity: 0.7;
+        .comment-input-field {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(31, 80, 119, 0.2);
+            font-size: 0.8rem;
         }
 
-        .user-color-circle {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
+        .comment-btn {
+            background: #1f5077;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 20px;
+            cursor: pointer;
         }
 
         .begin-module-wrapper {
-            width: 100% !important;
-            margin-top: auto !important;
+            margin-top: auto;
+            width: 100%;
         }
 
         .module_display_entry_button {
@@ -195,17 +200,38 @@ if (isset($_POST['module_delete'])) {
 
         .create-button-wrapper {
             width: 100%;
-            margin-top: 50px;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 15px;
+            background: #1f5077;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .create-button-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
             padding-bottom: 60px;
-            text-align: center;
+            grid-column: 1 / -1;
         }
 
         .create-module-button {
-            background: white;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
             padding: 15px 40px;
-            border-radius: 35px;
-            border: 1px solid #1f5077;
-            cursor: pointer;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .create-module-button a {
+            text-decoration: none;
+            color: #1f5077;
+            font-weight: bold;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -228,15 +254,13 @@ if (isset($_POST['module_delete'])) {
                         <h3><?= htmlspecialchars($mod['name'] ?? '')?></h3>
                         <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
-                    
                     <div class="mod_description">
                         <p><?= htmlspecialchars($mod['description'] ?? '')?></p>
                         <p style="font-size: 0.85rem; font-style: italic; margin-top: 5px;">
-                            Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
+                            Level: <?= htmlspecialchars($mod['exp_level'] ?? '') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '') ?>
                         </p>
                     </div>
-
-
+                    
                     <div class="module-comments-container">
                         <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
                             <?php if (empty($comments)): ?>
@@ -295,8 +319,8 @@ if (isset($_POST['module_delete'])) {
         <?php endforeach; ?>
 
         <div class="create-button-wrapper">
-            <button class="create-module-button" onclick="location.href='createForm.php'">
-                <a href="createForm.php" style="text-decoration:none; color:#1f5077; font-weight:bold;">Create New Module</a>
+            <button class="create-module-button">
+                <a href="createForm.php">Create New Module</a>
             </button>
         </div>
     </div>
