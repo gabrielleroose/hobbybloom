@@ -30,65 +30,45 @@ $googleId = $_SESSION['google_id'] ?? null;
     }
 
     try {
-
-        $conn->beginTransaction();
-
-        $user_id = $_SESSION['user']['id'] ?? null;
+        $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+        $stmt = $conn->prepare($user_id_sql);
+        $stmt->execute([':gid' => $googleId]);
+        $user_id = $stmt->fetchColumn();
 
         if (!$user_id) {
             throw new Exception("User session not found. Please log in again.");
         }
 
-        $mod_id = $_REQUEST['module_id'];
+        $mod_id = $_REQUEST['module_id'] ?? null;
+        if (!$mod_id) {
+            throw new Exception("No module selected.");
+        }
 
-        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id
-        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
+        $mod_stage_sql = "SELECT id, title, stage_num FROM module_stage WHERE mid = :mid ORDER BY stage_num ASC";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         $mod_stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        $mod_stages = $stmt->fetchAll();
-        
-        $module_stage_info = [];
-
         foreach ($mod_stages as $stage) {
             $stage_id = $stage['id'];
-            $module_stage_questions_sql = "SELECT msq.id, msq.question_text FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id WHERE msq.msid = ?";
-            $stmt = $conn->prepare($module_stage_questions_sql);
-            $stmt->execute([$stage_id]);
-            $module_stage_questions = $stmt->fetchAll();
             
-        $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
+            $q_sql = "SELECT id, question_text FROM module_stage_questions WHERE msid = ?";
+            $q_stmt = $conn->prepare($q_sql);
+            $q_stmt->execute([$stage_id]);
+            $questions = $q_stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
             echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
-            
-            echo "<div class='stage_title'>";
-            echo $stage['title'];
-            echo "<br><br>";
-            echo '<iframe width="560" height="315" src=' . $stage['video_url'] . ' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
-            echo "</div><br><br>";
-            
-            
-            
+            echo "<div class='stage_title'><h3>" . htmlspecialchars($stage['title']) . "</h3></div>";
 
             foreach($questions as $question) {
                 $question_id = $question['id'];
                 echo "<p><strong>Question:</strong> " . htmlspecialchars($question['question_text']) . "</p>";
 
-                $question_id = $question['id'];
-                $question_text = $question['question_text'];
-
-                $module_stage_questions_answers_sql = "SELECT msqa.id, answer, is_correct from module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
-                $stmt = $conn->prepare($module_stage_questions_answers_sql);
-                $stmt->execute([$question_id]);
-                
-                $module_stage_answers = $stmt->fetchAll(); 
-                echo $question['question_text'];
-
-                foreach ($module_stage_answers as $answer) {
-
-                    $module_stage_info[$stage_id]['questions'][$question_id]['answers'][] = 
-                    ['answer' => $answer['answer'], 
-                    'is_correct' => $answer['is_correct']];
+                $a_sql = "SELECT id, answer, is_correct FROM module_stage_questions_answers WHERE msqid = ?";
+                $a_stmt = $conn->prepare($a_sql);
+                $a_stmt->execute([$question_id]);
+                $answers = $a_stmt->fetchAll(PDO::FETCH_ASSOC); 
 
                 shuffle($answers);
 
@@ -109,46 +89,16 @@ $googleId = $_SESSION['google_id'] ?? null;
         echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
     }
     ?>
+
     <?php if (isset($user_id)): ?>
     <button id="reportModuleBtn" 
-        style="margin-top: 15px; background:#ff4d4d; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
-        Report Module
+        style="margin-top: 30px; background:#ff4d4d; color:white; border:none; padding:12px 24px; border-radius:20px; cursor:pointer; font-weight:bold;">
+        Report This Module
     </button>
     <?php endif; ?>
 </div>
 
-    <?php include __DIR__ . '/../includes/footer.php'; ?>
-
-    <script src="../js/module.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const reportBtn = document.getElementById('reportModuleBtn');
-        if (!reportBtn) return;
-
-        reportBtn.addEventListener('click', function() {
-            const reason = prompt("Why are you reporting this module?");
-            if (!reason || reason.trim() === "") return alert("You must enter a reason.");
-
-            fetch('submit_report.php', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({
-                    type: 'module',
-                    item_id: <?= json_encode($mod_id) ?>,
-                    reason: reason.trim()
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message || "Report submitted.");
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error submitting report. Try again.");
-            });
-        });
-    });
-    </script>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script src="../js/module.js"></script>
 <script>
