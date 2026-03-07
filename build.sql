@@ -242,7 +242,8 @@ INSERT INTO users (id, username, email, password, google_id) VALUES
 INSERT INTO module (id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
 VALUES
 (1, 1, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
-(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused'),
+(3, 2, 'Making Eggs', 'Watch the video and view the article, then take the quiz if you want to test your knowledge!', 0, 'intermediate', 4, 20, 'Come watch some informational videos and/or test your knowledge with a quiz?');
 
 INSERT INTO module_stage (id, mid, stage_num, title)
 VALUES

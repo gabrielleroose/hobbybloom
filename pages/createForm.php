@@ -88,6 +88,27 @@ $error = "";
 //     }
 // }
 ?>
+$circleId = $_GET['circle_id'] ?? null;
+?>
+
+<form action="save_module.php" method="POST">
+    <input type="hidden" name="circle_id" value="<?= htmlspecialchars($circleId) ?>">
+    
+    <label>Module Name:</label>
+    <input type="text" name="module_name" required>
+    
+    <label>Description:</label>
+    <textarea name="description"></textarea>
+    
+    <label>Experience Level:</label>
+    <select name="exp_level">
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+    </select>
+    
+    <button type="submit">Create Module</button>
+</form>
 
 <!DOCTYPE html>
 <html>
