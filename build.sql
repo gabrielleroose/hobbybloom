@@ -347,6 +347,48 @@ INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) 
 (5, 'To keep them from getting too big and chunky', 1, 1),
 (5, 'To make the stove heat up faster', 0, 2),
 (5, 'To change the color of the yolk', 0, 3),
+(5, 'To make sure the shell doesn't get in', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(6, 'The yolk is hard and dry', 0, 1),
+(6, 'The egg was cooked in a microwave', 0, 2),
+(6, 'The egg was flipped, but the yolk is still runny', 1, 3),
+(6, 'The egg was boiled in its shell', 0, 4);
+
+INSERT INTO module_stage (id, mid, stage_num, title) VALUES
+(6, 3, 1, 'Sunny Side Up Rules'),
+(7, 3, 2, 'Peeling Perfection'),
+(8, 3, 3, 'Scrambling Secrets'),
+(9, 3, 4, 'Mastering the Over-Easy');
+
+INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES
+(6, 'https://youtu.be/zgpK5eeZ4Jg?si=cyD_1DobnDeNTiOj', 1), -- Sunny Side Up
+(7, 'https://youtu.be/FTha4zARGN4?si=bYogXm4_MVVWutkO', 2), -- Hard Boiled
+(8, 'https://youtu.be/7goNbTdFwNM?si=VvDj4adROp4v7CgD', 3), -- Scrambled
+(9, 'https://youtu.be/pIygps4v98c?si=3PsFdZZV1QBOYDjh', 4); -- Over Easy
+
+INSERT INTO module_stage_questions (id, msid, question_text, order_num) VALUES
+(3, 6, 'If you want a "Sunny Side Up" egg, what is the one thing you should NOT do?', 1),
+(4, 7, 'What is the best way to get the shell off a hard-boiled egg easily?', 1),
+(5, 8, 'When making scrambled eggs, why should you stir them while they cook?', 1),
+(6, 9, 'What does it mean if an egg is "Over Easy"?', 1);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(3, 'Use a frying pan', 0, 1),
+(3, 'Flip the egg over', 1, 2),
+(3, 'Use a little bit of butter', 0, 3),
+(3, 'Crack the egg carefully', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(4, 'Peel it while it is still burning hot', 0, 1),
+(4, 'Put it in a bowl of ice water right after cooking', 1, 2),
+(4, 'Let it sit on the counter for three hours', 0, 3),
+(4, 'Use the freshest egg you can find', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(5, 'To keep them from getting too big and chunky', 1, 1),
+(5, 'To make the stove heat up faster', 0, 2),
+(5, 'To change the color of the yolk', 0, 3),
 (5, 'To make sure the shell doesn''t get in', 0, 4);
 
 INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
