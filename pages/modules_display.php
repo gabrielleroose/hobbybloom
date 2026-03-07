@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
         }
     } else if (!$uid) {
         header("Location: login.php");
-        exit();
     }
 }
 
@@ -139,15 +138,15 @@ if (isset($_POST['module_delete'])) {
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 12px 15px;
             border-radius: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 0.85rem;
             color: #153853;
             line-height: 1.4;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
         }
 
         .comment-item strong {
@@ -241,7 +240,7 @@ if (isset($_POST['module_delete'])) {
                     <div class="module-comments-container">
                         <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
                             <?php if (empty($comments)): ?>
-                                <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
+                                <p style="font-size: 0.85rem; color: #666; font-style: italic; text-align: center; margin-top: 60px;">No comments yet.</p>
                             <?php else: ?>
                                 <?php foreach ($comments as $c): ?>
                                     <div class="comment-item">
