@@ -414,7 +414,7 @@ INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) 
 (5, 'To keep them from getting too big and chunky', 1, 1),
 (5, 'To make the stove heat up faster', 0, 2),
 (5, 'To change the color of the yolk', 0, 3),
-(5, 'To make sure the shell doesn't get in', 0, 4);
+(5, 'To make sure the shell doesn''t get in', 0, 4);
 
 INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
 (6, 'The yolk is hard and dry', 0, 1),
