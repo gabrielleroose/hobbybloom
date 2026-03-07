@@ -268,11 +268,9 @@ if (isset($_POST['module_delete'])) {
                     </form>
 
                     <form action="modules_display.php" method="POST">
-
-                        <?php if ($mod['cid'] == $user_id): ?> <!-- DELETE MODULE BUTTON. CHECKS IF CID = USER_ID. --->
+                        <?php if ($mod['cid'] == $user_id): ?> 
                             <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
                         <?php endif ?>
-
                     </form>
 
                     <form action="createForm.php" method="POST">
@@ -280,9 +278,6 @@ if (isset($_POST['module_delete'])) {
                             <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
                         <?php endif ?>
                     </form>
-                       
-                
-                    
                 </div>
             </div>
         <?php endforeach; ?>
