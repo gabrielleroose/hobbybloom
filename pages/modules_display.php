@@ -22,7 +22,6 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     $mid = $_POST['module_id'];
-    
     $uid = $_SESSION['user']['id'] ?? $_SESSION['user_id'] ?? null;
     $commentText = trim($_POST['comment_text']);
     
@@ -58,71 +57,21 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
     <style>
-        .module-comments-container {
-            margin-top: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            height: 180px;
+        .module_back_container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 20px;
         }
 
-        .comments-scroll-box {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 8px;
-            padding-right: 5px;
-        }
-
-        .comment-item {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
-            color: #153853;
-            line-height: 1.3;
-        }
-
-        .comment-item strong {
-            color: #1f5077;
-        }
-
-        .comment-input-form {
-            display: flex;
-            gap: 5px;
-        }
-
-        .comment-input-field {
-            flex: 1;
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(31, 80, 119, 0.2);
-            font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .comment-btn {
-            background: #1f5077;
-            color: white;
-            border: none;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .comment-btn:hover {
-            background: #153853;
-        }
-        
         .module_outter_card {
-            height: auto !important;
-            min-height: 520px;
-            padding-bottom: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            height: 650px !important; 
+            padding: 25px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
         }
@@ -131,11 +80,97 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+
+        .module_header {
+            margin-bottom: 10px;
+        }
+
+        .mod_description {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            height: 45px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .module-comments-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            min-height: 250px;
+        }
+
+        .comments-scroll-box {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            padding-right: 8px;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #153853;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .comment-item strong {
+            color: #1f5077;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+            text-transform: lowercase;
+        }
+
+        .comment-input-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-input-field {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(31, 80, 119, 0.2);
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .comment-btn {
+            background: #1f5077;
+            color: white;
+            border: none;
+            padding: 0 18px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .comment-btn:hover {
+            background: #153853;
         }
 
         .begin-module-wrapper {
             margin-top: auto;
-            padding-top: 15px;
+        }
+
+        .module_display_entry_button {
+            width: 100%;
+            margin: 0;
+            padding: 12px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -160,17 +195,15 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
                     <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
-                    <div class="exp_level"><p>Level: <?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
-                    <div class="num_lessons"><p>Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
-
+                    
                     <div class="module-comments-container">
                         <div class="comments-scroll-box">
                             <?php if (empty($comments)): ?>
-                                <p style="font-size: 0.75rem; color: #666; font-style: italic; text-align: center; margin-top: 50px;">No comments yet.</p>
+                                <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
                             <?php else: ?>
                                 <?php foreach ($comments as $c): ?>
                                     <div class="comment-item">
-                                        <strong>@<?= htmlspecialchars($c['username']) ?>:</strong> 
+                                        <strong>@<?= htmlspecialchars($c['username']) ?></strong> 
                                         <?= htmlspecialchars($c['comment_text']) ?>
                                     </div>
                                 <?php endforeach; ?>
@@ -186,16 +219,16 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <div class="begin-module-wrapper">
                         <form action="./module.php" method="GET">
-                           <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>" style="margin: 0; width: 100%;">Begin Module</button>
+                           <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
                         </form>
                     </div>
                 </div>
             </div>
         <?php endforeach; ?>
 
-        <div class="create-button-wrapper">
+        <div class="create-button-wrapper" style="grid-column: 1 / -1; text-align: center; margin-top: 30px;">
             <button class="create-module-button">
-                <a href="createForm.php">Create New Module</a>
+                <a href="createForm.php" style="color: inherit; text-decoration: none;">Create New Module</a>
             </button>
         </div>
     </div>
