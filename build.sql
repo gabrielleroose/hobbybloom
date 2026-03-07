@@ -235,7 +235,9 @@ CREATE TABLE reports (
 ) ENGINE=InnoDB;
 
 -- TEST DATA --
-INSERT INTO users (id, username, email, password) VALUES (1, 'Admin', 'admin@hobbybloom.com', 'password123');
+INSERT INTO users (id, username, email, password, google_id) VALUES 
+(1, 'Admin', 'admin@hobbybloom.com', 'password123', NULL),
+(2, 'ChrisM201', 'martichc@iu.edu', NULL, '110679650095682993887');
 
 INSERT INTO module (id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
 VALUES
@@ -269,15 +271,17 @@ VALUES
 (1, 'GRAB', 0, 4);
 
 INSERT INTO circle (name, uid, description, color, category) VALUES 
-('Cooking', 1, 'A place for beginners and chefs to share recipes, tips, and culinary adventures.', '#ff9999', 'Wellness'),
-('Knitting', 1, 'Yarn lovers unite!! Share your latest patterns, stitches, and cozy creations.', '#e6e6fa', 'Arts'),
-('Lego', 1, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
-('Gaming', 1, 'Discuss new releases, find teammates for multiplayer games, and talk strategy across all platforms.', '#9370db', 'Technical'),
-('Hiking', 1, 'Let\'s hit the trails! Come share gear reviews and the best scenic paths in the area.', '#90ee90', 'Wellness'),
-('Bird Watching', 1, 'A peaceful space to look up! Share your sightings and best local birding spots.', '#9ed3ff', 'Wellness'),
-('Gardening', 1, 'Come grow your own food and flowers! Share tips for healthy soil and happy plants.', '#26f749', 'Wellness'),
-('Rug Tufting', 1, 'Making rugs and art with yarn! Share your tufting frames and finished rugs.', '#178c08', 'Arts'),
-('Diving', 1, 'Take the plunge! A community for those who love diving, from the board to the deep blue.', '#1f5077', 'Wellness'),
-('Design', 1, 'For the visually inspired. Discuss UI/UX, graphic design, and artistic theory.', '#5cacee', 'Arts'),
-('Piano', 1, 'Whether you are a beginner or an experienced pianist, connect through the keys and share your progress.', '#ac58ca', 'Arts'),
-('Crocheting', 1, 'From blankets to clothes, join a community of creators who love the hook and yarn.', '#ff881a', 'Arts');
+('Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
+('Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
+('Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
+('Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
+('Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
+('Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
+('Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
+('Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
+('Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
+('Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
+('Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
+('Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
+('Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
+('Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
