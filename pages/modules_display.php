@@ -139,15 +139,22 @@ if (isset($_POST['module_delete'])) {
         }
 
         .comment-item {
-            background: rgba(255, 255, 255, 0.6);
-            padding: 10px 12px;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 10px 14px;
+            border-radius: 12px;
             margin-bottom: 10px;
             font-size: 0.85rem;
+            color: #153853;
+            line-height: 1.4;
             word-wrap: break-word;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
+        }
+
+        .comment-item strong {
+            color: #1f5077;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+            text-transform: lowercase;
         }
 
         .profile-link {
@@ -229,7 +236,8 @@ if (isset($_POST['module_delete'])) {
                             Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
                         </p>
                     </div>
-                    
+
+
                     <div class="module-comments-container">
                         <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
                             <?php if (empty($comments)): ?>
@@ -260,7 +268,6 @@ if (isset($_POST['module_delete'])) {
                             <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
-                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
                     <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
                     <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
                     <form  action="./module.php" method="POST">
