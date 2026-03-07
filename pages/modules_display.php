@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/../config/db.php'; //necessary to connect to db. 
+require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
 
 require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
 include 'base.php';
