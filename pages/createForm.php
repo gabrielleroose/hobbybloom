@@ -119,7 +119,11 @@ if (isset($_GET['module_edit'])) {
     }
 
 
-    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id WHERE ms.mid = ?"    ;
+    $module_stage_info = "SELECT ms.id, ms.stage_num, ms.title, msv.video_url FROM module_stage AS ms 
+    JOIN module AS m ON ms.mid = m.id 
+    LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid 
+    WHERE ms.mid = ?";
+
     $stmt = $conn->prepare($module_stage_info);
     $stmt->execute([$module_id]);
     $module_stage_info = $stmt->fetchAll();
@@ -127,7 +131,10 @@ if (isset($_GET['module_edit'])) {
     $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
     foreach ($module_stage_info as $stage) {
 
-        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num, msv.video_url FROM module_stage_questions AS msq JOIN module_stage AS ms ON msq.msid = ms.id JOIN module_stage_videos AS msv ON msq.msid = msv.msid WHERE msq.msid = ?";
+        $module_stage_questions_sql = "SELECT msq.id, msq.question_text, msq.order_num FROM module_stage_questions AS msq 
+        JOIN module_stage AS ms ON msq.msid = ms.id 
+        WHERE msq.msid = ?";
+
         $stmt = $conn->prepare($module_stage_questions_sql);
         $stmt->execute([$stage['id']]);
         $module_stage_questions_results = $stmt->fetchAll();
@@ -144,7 +151,10 @@ if (isset($_GET['module_edit'])) {
 
     foreach ($module_stage_questions_info as &$stage) {
         foreach ($stage['question'] as &$question) {
-            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa JOIN module_stage_questions AS msq ON msqa.msqid = msq.id WHERE msqa.msqid = ?";
+            $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa 
+            JOIN module_stage_questions AS msq ON msqa.msqid = msq.id 
+            WHERE msqa.msqid = ?";
+            
             $stmt = $conn->prepare($module_stage_questions_answers_sql);
             $stmt->execute([$question['id']]);
             $module_stage_questions_answers_results = $stmt->fetchAll();

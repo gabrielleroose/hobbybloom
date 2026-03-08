@@ -22,6 +22,8 @@ $stmt->execute([':gid' => $googleId]);
 
 $user_id = $stmt->fetchColumn();
 
+
+
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 } catch (PDOException $e) {
@@ -55,6 +57,23 @@ $fetch_query = "SELECT m.*, msp.msid
 $stmt = $pdo->prepare($fetch_query);
 $stmt->execute();
 $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$module_delete_id = NULL;
+
+if (isset($_POST['module_delete'])) {
+    $module_delete_id = (int) $_POST['module_delete'];
+    $module_delete_sql = "DELETE FROM module WHERE id = ? AND cid = ?";
+    $stmt = $conn->prepare($module_delete_sql);
+    $stmt->execute([$module_delete_id, $user_id]);
+    
+    header("Location: modules_display.php");
+    exit();
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html>

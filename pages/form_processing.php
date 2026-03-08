@@ -124,8 +124,22 @@ try {
 
             $msid = $conn->lastInsertId();
 
+            $video_url = $stage_data['video_url'] ?? null;
+
+            if (!empty($video_url)) {
+
+                $video_sql = "
+                    INSERT INTO module_stage_videos (msid, video_url, lesson_number)
+                    VALUES (?, ?, ?)
+                ";
+
+                $stmt = $conn->prepare($video_sql);
+                $stmt->execute([$msid, $video_url, $stage_num]);
+
+            }
+
             // insert question
-            $question = $stage_data['question']; 
+            $question = $stage_data['question'] ?? '';
 
             $module_stage_question_sql = "
                 INSERT INTO module_stage_questions 
@@ -160,6 +174,7 @@ try {
             }
         }
     }
+}
 
  
 
