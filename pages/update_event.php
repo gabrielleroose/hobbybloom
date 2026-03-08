@@ -1,15 +1,10 @@
 <?php
-
 session_start();
 require_once 'db.php';
-
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user']['id'])) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Not authenticated'
-    ]);
+    echo json_encode(['success'=>false,'error'=>'Not authenticated']);
     exit;
 }
 
@@ -27,100 +22,58 @@ $invitees = $data['invitees'] ?? [];
 $circles  = $data['circles'] ?? [];
 
 if (!$id || !$title || !$date) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Missing required fields'
-    ]);
+    echo json_encode(['success'=>false,'error'=>'Missing required fields']);
     exit;
 }
 
 try {
-
     $conn->beginTransaction();
 
-
+    // Update event
     $stmt = $conn->prepare("
         UPDATE events
         SET title = ?, event_date = ?, event_time = ?, description = ?, location = ?
         WHERE id = ? AND created_by = ?
     ");
+    $stmt->execute([$title, $date, $time, $description, $location, $id, $user_id]);
+    if($stmt->rowCount() === 0) throw new Exception("Not owner");
 
-    $stmt->execute([
-        $title,
-        $date,
-        $time,
-        $description,
-        $location,
-        $id,
-        $user_id
-    ]);
+    // Remove all old invites
+    $conn->prepare("DELETE FROM event_invites WHERE event_id = ?")->execute([$id]);
 
-    if ($stmt->rowCount() === 0) {
-        throw new Exception("Not owner");
+    $allInvites = [];
+
+    // Individual invites
+    foreach($invitees as $uid){
+        if($uid != $user_id) $allInvites[] = $uid;
     }
 
-
-    $conn->prepare("
-        DELETE FROM event_invites
-        WHERE event_id = ?
-    ")->execute([$id]);
-
-    $invite_stmt = $conn->prepare("
-        INSERT INTO event_invites (event_id, user_id, status)
-        VALUES (?, ?, 'pending')
-    ");
-
-    $added = [];
-
-
-    foreach ($invitees as $invitee_id) {
-
-        if ($invitee_id != $user_id && !in_array($invitee_id, $added)) {
-
-            $invite_stmt->execute([$id, $invitee_id]);
-            $added[] = $invitee_id;
-
-        }
-    }
-
-    if (!empty($circles)) {
-
-        $circleQuery = $conn->prepare("
-            SELECT user_id
-            FROM circle_members
-            WHERE circle_id = ?
-        ");
-
-        foreach ($circles as $circle_id) {
-
-            $circleQuery->execute([$circle_id]);
-
-            while ($member = $circleQuery->fetch(PDO::FETCH_ASSOC)) {
-
-                $member_id = $member['user_id'];
-
-                if ($member_id != $user_id && !in_array($member_id, $added)) {
-
-                    $invite_stmt->execute([$id, $member_id]);
-                    $added[] = $member_id;
-
-                }
+    // Circle invites
+    if(!empty($circles)){
+        $circleStmt = $conn->prepare("SELECT user_id FROM circle_members WHERE circle_id = ?");
+        foreach($circles as $circle_id){
+            $circleStmt->execute([$circle_id]);
+            $members = $circleStmt->fetchAll(PDO::FETCH_COLUMN);
+            foreach($members as $member_id){
+                if($member_id != $user_id) $allInvites[] = $member_id;
             }
         }
     }
 
+    $allInvites = array_unique($allInvites);
+
+    // Insert new invites
+    if(!empty($allInvites)){
+        $inviteStmt = $conn->prepare("INSERT INTO event_invites (event_id, user_id, status) VALUES (?, ?, 'pending')");
+        foreach($allInvites as $uid){
+            $inviteStmt->execute([$id, $uid]);
+        }
+    }
+
     $conn->commit();
+    echo json_encode(['success'=>true]);
 
-    echo json_encode([
-        'success' => true
-    ]);
-
-} catch (Exception $e) {
-
+} catch(Exception $e){
     $conn->rollBack();
-
-    echo json_encode([
-        'success' => false,
-        'error' => 'Update failed'
-    ]);
+    echo json_encode(['success'=>false,'error'=>'Update failed']);
 }

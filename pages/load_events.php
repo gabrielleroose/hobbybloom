@@ -11,7 +11,7 @@ if (!isset($_SESSION['user']['id'])) {
 $user_id = $_SESSION['user']['id'];
 
 $stmt = $conn->prepare("
-    SELECT DISTINCT 
+    SELECT DISTINCT
         e.id,
         e.title,
         e.event_date,
@@ -21,16 +21,12 @@ $stmt = $conn->prepare("
         e.created_by,
         ei.status AS invite_status
     FROM events e
-    LEFT JOIN event_invites ei 
+    LEFT JOIN event_invites ei
         ON e.id = ei.event_id AND ei.user_id = ?
-    WHERE 
+    WHERE
         e.created_by = ?
-        OR (
-            ei.user_id = ?
-            AND ei.status != 'declined'
-        )
+        OR ei.user_id = ?
 ");
-
 $stmt->execute([$user_id, $user_id, $user_id]);
 
 $events = [];
@@ -42,9 +38,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $start .= 'T' . $row['event_time'];
     }
 
-    // Fetch all invitees for this event
+    // Load invite list with user id + username + status
     $inviteStmt = $conn->prepare("
-        SELECT u.username, ei.status
+        SELECT u.id, u.username, ei.status
         FROM event_invites ei
         JOIN users u ON u.id = ei.user_id
         WHERE ei.event_id = ?
@@ -53,16 +49,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $invites = $inviteStmt->fetchAll(PDO::FETCH_ASSOC);
 
     $events[] = [
-        'id' => $row['id'],
+        'id'    => $row['id'],
         'title' => $row['title'],
         'start' => $start,
         'allDay' => empty($row['event_time']),
         'extendedProps' => [
             'description' => $row['description'],
-            'location' => $row['location'],
-            'status' => $row['invite_status'],
-            'isOwner' => $row['created_by'] == $user_id,
-            'inviteList' => $invites
+            'location'    => $row['location'],
+            'status'      => $row['invite_status'],
+            'isOwner'     => $row['created_by'] == $user_id,
+            'inviteList'  => $invites   // now includes 'id' field
         ]
     ];
 }
