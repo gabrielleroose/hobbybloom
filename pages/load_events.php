@@ -38,7 +38,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $start .= 'T' . $row['event_time'];
     }
 
-    // Load invite list with user id + username + status
+    // Load invite list with user id + username + status 
     $inviteStmt = $conn->prepare("
         SELECT u.id, u.username, ei.status
         FROM event_invites ei
@@ -57,7 +57,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             'description' => $row['description'],
             'location' => $row['location'],
             'status' => $row['invite_status'],
-            'isOwner' => $row['created_by'] == $user_id, 
+            'isOwner' => $row['created_by'] == $user_id,  
             'inviteList' => $invites
         ]
     ];

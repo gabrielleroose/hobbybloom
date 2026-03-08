@@ -241,8 +241,8 @@ footer {
 }
 
 .page-container-inside {
-  /* border: 3px solid red; */ 
-  padding-left: 5rem;
+  /* border: 3px solid red; */
+  width: 100%;
 }
 
 .search-row {
@@ -2192,14 +2192,13 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 
-
 /* ************************************* SHARE STYLES ************************************* */
 /* ************************************* SHARE STYLES ************************************* */
 .share-body {
   background-color: #BDC29D;
 }
 
-
+/* ************************************* CREATE FORM STYLES ************************************* */
 /* ************************************* CREATE FORM STYLES ************************************* */
 
 .create-body {
@@ -2231,7 +2230,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .create-module-main:hover {
-  /* transform: scale(1.05);  */
+   /* transform: scale(1.05);  */
 }
 
 .create-module-main h2 {
@@ -2240,7 +2239,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* margin-bottom: 2rem; */
 }
 
-
+/* ************************************* BEGIN MODULE STYLES ************************************* */
 /* ************************************* BEGIN MODULE STYLES ************************************* */
 
 .begin-module-body {

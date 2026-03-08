@@ -119,58 +119,48 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="activity-feed-list">
-            <?php if (empty($activities)): ?>
-                <div style="background-color: white; padding: 60px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <h3 style="color: #1f5077;">No activity yet.</h3>
-                    <p style="color: #777;">Follow more people to see what they're up to!</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($activities as $act): 
-                    $dateStr = date('M j, Y', strtotime($act['activity_date']));
-                    $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
-                    
-                    $targetLink = "#";
-                    if ($act['activity_type'] === 'module_progress' || $act['activity_type'] === 'module_created') {
-                        $actionText = ($act['activity_type'] === 'module_created') ? "published module" : (($act['status'] == 1) ? "completed module" : "started module");
-                        $targetLink = "module.php?id=" . $act['target_id'];
-                    } elseif ($act['activity_type'] === 'circle') {
-                        $actionText = "created the circle";
-                        $targetLink = "circle_detail.php?hobby=" . urlencode($act['target_name']);
-                    } elseif ($act['activity_type'] === 'event') {
-                        $actionText = "scheduled event";
-                        $targetLink = "calendar.php";
-                    } else {
-                        $actionText = "is following you!";
-                    }
-                ?>
-                    <div class="activity-feed-item">
+            <?php foreach ($activities as $act): 
+                $dateStr = date('M j, Y', strtotime($act['activity_date']));
+                $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
+                
+                $targetLink = "#";
+                if ($act['activity_type'] === 'module_progress' || $act['activity_type'] === 'module_created') {
+                    $actionText = ($act['activity_type'] === 'module_created') ? "published module" : (($act['status'] == 1) ? "completed module" : "started module");
+                    $targetLink = "module.php?module_id=" . $act['target_id'];
+                } elseif ($act['activity_type'] === 'circle') {
+                    $actionText = "created the circle";
+                    $targetLink = "circle_detail.php?hobby=" . urlencode($act['target_name']);
+                } elseif ($act['activity_type'] === 'event') {
+                    $actionText = "scheduled the event";
+                    $targetLink = "calendar.php";
+                }
+            ?>
+                <div class="activity-feed-item">
+                    <div class="activity-main-content">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
-                        
-                        <div class="activity-content">
+                        <div class="activity-text">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
                             <span style="color: #666;"> <?= $actionText ?> </span>
                             <?php if ($act['target_name']): ?>
                                 <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
                             <?php endif; ?>
                         </div>
-                        
-                        <div class="activity-actions">
-                            <?php if ($act['user_id'] !== $userId): ?>
-                                <?php if ($act['is_following'] > 0): ?>
-                                    <span class="following-label">Following ✓</span>
-                                <?php else: ?>
-                                    <form action="circle_action.php" method="POST" style="margin: 0;">
-                                        <input type="hidden" name="action" value="toggle_follow">
-                                        <input type="hidden" name="target_id" value="<?= $act['user_id'] ?>">
-                                        <button type="submit" class="action-btn">Follow</button>
-                                    </form>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
+                    </div>
+                    <div class="activity-actions" style="display: flex; align-items: center; gap: 10px;">
+                        <?php if ($act['user_id'] !== $userId): ?>
+                            <form action="circle_action.php" method="POST" style="margin: 0;">
+                                <input type="hidden" name="action" value="toggle_follow">
+                                <input type="hidden" name="target_id" value="<?= $act['user_id'] ?>">
+                                <input type="hidden" name="hobby" value="activity_redirect"> 
+                                <button type="submit" class="action-btn <?= ($act['is_following'] > 0) ? 'unfollow-btn' : '' ?>">
+                                    <?= ($act['is_following'] > 0) ? 'Following ✓' : '+ Follow' ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                         <div class="activity-date"><?= $dateStr ?></div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
