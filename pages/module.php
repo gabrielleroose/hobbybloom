@@ -107,7 +107,7 @@ $googleId = $_SESSION['google_id'] ?? null;
     <?php endif; ?>
 </div>
 
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 
     <script>
         const moduleId = <?php echo json_encode($mod_id); ?>;

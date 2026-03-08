@@ -4,8 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/db.php'; 
-require_once __DIR__ . '/../config/twig.php'; 
+
+require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
+
+require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
 include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
@@ -201,6 +203,7 @@ if (isset($_POST['module_delete'])) {
         }
     </style>
 </head>
+<body class="module-body">
     <div class="module_back_container">
         <?php foreach ($all_mods as $mod): 
             $c_stmt = $pdo->prepare("
@@ -286,7 +289,7 @@ if (isset($_POST['module_delete'])) {
             </button>
         </div>
     </div>
-    
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>    
 </body>    
 </html>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
