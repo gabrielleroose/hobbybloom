@@ -1,22 +1,24 @@
 <?php
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1); //debugging/error messages
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// session_start(); // NOTE: session_start(); allows access to $_SESSION variable, which can store data persistently across pages.
 require_once __DIR__ . '/../vendor/autoload.php';
-
-require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
-
-require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
+require_once __DIR__ . '/../config/db.php'; 
+require_once __DIR__ . '/../config/twig.php'; 
 include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
-
-if (!$googleId) {                   //checking if google id present, sending back to index.php if not.
+if (!$googleId) {
     header('Location: index.php');
     exit;
 }
+
+$user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
+$stmt = $conn->prepare($user_id_sql);
+$stmt->execute([':gid' => $googleId]);
+
+$user_id = $stmt->fetchColumn();
 
 
 try {
@@ -25,81 +27,248 @@ try {
     die("database connection failed: " . $e->getMessage());
 }
 
-
-$mod_id_list = [];
-
-    $all_module_ids = "SELECT * from module";
-    $stmt = $pdo->prepare($all_module_ids);
-    $stmt -> execute();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
+    $mid = $_POST['module_id'];
+    $uid = $_SESSION['user']['id'] ?? $_SESSION['user_id'] ?? null;
+    $commentText = trim($_POST['comment_text']);
     
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $mod_id_list[] = $row['id'];
+    if ($uid && !empty($commentText)) {
+        try {
+            $ins = $pdo->prepare("INSERT INTO module_comments (module_id, user_id, comment_text) VALUES (?, ?, ?)");
+            $ins->execute([$mid, $uid, $commentText]);
+            header("Location: modules_display.php");
+            exit();
+        } catch (PDOException $e) {
+            error_log("Comment submission error: " . $e->getMessage());
+        }
+    } else if (!$uid) {
+        header("Location: login.php");
+        exit();
     }
-    
+}
 
-
-
-    $all_mods = [];
-    foreach ($mod_id_list as $id) {
-    
-        $fetch_mod_info = "SELECT m.id, m.name, m.description, m.rating, m.exp_level, m.num_lessons, msp.msid FROM module as m
-        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
-        WHERE m.id = ?";
-
-        $stmt = $pdo->prepare($fetch_mod_info);
-        $stmt->execute([$id]);
-        $module = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($module !== false) {
-            $all_mods[$id] = $module; //checking to make sure module exists before adding it to $all_mods
-            }
-    }
-
-    
+$fetch_query = "SELECT m.*, msp.msid 
+                FROM module AS m 
+                LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id 
+                ORDER BY m.created_at DESC";
+$stmt = $pdo->prepare($fetch_query);
+$stmt->execute();
+$all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beginner Cooking</title>
-<link href="../css/style.css" rel="stylesheet">
-<link href="../css/nav.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Modules | HobbyBloom</title>
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
+    <style>
+        .module_back_container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 40px !important;
+            padding: 50px 20px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .module_outter_card {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 450px !important; 
+            height: 720px !important; 
+            padding: 35px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            position: relative;
+        }
+
+        .module_inner_card {
+            width: 100% !important;
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding-left: 0 !important; 
+        }
+
+        .module-comments-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
+            padding: 15px;
+            height: 280px !important; 
+            margin: 15px 0;
+            display: flex !important;
+            flex-direction: column !important;
+            box-sizing: border-box !important;
+        }
+
+        .comments-scroll-box {
+            flex: 1 !important;
+            overflow-y: auto !important; 
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column; 
+            text-align: left;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px 12px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            word-wrap: break-word;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .profile-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .profile-link:hover {
+            opacity: 0.7;
+        }
+
+        .user-color-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .begin-module-wrapper {
+            width: 100% !important;
+            margin-top: auto !important;
+        }
+
+        .module_display_entry_button {
+            width: 100% !important;
+            padding: 16px !important;
+            font-weight: bold !important;
+            border-radius: 20px !important;
+            background: #1f5077 !important;
+            color: white !important;
+            border: none !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+        }
+
+        .create-button-wrapper {
+            width: 100%;
+            margin-top: 50px;
+            padding-bottom: 60px;
+            text-align: center;
+        }
+
+        .create-module-button {
+            background: white;
+            padding: 15px 40px;
+            border-radius: 35px;
+            border: 1px solid #1f5077;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body class="module-body">
     <div class="module_back_container">
-        <?php foreach ($all_mods as $mod): ?>
+        <?php foreach ($all_mods as $mod): 
+            $c_stmt = $pdo->prepare("
+                SELECT mc.*, u.username, up.profile_color, u.id as user_actual_id
+                FROM module_comments mc 
+                JOIN users u ON mc.user_id = u.id 
+                LEFT JOIN user_profiles up ON u.id = up.user_id
+                WHERE mc.module_id = ? 
+                ORDER BY mc.created_at ASC
+            ");
+            $c_stmt->execute([$mod['id']]);
+            $comments = $c_stmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
             <div class="module_outter_card">
                 <div class="module_inner_card">
-                    <div class="module_header">
-                        <div class="mod_name"><h3><?= htmlspecialchars($mod['name'] ?? '')?></h3></div> <!-- ?? '' checks if null -->
-                        <div class="rating"><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+                    <div class="module_header" style="text-align: center; width: 100%;">
+                        <h3><?= htmlspecialchars($mod['name'] ?? '')?></h3>
+                        <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
-                    <div class="mod_description"><p><?= htmlspecialchars($mod['description'] ?? '')?></p></div>
-                    <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
-                    <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
+                    
+                    <div class="mod_description">
+                        <p><?= htmlspecialchars($mod['description'] ?? '')?></p>
+                        <p style="font-size: 0.85rem; font-style: italic; margin-top: 5px;">
+                            Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
+                        </p>
+                    </div>
+                    
+                    <div class="module-comments-container">
+                        <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
+                            <?php if (empty($comments)): ?>
+                                <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
+                            <?php else: ?>
+                                <?php foreach ($comments as $c): ?>
+                                    <div class="comment-item">
+                                        <a href="profile.php?user_id=<?= $c['user_actual_id'] ?>" class="profile-link">
+                                            <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>;"></div>
+                                            <strong>@<?= htmlspecialchars($c['username']) ?></strong>
+                                        </a>
+                                        <div style="flex: 1; margin-left: 5px;">
+                                            <?= htmlspecialchars($c['comment_text']) ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <script>
+                            var d = document.getElementById("box-<?= $mod['id'] ?>");
+                            d.scrollTop = d.scrollHeight;
+                        </script>
+
+                        <form method="POST" class="comment-input-form" style="display: flex; gap: 8px; margin-top: 10px;">
+                            <input type="hidden" name="module_id" value="<?= $mod['id'] ?>">
+                            <input type="text" name="comment_text" class="comment-input-field" placeholder="Write a comment..." required style="flex:1; padding:10px; border-radius:20px; border:1px solid #ccc;">
+                            <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
+                        </form>
+                    </div>
+
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                    </form>
+
+                    <form action="modules_display.php" method="POST">
+                        <?php if ($mod['cid'] == $user_id): ?> 
+                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                        <?php endif ?>
+                    </form>
+
+                    <form action="createForm.php" method="POST">
+                        <?php if ($mod['cid'] == $user_id): ?>
+                            <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
+                        <?php endif ?>
                     </form>
                 </div>
             </div>
         <?php endforeach; ?>
 
         <div class="create-button-wrapper">
-            <button class="create-module-button">
-                <a href="createForm.php">Create New Module</a>
+            <button class="create-module-button" onclick="location.href='createForm.php'">
+                <a href="createForm.php" style="text-decoration:none; color:#1f5077; font-weight:bold;">Create New Module</a>
             </button>
-
         </div>
     </div>
 </body>    
-
 </html>
-
-
-
 <?php include __DIR__ . '/../includes/footer.php'; ?>

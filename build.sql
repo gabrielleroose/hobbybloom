@@ -1,20 +1,23 @@
 SET FOREIGN_KEY_CHECKS = 0;  
-DROP TABLE IF EXISTS user_follows;
-DROP TABLE IF EXISTS user_profiles;
+DROP TABLE IF EXISTS module_comments;
+DROP TABLE IF EXISTS reports;
+DROP TABLE IF EXISTS circle_members;
+DROP TABLE IF EXISTS event_invites;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS feed;
 DROP TABLE IF EXISTS log;
-DROP TABLE IF EXISTS circle;
-DROP TABLE IF EXISTS circle_messages;
-DROP TABLE IF EXISTS module;
-DROP TABLE IF EXISTS module_stage;
 DROP TABLE IF EXISTS module_stage_progress;
-DROP TABLE IF EXISTS module_stage_questions;
-DROP TABLE IF EXISTS module_stage_questions_answers;
 DROP TABLE IF EXISTS module_stage_questions_user_answers;
-DROP TABLE IF EXISTS module_stage_videos;
+DROP TABLE IF EXISTS module_stage_questions_answers;
+DROP TABLE IF EXISTS module_stage_questions;
+DROP TABLE IF EXISTS module_stage;
+DROP TABLE IF EXISTS module;
 DROP TABLE IF EXISTS tag;
-DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS event_invites;
+DROP TABLE IF EXISTS user_follows;
+DROP TABLE IF EXISTS user_profiles;
+DROP TABLE IF EXISTS circle_messages;
+DROP TABLE IF EXISTS circle;
 DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -31,29 +34,6 @@ CREATE TABLE users (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE circle (
-    circle_id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(40) NOT NULL,
-    uid INT,
-    description TEXT,
-    color VARCHAR(7) DEFAULT '#1f5077',
-    category VARCHAR(50) DEFAULT 'General',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (circle_id),
-    FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE circle_messages (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    hobby_name VARCHAR(50) NOT NULL, 
-    user_id INT NOT NULL, 
-    message TEXT NOT NULL, 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-
 CREATE TABLE user_profiles (
     profile_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -64,9 +44,7 @@ CREATE TABLE user_profiles (
     last_login DATE,
     login_streak INT DEFAULT 0,
     is_private TINYINT(1) DEFAULT 0, 
-    FOREIGN KEY (user_id) REFERENCES users(id) 
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_follows (
@@ -78,14 +56,36 @@ CREATE TABLE user_follows (
     FOREIGN KEY (followed_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE tag (
-    id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE circle (
+    circle_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL,
-    cid INT NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (cid) REFERENCES users(id) 
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    uid INT,
+    description TEXT,
+    color VARCHAR(7) DEFAULT '#1f5077',
+    category VARCHAR(50) DEFAULT 'General',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (circle_id),
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE circle_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    hobby_name VARCHAR(50) NOT NULL, 
+    user_id INT NOT NULL, 
+    message TEXT NOT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE circle_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    circle_id INT NOT NULL,
+    user_id INT NOT NULL,
+    role ENUM('member','admin') DEFAULT 'member',
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(circle_id, user_id),
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module (
@@ -101,9 +101,7 @@ CREATE TABLE module (
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (cid) REFERENCES users(id) 
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage (
@@ -112,9 +110,7 @@ CREATE TABLE module_stage (
     stage_num INT NOT NULL DEFAULT 1,
     title varchar(100),
     UNIQUE (mid, stage_num),
-    FOREIGN KEY (mid) REFERENCES module(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_questions (
@@ -122,9 +118,7 @@ CREATE TABLE module_stage_questions (
     msid INT NOT NULL,
     question_text varchar(255),
     order_num INT NOT NULL,
-    FOREIGN KEY (msid) REFERENCES module_stage(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_questions_answers (
@@ -133,21 +127,15 @@ CREATE TABLE module_stage_questions_answers (
     answer varchar(255),
     is_correct INT NOT NULL DEFAULT 0,
     ans_num INT NOT NULL,
-    FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (msqid) REFERENCES module_stage_questions(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_questions_user_answers (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     uid INT NOT NULL, 
     msqaid INT NOT NULL,
-    FOREIGN KEY (uid) REFERENCES users(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_progress (
@@ -155,15 +143,27 @@ CREATE TABLE module_stage_progress (
     uid INT NOT NULL,
     mid INT NOT NULL,
     msid INT NOT NULL,
-    FOREIGN KEY (uid) REFERENCES users(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (mid) REFERENCES module(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (msid) REFERENCES module_stage(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE module_stage_videos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    msid INT NOT NULL,
+    video_url VARCHAR(500) NOT NULL,
+    lesson_number INT NOT NULL,
+    FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE module_comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    module_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE log (
@@ -175,12 +175,8 @@ CREATE TABLE log (
     complete INT NOT NULL DEFAULT 0,
     feedback VARCHAR(500),
     PRIMARY KEY (id),
-    FOREIGN KEY (mid) REFERENCES `module`(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE feed (
@@ -188,15 +184,9 @@ CREATE TABLE feed (
     mid INT NOT NULL,
     lid INT NOT NULL,
     PRIMARY KEY (uid, mid),
-    FOREIGN KEY (uid) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (mid) REFERENCES module(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-   FOREIGN KEY (lid) REFERENCES log(id)
-       ON DELETE CASCADE
-       ON UPDATE CASCADE
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (lid) REFERENCES log(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_videos (
@@ -238,6 +228,8 @@ answer varchar(255),
 is_correct INT NOT NULL DEFAULT 0,
 ans_num INT NOT NULL,
 FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE module_stage_questions_user_answers (
@@ -268,7 +260,6 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
----------------- calendar tables --------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -278,10 +269,7 @@ CREATE TABLE events (
     location VARCHAR(255),
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_events_user
-    FOREIGN KEY (created_by) REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    CONSTRAINT fk_events_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE event_invites (
@@ -292,25 +280,8 @@ CREATE TABLE event_invites (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
-CREATE TABLE circle_members (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    circle_id INT NOT NULL,
-    user_id INT NOT NULL,
-    role ENUM('member','admin') DEFAULT 'member',
-    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE(circle_id, user_id),
-
-    FOREIGN KEY (circle_id) REFERENCES circle(circle_id)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
-);
-
--------------------- report table ----------------
 CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     reporter_id INT NOT NULL,
@@ -320,20 +291,22 @@ CREATE TABLE reports (
     reason TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending','reviewed','resolved') DEFAULT 'pending',
-
     FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
     FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 -- TEST DATA --
-INSERT INTO users (id, username, email, password) VALUES (1, 'Admin', 'admin@hobbybloom.com', 'password123');
+INSERT INTO users (id, username, email, password, google_id) VALUES 
+(1, 'Admin', 'admin@hobbybloom.com', 'password123', NULL),
+(2, 'ChrisM201', 'martichc@iu.edu', NULL, '110679650095682993887');
 
 INSERT INTO module (id, cid, name, description, rating, exp_level, num_lessons, est_comp_time, notes)
 VALUES
 (1, 1, 'Intro to SQL', 'Learn fundamental SQL concepts.', 5, 'beginner', 2, 60, 'Core foundations'),
-(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused');
+(2, 1, 'Advanced Query Optimization', 'Deep dive into indexing and performance.', 4, 'expert', 3, 120, 'Performance focused'),
+(3, 2, 'Making Eggs', 'Watch the video and view the article, then take the quiz if you want to test your knowledge!', 0, 'intermediate', 4, 20, 'Come watch some informational videos and/or test your knowledge with a quiz?');
 
 INSERT INTO module_stage (id, mid, stage_num, title)
 VALUES
@@ -361,15 +334,59 @@ VALUES
 (1, 'GRAB', 0, 4);
 
 INSERT INTO circle (name, uid, description, color, category) VALUES 
-('Cooking', 1, 'A place for beginners and chefs to share recipes, tips, and culinary adventures.', '#ff9999', 'Wellness'),
-('Knitting', 1, 'Yarn lovers unite!! Share your latest patterns, stitches, and cozy creations.', '#e6e6fa', 'Arts'),
-('Lego', 1, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
-('Gaming', 1, 'Discuss new releases, find teammates for multiplayer games, and talk strategy across all platforms.', '#9370db', 'Technical'),
-('Hiking', 1, 'Let\'s hit the trails! Come share gear reviews and the best scenic paths in the area.', '#90ee90', 'Wellness'),
-('Bird Watching', 1, 'A peaceful space to look up! Share your sightings and best local birding spots.', '#9ed3ff', 'Wellness'),
-('Gardening', 1, 'Come grow your own food and flowers! Share tips for healthy soil and happy plants.', '#26f749', 'Wellness'),
-('Rug Tufting', 1, 'Making rugs and art with yarn! Share your tufting frames and finished rugs.', '#178c08', 'Arts'),
-('Diving', 1, 'Take the plunge! A community for those who love diving, from the board to the deep blue.', '#1f5077', 'Wellness'),
-('Design', 1, 'For the visually inspired. Discuss UI/UX, graphic design, and artistic theory.', '#5cacee', 'Arts'),
-('Piano', 1, 'Whether you are a beginner or an experienced pianist, connect through the keys and share your progress.', '#ac58ca', 'Arts'),
-('Crocheting', 1, 'From blankets to clothes, join a community of creators who love the hook and yarn.', '#ff881a', 'Arts');
+('Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
+('Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
+('Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
+('Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
+('Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
+('Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
+('Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
+('Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
+('Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
+('Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
+('Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
+('Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
+('Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
+('Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
+
+INSERT INTO module_stage (id, mid, stage_num, title) VALUES
+(6, 3, 1, 'Sunny Side Up Rules'),
+(7, 3, 2, 'Peeling Perfection'),
+(8, 3, 3, 'Scrambling Secrets'),
+(9, 3, 4, 'Mastering the Over-Easy');
+
+INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES
+(6, 'https://youtu.be/zgpK5eeZ4Jg?si=cyD_1DobnDeNTiOj', 1), -- Sunny Side Up
+(7, 'https://youtu.be/FTha4zARGN4?si=bYogXm4_MVVWutkO', 2), -- Hard Boiled
+(8, 'https://youtu.be/7goNbTdFwNM?si=VvDj4adROp4v7CgD', 3), -- Scrambled
+(9, 'https://youtu.be/pIygps4v98c?si=3PsFdZZV1QBOYDjh', 4); -- Over Easy
+
+INSERT INTO module_stage_questions (id, msid, question_text, order_num) VALUES
+(3, 6, 'If you want a "Sunny Side Up" egg, what is the one thing you should NOT do?', 1),
+(4, 7, 'What is the best way to get the shell off a hard-boiled egg easily?', 1),
+(5, 8, 'When making scrambled eggs, why should you stir them while they cook?', 1),
+(6, 9, 'What does it mean if an egg is "Over Easy"?', 1);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(3, 'Use a frying pan', 0, 1),
+(3, 'Flip the egg over', 1, 2),
+(3, 'Use a little bit of butter', 0, 3),
+(3, 'Crack the egg carefully', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(4, 'Peel it while it is still burning hot', 0, 1),
+(4, 'Put it in a bowl of ice water right after cooking', 1, 2),
+(4, 'Let it sit on the counter for three hours', 0, 3),
+(4, 'Use the freshest egg you can find', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(5, 'To keep them from getting too big and chunky', 1, 1),
+(5, 'To make the stove heat up faster', 0, 2),
+(5, 'To change the color of the yolk', 0, 3),
+(5, 'To make sure the shell doesn''t get in', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(6, 'The yolk is hard and dry', 0, 1),
+(6, 'The egg was cooked in a microwave', 0, 2),
+(6, 'The egg was flipped, but the yolk is still runny', 1, 3),
+(6, 'The egg was boiled in its shell', 0, 4);

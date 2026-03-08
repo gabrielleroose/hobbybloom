@@ -235,13 +235,13 @@ footer {
   width: 85%;
   height: auto;
   padding: 1rem;
-  border: 3px solid peru;
+  /* border: 3px solid peru; */
   /* align-items: stretch; */
   gap: 10px;
 }
 
 .page-container-inside {
-  border: 3px solid red;
+  /* border: 3px solid red; */
   width: 100%;
 }
 
@@ -2093,7 +2093,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border: 4px solid yellow;
+  /* border: 4px solid yellow; */
   width: 92%;
   /* margin: 0 auto; */
 }
