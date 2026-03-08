@@ -4,8 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/db.php'; 
-require_once __DIR__ . '/../config/twig.php'; 
+
+require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
+
+require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
 include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
@@ -183,116 +185,7 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </style>
 </head>
-
-        .module_outter_card {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(12px);
-            border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            width: 450px !important; 
-            height: 720px !important; 
-            padding: 35px !important;
-            box-sizing: border-box !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            position: relative;
-        }
-
-        .module_inner_card {
-            width: 100% !important;
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding-left: 0 !important; 
-        }
-
-        .module-comments-container {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 25px;
-            padding: 15px;
-            height: 280px !important; 
-            margin: 15px 0;
-            display: flex !important;
-            flex-direction: column !important;
-            box-sizing: border-box !important;
-        }
-
-        .comments-scroll-box {
-            flex: 1 !important;
-            overflow-y: auto !important; 
-            padding-right: 10px;
-            display: flex;
-            flex-direction: column; 
-            text-align: left;
-        }
-
-        .comment-item {
-            background: rgba(255, 255, 255, 0.6);
-            padding: 10px 12px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            word-wrap: break-word;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .profile-link {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: inherit;
-            transition: opacity 0.2s;
-        }
-
-        .profile-link:hover {
-            opacity: 0.7;
-        }
-
-        .user-color-circle {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .begin-module-wrapper {
-            width: 100% !important;
-            margin-top: auto !important;
-        }
-
-        .module_display_entry_button {
-            width: 100% !important;
-            padding: 16px !important;
-            font-weight: bold !important;
-            border-radius: 20px !important;
-            background: #1f5077 !important;
-            color: white !important;
-            border: none !important;
-            cursor: pointer !important;
-            margin: 0 !important;
-        }
-
-        .create-button-wrapper {
-            width: 100%;
-            margin-top: 50px;
-            padding-bottom: 60px;
-            text-align: center;
-        }
-
-        .create-module-button {
-            background: white;
-            padding: 15px 40px;
-            border-radius: 35px;
-            border: 1px solid #1f5077;
-            cursor: pointer;
-        }
-    </style>
-</head>
+<body class="module-body">
     <div class="module_back_container">
         <?php foreach ($all_mods as $mod): 
             $c_stmt = $pdo->prepare("
@@ -377,7 +270,7 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </div>
     </div>
-    
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>    
 </body>    
 </html>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
