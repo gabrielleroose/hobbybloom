@@ -154,7 +154,7 @@ if (isset($_GET['module_edit'])) {
             $module_stage_questions_answers_sql = "SELECT msqa.id, msqa.answer, msqa.is_correct, msqa.ans_num FROM module_stage_questions_answers AS msqa 
             JOIN module_stage_questions AS msq ON msqa.msqid = msq.id 
             WHERE msqa.msqid = ?";
-            
+
             $stmt = $conn->prepare($module_stage_questions_answers_sql);
             $stmt->execute([$question['id']]);
             $module_stage_questions_answers_results = $stmt->fetchAll();
@@ -222,14 +222,21 @@ $circleId = $_GET['circle_id'] ?? null;
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
             <div id="videoInputs"></div><br>
+            
+            
+            <label class="quiz_check">
+                <input type="checkbox" id="enable_stages">
+                Include Quiz Stages?
+            </label><br><br>
 
-            <div>
+            <div id="stages_section" style="display:none;">
                 <label>Number of lessons:</label><br>
                 <input type="number" id="stage_num" name="stage_num" min="0" max="5"> 
-            </div>
-
-            <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
             
+            
+            <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
+
+            </div>
 
             <label>Notes:</label><br>
             <textarea name="notes" rows="4" cols="40"></textarea><br><br>
@@ -244,9 +251,9 @@ $circleId = $_GET['circle_id'] ?? null;
 
 
             <label>Estimated time of completion:</label>
-            <!-- maybe do a set time format if possible -->
+           
             <label for="estimate">Estimated time (minutes):</label>
-            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required> 
+            <input type="number" id="estimate" name="estimate" min="1"  value="<?= htmlspecialchars($module_info['est_comp_time'] ?? '') ?>" required>
 
             <p id="formattedOutput"></p>
 
@@ -267,10 +274,31 @@ $circleId = $_GET['circle_id'] ?? null;
     </div>
     <script>
         const existingStages = <?= json_encode($module_stage_questions_info ?? []) ?>;
+        if (existingStages.length > 0) {
+        document.getElementById("enable_stages").checked = true;
+        stageSection.style.display = "block";
+    }
     </script>
+
 </body>
 
 </html>
+
+<script>
+    const enableStages = document.getElementById("enable_stages");
+    const stageSection = document.getElementById("stages_section");
+
+    enableStages.addEventListener("change", function () {
+        if (this.checked) {
+            stageSection.style.display = "block";
+        } else {
+            stageSection.style.display = "none";
+            document.getElementById("stages_container").innerHTML = "";
+            document.getElementById("stage_num").value = "";
+        }
+});
+
+</script>
 
 <script>
     function generateStageVideoInput(stage_num, url = "") { 

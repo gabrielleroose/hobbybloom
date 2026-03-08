@@ -35,7 +35,7 @@ try {
     $cid           = (int) $user_id;
     $exp_level     = $_POST['exp_level'] ?? null;
     $mod_description = $_POST['description'] ?? null;
-    $num_lessons     = isset($_POST['stage_num']) ? (int)$_POST['stage_num'] : 0;
+    $num_lessons = !empty($_POST['stages']) ? (int)$_POST['stage_num'] : 0;
     $est_comp_time   = $_POST['estimate'] ?? null;
     $notes           = $_POST['notes'] ?? null;
 
