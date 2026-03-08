@@ -174,7 +174,7 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
             }
 
             try {
-                const res = await fetch('submit_report.php', {
+                const res = await fetch('submit_report.php', { 
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({

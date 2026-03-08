@@ -2230,7 +2230,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .create-module-main:hover {
-  /* transform: scale(1.05); */
+   /* transform: scale(1.05);  */
 }
 
 .create-module-main h2 {

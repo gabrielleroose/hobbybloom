@@ -1,3 +1,6 @@
+console.log("module.js loaded"); //debugging. checking if this is loading
+
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.submit-stage').forEach(button => { //selects each button with class .submit-stage, adds event listener function on click.
         button.addEventListener('click', function() {
@@ -14,30 +17,45 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const answerId = questionRadios[0].value;
 
+            const nextStageNum = parseInt(stageNum) + 1
+            const nextStage = document.getElementById(`stage_${nextStageNum}`);
+            const isFinalStage = !nextStage; //checking if there is a 'next stage';
+
             // sends to backend for validation
+
             fetch('check_answer.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    answer_id: answerId,
-                    stage_num: stageNum
-                })
-
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        answer_id: answerId,
+                        stage_num: stageNum,
+                        is_final_stage: isFinalStage,
+                        module_id: moduleId
+                    })
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.correct) {  // advance to next stage once question is correct
-                    const nextStage = document.getElementById(`stage_${parseInt(stageNum) + 1}`);
 
-                    if (nextStage) {
+            
+            
+            .then(res => res.json())
+            
+            .then(data => {
+                console.log("Server response:", data);
+                if (data.correct) {
+
+                    if (data.completed) {
+                        alert("Module complete!");
+                    } else {
                         nextStage.classList.remove('hidden');
                     }
 
                 } else {
                     alert("Incorrect answer, try again.");
                 }
+
             })
             .catch(err => console.error(err));
+
         });
+
     });
 });

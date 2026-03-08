@@ -137,6 +137,8 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: bold;
             border: 1px solid rgba(255, 255, 255, 0.3);
             display: inline-block;
+            vertical-align: middle; 
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -200,7 +202,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </div>
 
-            <h2>Modules in this Circle</h2>
+            <h2>Modules in this Circle</h2> 
             <?php if (empty($circleModules)): ?>
                 <div class="info-box" style="background-color: #1f5077; padding: 20px; border-radius: 10px; color: white; text-align: center;">
                     <p>No modules found for this circle yet.</p><br>

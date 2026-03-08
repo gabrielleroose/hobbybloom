@@ -13,6 +13,8 @@ DROP TABLE IF EXISTS module_stage_questions_answers;
 DROP TABLE IF EXISTS module_stage_questions;
 DROP TABLE IF EXISTS module_stage;
 DROP TABLE IF EXISTS module;
+DROP TABLE IF EXISTS module_stage_videos;
+DROP TABLE IF EXISTS module_user_completion;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS user_follows;
 DROP TABLE IF EXISTS user_profiles;
@@ -143,16 +145,8 @@ CREATE TABLE module_stage_progress (
     uid INT NOT NULL,
     mid INT NOT NULL,
     msid INT NOT NULL,
-    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE, 
     FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE module_stage_videos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    msid INT NOT NULL,
-    video_url VARCHAR(500) NOT NULL,
-    lesson_number INT NOT NULL,
     FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -164,6 +158,20 @@ CREATE TABLE module_comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE module_user_completion (
+    id INT NOT NULL AUTO_INCREMENT,
+    mid INT NOT NULL,
+    uid INT NOT NULL,
+    is_complete INT DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (mid) REFERENCES module(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES users(id) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE log (
@@ -200,6 +208,8 @@ CREATE TABLE module_stage_videos (
 ) ENGINE=InnoDB;
 
 
+-- MODULE STAGE TABLE ADDED TO HELP DEVELOPMENT OF MODULES, KEEP SEPARATE STAGES
+
 CREATE TABLE module_stage (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 mid INT NOT NULL,
@@ -211,6 +221,7 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+-- MODULE STAGE QUESTIONS (linked via module_stage id (msid))
 CREATE TABLE module_stage_questions (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 msid INT NOT NULL,
@@ -221,6 +232,8 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+
+-- MODULE_STAGE_QUESTIONS_ANSWERS
 CREATE TABLE module_stage_questions_answers (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 msqid INT NOT NULL,
@@ -228,10 +241,9 @@ answer varchar(255),
 is_correct INT NOT NULL DEFAULT 0,
 ans_num INT NOT NULL,
 FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+-- MODULE_STAGE_QUESTION_USER_ANSWERS
 CREATE TABLE module_stage_questions_user_answers (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     uid INT NOT NULL, 
@@ -242,8 +254,13 @@ CREATE TABLE module_stage_questions_user_answers (
     FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
+
 ) ENGINE=InnoDB;
 
+
+
+
+-- MODULE STAGE PROGRESS TABLE TO KEEP TRACK OF USER PROGRESS.
 CREATE TABLE module_stage_progress (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 uid INT NOT NULL,
@@ -260,6 +277,8 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+
+------------- calendar tables below ---------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -282,6 +301,23 @@ CREATE TABLE event_invites (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE circle_members ( 
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    circle_id INT NOT NULL,
+    user_id INT NOT NULL,
+    role ENUM('member','admin') DEFAULT 'member',
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE(circle_id, user_id),
+
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+-------------------- report table ----------------
 CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     reporter_id INT NOT NULL,
@@ -294,8 +330,8 @@ CREATE TABLE reports (
     FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
-    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+    FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE 
+);
 
 -- TEST DATA --
 INSERT INTO users (id, username, email, password, google_id) VALUES 
@@ -348,6 +384,48 @@ INSERT INTO circle (name, uid, description, color, category) VALUES
 ('Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
 ('Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
 ('Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
+
+INSERT INTO module_stage (id, mid, stage_num, title) VALUES
+(6, 3, 1, 'Sunny Side Up Rules'),
+(7, 3, 2, 'Peeling Perfection'),
+(8, 3, 3, 'Scrambling Secrets'),
+(9, 3, 4, 'Mastering the Over-Easy');
+
+INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES
+(6, 'https://youtu.be/zgpK5eeZ4Jg?si=cyD_1DobnDeNTiOj', 1), -- Sunny Side Up
+(7, 'https://youtu.be/FTha4zARGN4?si=bYogXm4_MVVWutkO', 2), -- Hard Boiled
+(8, 'https://youtu.be/7goNbTdFwNM?si=VvDj4adROp4v7CgD', 3), -- Scrambled
+(9, 'https://youtu.be/pIygps4v98c?si=3PsFdZZV1QBOYDjh', 4); -- Over Easy
+
+INSERT INTO module_stage_questions (id, msid, question_text, order_num) VALUES
+(3, 6, 'If you want a "Sunny Side Up" egg, what is the one thing you should NOT do?', 1),
+(4, 7, 'What is the best way to get the shell off a hard-boiled egg easily?', 1),
+(5, 8, 'When making scrambled eggs, why should you stir them while they cook?', 1),
+(6, 9, 'What does it mean if an egg is "Over Easy"?', 1);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(3, 'Use a frying pan', 0, 1),
+(3, 'Flip the egg over', 1, 2),
+(3, 'Use a little bit of butter', 0, 3),
+(3, 'Crack the egg carefully', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(4, 'Peel it while it is still burning hot', 0, 1),
+(4, 'Put it in a bowl of ice water right after cooking', 1, 2),
+(4, 'Let it sit on the counter for three hours', 0, 3),
+(4, 'Use the freshest egg you can find', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(5, 'To keep them from getting too big and chunky', 1, 1),
+(5, 'To make the stove heat up faster', 0, 2),
+(5, 'To change the color of the yolk', 0, 3),
+(5, 'To make sure the shell doesn''t get in', 0, 4);
+
+INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES
+(6, 'The yolk is hard and dry', 0, 1),
+(6, 'The egg was cooked in a microwave', 0, 2),
+(6, 'The egg was flipped, but the yolk is still runny', 1, 3),
+(6, 'The egg was boiled in its shell', 0, 4);
 
 INSERT INTO module_stage (id, mid, stage_num, title) VALUES
 (6, 3, 1, 'Sunny Side Up Rules'),
