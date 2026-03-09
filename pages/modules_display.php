@@ -49,9 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     }
 }
 
-$fetch_query = "SELECT m.*, msp.msid 
+$fetch_query = "SELECT m.*, msp.msid, u.username, u.email
                 FROM module AS m 
-                LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id 
+                LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+                JOIN users AS u on m.cid = u.id
                 ORDER BY m.created_at DESC";
 $stmt = $pdo->prepare($fetch_query);
 $stmt->execute();
@@ -203,6 +204,8 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="module_inner_card">
                     <div class="module_header" style="text-align: center; width: 100%;">
                         <h3><?= htmlspecialchars($mod['name'] ?? '')?></h3>
+                        <h6>Created by: <?= htmlspecialchars($mod['username'] ?? '') ?></h6>
+                        <h6>Contact the creator here: <?= htmlspecialchars($mod['email'] ?? '')?><h6>
                         <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
                     </div>
                     
