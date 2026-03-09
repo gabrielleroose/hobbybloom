@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
             msg.textContent = '';
             msg.className = 'gc-sync-msg';
 
-            fetch('google_calendar_sync.php')
+            fetch('Google_calendar_sync.php')
                 .then(r => r.json())
                 .then(data => {
                     gcSyncBtn.disabled = false;
