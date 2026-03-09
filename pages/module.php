@@ -43,11 +43,13 @@ $googleId = $_SESSION['google_id'] ?? null;
         if (!$mod_id) {
             throw new Exception("No module selected.");
         }
-
-        $mod_stage_sql = "SELECT id, title, stage_num FROM module_stage WHERE mid = :mid ORDER BY stage_num ASC";
+        //selecting module stage information below
+        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id 
+        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         $mod_stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $hasStages = !empty($mod_stages);
         
         foreach ($mod_stages as $stage) {
             $stage_id = $stage['id'];
@@ -83,7 +85,7 @@ $googleId = $_SESSION['google_id'] ?? null;
             
             
             
-
+            //loops through question array information
             foreach($questions as $question) {
                 $question_id = $question['id'];
                 echo "<p><strong>Question:</strong> " . htmlspecialchars($question['question_text']) . "</p>";
@@ -96,6 +98,7 @@ $googleId = $_SESSION['google_id'] ?? null;
                 shuffle($answers);
 
                 echo "<div class='answers-list'>";
+                //loops through answer array information
                 foreach ($answers as $answer) {
                     echo "<div class='module_answer'>";
                     echo "<input type='radio' name='question_" . $question_id . "' id='answer_" . $answer['id'] . "' value='" . $answer['id'] . "'>";
@@ -108,10 +111,21 @@ $googleId = $_SESSION['google_id'] ?? null;
             echo "</div>";
         }
 
+
     } catch (Exception $e) {
         echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
     }
     ?>
+
+    <?php if (!$hasStages): ?>
+
+    <div class="no-quiz-module">
+        <p>This module does not contain quiz stages.</p>
+        <button id="completeModuleBtn">Complete Module</button>
+    </div>
+
+    <?php endif; ?>
+
 
     <?php if (isset($user_id)): ?>
     <button id="reportModuleBtn" 
