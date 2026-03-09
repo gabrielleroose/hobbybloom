@@ -61,7 +61,6 @@ $gcConnected = !empty($gcRow['gc_access_token']);
     <label>Description</label>
     <textarea id="eventDescription" placeholder="Details..."></textarea>
 
-
     <div id="inviteSection">
 
         <label style="margin-top:18px;">Invite People</label>
@@ -73,6 +72,7 @@ $gcConnected = !empty($gcRow['gc_access_token']);
                 <button class="invite-tab" data-panel="following">Following</button>
                 <button class="invite-tab" data-panel="circles">Circles</button>
             </div>
+
             <div class="invite-panel active" id="panel-search">
                 <div class="user-search-wrap">
                     <span class="search-icon">🔍</span>
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const invitedUsers = new Map();
 
-
     const circleUserMap = new Map();
+
 
     const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         initialView: 'dayGridMonth',
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
- 
+
     let gcSource = calendar.addEventSource([]);
 
 
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
- 
+
     function loadFollowing() {
         followingLoaded = true;
         fetch('search_users.php?mode=following')
@@ -311,14 +311,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 280);
     });
 
-
     document.addEventListener('click', function (e) {
         if (!e.target.closest('.user-search-wrap') && !e.target.closest('#userDropdown')) {
             userDropdown.classList.remove('open');
         }
     });
 
-    // ── Circle bulk-add ────────────────────────────────────
     document.getElementById('circleList').addEventListener('click', function (e) {
         const btn = e.target.closest('.circle-toggle-btn');
         if (!btn) return;
@@ -472,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function () {
         userDropdown.classList.remove('open');
         userDropdown.innerHTML = '';
 
-        // Reset following checkboxes (will re-sync when loaded)
+
         followingLoaded = false;
         document.getElementById('followingList').innerHTML = '<div class="user-dropdown-empty">Loading…</div>';
 
@@ -521,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title, date: selectedDate, time,
                 location, description,
                 invitees,
-                circles: []
+                circles: [] 
             })
         })
         .then(r => r.json())
@@ -544,7 +542,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else alert(data.error || 'Failed to delete.');
         });
     });
-
 
     document.getElementById('acceptInvite').addEventListener('click', function () {
         fetch('respond_invite.php', {
