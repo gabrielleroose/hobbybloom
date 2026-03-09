@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const invitedUsers = new Map();
 
-    const circleUserMap = new Map();
 
+    const circleUserMap = new Map();
 
     const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         initialView: 'dayGridMonth',
@@ -326,7 +326,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const isAdded    = btn.classList.contains('added');
 
         if (isAdded) {
-
             const uids = circleUserMap.get(circleId) || [];
             uids.forEach(uid => removeInvitee(uid));
             circleUserMap.delete(circleId);
