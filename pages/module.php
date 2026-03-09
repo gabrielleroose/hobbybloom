@@ -64,7 +64,22 @@ $googleId = $_SESSION['google_id'] ?? null;
             echo "<div class='stage_title'>";
             echo $stage['title'];
             echo "<br><br>";
-            echo '<iframe width="560" height="315" src=' . $stage['video_url'] . ' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+            
+            $video_url = $stage['video_url'];
+
+            //extracts id, attempts to discern common youtube patterns.
+            if (preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
+                $video_id = $matches[2];
+                $video_url = "https://www.youtube.com/embed/" . $video_id;
+                }
+            echo '<iframe width="560" height="315"
+            src="' . htmlspecialchars($video_url) . '"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+            </iframe>';
+
             echo "</div><br><br>";
             
             
