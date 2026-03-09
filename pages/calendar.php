@@ -148,35 +148,9 @@ $gcConnected = !empty($gcRow['gc_access_token']);
         <span class="selected-label" id="selectedLabel" style="display:none;">Invited</span>
         <div class="selected-invitees" id="selectedInvitees"></div>
 
-<<<<<<< HEAD
-=======
     </div>
 
 
-    <div id="inviteActions" style="display:none;">
-        <button class="btn btn-success" id="acceptInvite">✓ Accept</button>
-        <button class="btn btn-danger" id="declineInvite">✗ Decline</button>
-    </div>
-
-        <button id="saveEvent">Save</button>
-        <button id="deleteEvent" style="display:none;">Delete</button>
-        <button id="cancelEvent">Cancel</button>
->>>>>>> module
-    </div>
-    <button onclick="openReportModal(<?= $module_id ?>)">Report</button> 
-    <div id="reportModal" class="modal">
-    <div class="modal-content">
-        <h3>Report Module</h3>
-        <form id="reportForm">
-            <input type="hidden" name="module_id" id="reportModuleId">
-            <textarea name="reason" placeholder="Describe the issue..." required></textarea>
-            <button type="submit">Submit Report</button>
-            <button type="button" onclick="closeReportModal()">Cancel</button>
-        </form>
-    </div>
-</div>
-
-<<<<<<< HEAD
 
     <div id="inviteActions" style="display:none;">
         <button class="btn btn-success" id="acceptInvite">✓ Accept</button>
@@ -211,57 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick(info) { openEditModal(info.event); }
     });
 
-=======
-    <div id="inviteActions" style="display:none;">
-        <button id="acceptInvite">Accept</button>
-        <button id="declineInvite">Decline</button>
-    </div>
-
-    <button id="saveEvent">Save</button>
-    <button id="deleteEvent" style="display:none;">Delete</button>
-    <button id="cancelEvent">Cancel</button>
-</div>
-
-        <span class="selected-label" id="selectedLabel" style="display:none;">Invited</span>
-        <div class="selected-invitees" id="selectedInvitees"></div>
-
-    </div>
-
-
-    <div id="inviteActions" style="display:none;">
-        <button class="btn btn-success" id="acceptInvite">✓ Accept</button>
-        <button class="btn btn-danger" id="declineInvite">✗ Decline</button>
-    </div>
-
-    <div class="modal-actions">
-        <button class="btn btn-primary" id="saveEvent" style="display:none;">Save Event</button>
-        <button class="btn btn-danger" id="deleteEvent" style="display:none;">Delete</button>
-        <button class="btn btn-ghost" id="cancelEvent">Cancel</button>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-
-    let selectedDate    = null;
-    let editingEventId  = null;
-    let followingLoaded = false;
-
-
-    const invitedUsers = new Map();
-
-    const circleUserMap = new Map();
-
-
-    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-        initialView: 'dayGridMonth',
-        events: 'load_events.php',
-        dateClick(info)  { openCreateModal(info.dateStr); },
-        eventClick(info) { openEditModal(info.event); }
-    });
-
->>>>>>> module
     calendar.render();
 
 
@@ -404,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const isAdded    = btn.classList.contains('added');
 
         if (isAdded) {
-
             const uids = circleUserMap.get(circleId) || [];
             uids.forEach(uid => removeInvitee(uid));
             circleUserMap.delete(circleId);
