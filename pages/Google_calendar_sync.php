@@ -120,7 +120,7 @@ foreach ($events as $event) {
     ];
 
     if (!empty($event['gc_event_id'])) {
-        // Update existing Google event
+
         $result = gcal_request(
             'PUT',
             'https://www.googleapis.com/calendar/v3/calendars/primary/events/' . urlencode($event['gc_event_id']),
@@ -138,7 +138,7 @@ foreach ($events as $event) {
         );
 
         if (!empty($result['id'])) {
-            // Store Google event ID back in our DB
+
             $conn->prepare("UPDATE events SET gc_event_id = ? WHERE id = ?")
                  ->execute([$result['id'], $event['id']]);
             $pushed++;
