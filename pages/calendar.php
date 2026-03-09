@@ -30,7 +30,7 @@ $gcConnected = !empty($gcRow['gc_access_token']);
         <span id="gcSyncMsg" class="gc-sync-msg"></span>
     <?php else: ?>
         <span class="gc-status-disconnected">&#128197; Google Calendar not connected</span>
-        <a href="google_calendar_connect.php" class="gc-btn gc-btn-connect">Connect Google Calendar</a>
+        <a href="Google_calendar_connect.php" class="gc-btn gc-btn-connect">Connect Google Calendar</a>
         <?php if (isset($_GET['gc_error'])): ?>
             <span class="gc-sync-msg gc-error">Connection failed: <?= htmlspecialchars($_GET['gc_error']) ?></span>
         <?php endif; ?>
