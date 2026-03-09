@@ -1,5 +1,4 @@
 <?php
-
 require 'db.php';
 header('Content-Type: application/json');
 
@@ -14,14 +13,39 @@ $user_id = $stmt->fetchColumn();
  
 
 
-$data = json_decode(file_get_contents('php://input'), true); //reads incoming json data
-$answer_id = (int) $data['answer_id'] ?? null; //assigns null value if answer_id not found, same with stage_num
-$stage_num = (int) $data['stage_num'] ?? null;
-$module_id = (int) $data['module_id'] ?? null;
+$data = json_decode(file_get_contents('php://input'), true) ?? []; //reads incoming json data
+$answer_id = isset($data['answer_id']) ? (int)$data['answer_id'] : null;
+$stage_num = isset($data['stage_num']) ? (int)$data['stage_num'] : null;
+$module_id = isset($data['module_id']) ? (int)$data['module_id'] : null;
+$no_quiz = $data['no_quiz'] ?? false;
 
 $is_final_stage = $data['is_final_stage'] ?? false;
 
-if (!$answer_id) {
+
+if ($no_quiz && $module_id) {
+
+    $init_sql = "INSERT IGNORE INTO module_user_completion (mid, uid, is_complete)
+                 VALUES (?, ?, 0)";
+    $init = $conn->prepare($init_sql);
+    $init->execute([$module_id, $user_id]);
+
+    $complete_sql = "
+        UPDATE module_user_completion
+        SET is_complete = 1
+        WHERE uid = ? AND mid = ?
+    ";
+
+    $complete = $conn->prepare($complete_sql);
+    $complete->execute([$user_id, $module_id]);
+
+    echo json_encode([
+        'correct' => true,
+        'completed' => true
+    ]);
+    exit;
+}
+
+if (!$answer_id && !$no_quiz) {
     echo json_encode(['correct' => false]); //checks if answer id exists.
     exit;
 }
@@ -50,7 +74,7 @@ if ($correct && $module_id) {
 
         $init_sql = "INSERT IGNORE INTO module_user_completion (mid, uid, is_complete) VALUES (?, ?, 0)";
         $init = $conn->prepare($init_sql);
-        $init->execute([$user_id, $module_id]);
+        $init->execute([$module_id, $user_id]);
 
         $complete_sql = "
         UPDATE module_user_completion

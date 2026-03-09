@@ -127,6 +127,7 @@ if (isset($_GET['module_edit'])) {
     $stmt = $conn->prepare($module_stage_info);
     $stmt->execute([$module_id]);
     $module_stage_info = $stmt->fetchAll();
+    
 
     $module_stage_questions_info = []; //initialize array outside of loop, stops from data being overwritten
     foreach ($module_stage_info as $stage) {

@@ -58,4 +58,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     });
+        // completion for modules without quizzes
+        const completeBtn = document.getElementById("completeModuleBtn");
+
+        if (completeBtn) {
+
+            completeBtn.addEventListener("click", () => {
+
+                fetch("check_answer.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        module_id: moduleId,
+                        no_quiz: true
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.completed) {
+                        alert("Module complete!");
+                        completeBtn.disabled = true;
+                    }
+
+                })
+                .catch(err => console.error(err));
+
+            });
+
+        }
 });
