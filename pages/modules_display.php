@@ -243,7 +243,6 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
-
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
