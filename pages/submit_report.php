@@ -41,6 +41,9 @@ $stmt->execute([$reporter_id, $item_id, $reason]);
 // Detect localhost
 $isLocal = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1');
 
+// Detect localhost
+$isLocal = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1');
+
 if ($isLocal) {
     // Just log locally
     $logFile = __DIR__ . '/report_test_log.txt';
@@ -50,17 +53,27 @@ if ($isLocal) {
         FILE_APPEND
     );
 } else {
-    // Send email using PHP's mail() function (simpler than PHPMailer)
-    $to      = 'HobbyBloomadm@gmail.com';
-    $subject = 'New Report Submitted';
-    $message = "Type: $type\nItem ID: $item_id\nReporter ID: $reporter_id\nReason:\n$reason";
-    $headers = 'From: HobbyBloomadm@gmail.com' . "\r\n";
+    // Send email via Resend API
+    $resendApiKey = 're_AXDEs5CV_96FJaGoerTsu44AMtk912AJ8';
 
-    // This will attempt to send email; may require server mail setup
-    @mail($to, $subject, $message, $headers);
+    $emailBody = "A new report has been submitted.\n\nType: $type\nItem ID: $item_id\nReporter ID: $reporter_id\nReason:\n$reason";
+
+    $payload = json_encode([
+        'from'    => 'HobbyBloom <onboarding@resend.dev>',
+        'to'      => ['HobbyBloomadm@gmail.com'],
+        'subject' => 'New Report Submitted',
+        'text'    => $emailBody
+    ]);
+
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $resendApiKey,
+        'Content-Type: application/json'
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
 }
-
-// Always return JSON
-header('Content-Type: application/json');
-echo json_encode(['status' => 'success', 'message' => 'Report submitted to moderation.']);
-exit;
