@@ -12,7 +12,7 @@ require_once __DIR__ . '/base.php';
 $googleId = $_SESSION['google_id'] ?? null;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="begin-module-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@ $googleId = $_SESSION['google_id'] ?? null;
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body class="begin-module-body">
-
+<div class = "begin-module-page">
 <div class="begin-module-container">
     <?php
     if (!$googleId) {
@@ -121,6 +121,9 @@ $googleId = $_SESSION['google_id'] ?? null;
     </button>
     <?php endif; ?>
 </div>
+
+</div>
+
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 
