@@ -4,8 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/db.php'; 
-require_once __DIR__ . '/../config/twig.php'; 
+
+require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
+
+require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
 include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
@@ -19,6 +21,7 @@ $stmt = $conn->prepare($user_id_sql);
 $stmt->execute([':gid' => $googleId]);
 
 $user_id = $stmt->fetchColumn();
+
 
 
 try {
@@ -54,6 +57,23 @@ $fetch_query = "SELECT m.*, msp.msid
 $stmt = $pdo->prepare($fetch_query);
 $stmt->execute();
 $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$module_delete_id = NULL;
+
+if (isset($_POST['module_delete'])) {
+    $module_delete_id = (int) $_POST['module_delete'];
+    $module_delete_sql = "DELETE FROM module WHERE id = ? AND cid = ?";
+    $stmt = $conn->prepare($module_delete_sql);
+    $stmt->execute([$module_delete_id, $user_id]);
+    
+    header("Location: modules_display.php");
+    exit();
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -183,7 +203,6 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </style>
 </head>
-
 <body class="module-body">
     <div class="module_back_container">
         <?php foreach ($all_mods as $mod): 
@@ -242,7 +261,6 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
-
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
@@ -269,6 +287,7 @@ $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </div>
     </div>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>    
 </body>    
 </html>
-<?php include __DIR__ . '/../includes/footer.php'; ?>

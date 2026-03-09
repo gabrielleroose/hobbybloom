@@ -12,7 +12,7 @@ require_once __DIR__ . '/base.php';
 $googleId = $_SESSION['google_id'] ?? null;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="begin-module-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@ $googleId = $_SESSION['google_id'] ?? null;
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body class="begin-module-body">
-
+<div class = "begin-module-page">
 <div class="begin-module-container">
     <?php
     if (!$googleId) {
@@ -44,7 +44,8 @@ $googleId = $_SESSION['google_id'] ?? null;
             throw new Exception("No module selected.");
         }
 
-        $mod_stage_sql = "SELECT id, title, stage_num FROM module_stage WHERE mid = :mid ORDER BY stage_num ASC";
+        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id
+        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         $mod_stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +60,30 @@ $googleId = $_SESSION['google_id'] ?? null;
             
             $hidden = ($stage['stage_num'] == 1) ? "" : "hidden";
             echo "<div class='stage $hidden' id='stage_" . $stage['stage_num'] . "'>";
-            echo "<div class='stage_title'><h3>" . htmlspecialchars($stage['title']) . "</h3></div>";
+            
+            echo "<div class='stage_title'>";
+            echo $stage['title'];
+            echo "<br><br>";
+            
+            $video_url = $stage['video_url'];
+
+            //extracts id, attempts to discern common youtube patterns.
+            if (preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
+                $video_id = $matches[2];
+                $video_url = "https://www.youtube.com/embed/" . $video_id;
+                }
+            echo '<iframe width="560" height="315"
+            src="' . htmlspecialchars($video_url) . '"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+            </iframe>';
+
+            echo "</div><br><br>";
+            
+            
+            
 
             foreach($questions as $question) {
                 $question_id = $question['id'];
@@ -98,7 +122,14 @@ $googleId = $_SESSION['google_id'] ?? null;
     <?php endif; ?>
 </div>
 
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+</div>
+
+
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+    <script>
+        const moduleId = <?php echo json_encode($mod_id); ?>;
+    </script>
 
 <script src="../js/module.js"></script>
 <script>
