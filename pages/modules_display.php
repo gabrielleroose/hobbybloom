@@ -261,8 +261,6 @@ if (isset($_POST['module_delete'])) {
                             <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
                         </form>
                     </div>
-                    <div class="exp_level"><p><?= htmlspecialchars($mod['exp_level'] ?? '')?></p></div>
-                    <div class="num_lessons"><p>Number of lessons:<?= htmlspecialchars($mod['num_lessons'] ?? '')?></p></div>
                     <form  action="./module.php" method="POST">
                         <input type="hidden">
                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
