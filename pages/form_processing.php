@@ -35,53 +35,53 @@ try {
     $cid           = (int) $user_id;
     $exp_level     = $_POST['exp_level'] ?? null;
     $mod_description = $_POST['description'] ?? null;
-    $num_lessons = !empty($_POST['stages']) ? (int)$_POST['stage_num'] : 0;
+    $num_lessons = !empty($_POST['stages']) ? (int)($_POST['stage_num']) : 0;
     $est_comp_time   = $_POST['estimate'] ?? null;
     $notes           = $_POST['notes'] ?? null;
 
     $module_id = isset($_POST['module_id']) ? (int)$_POST['module_id'] : null;
     $is_edit = $module_id > 0;
 
-    if ($is_edit) { //entire block meant to check if user is authorized and updates basic module_info
+    if ($is_edit) {
+    // update module info
+    $delete_sql = "DELETE FROM module_stage WHERE mid = ?";
+    $stmt = $conn->prepare($delete_sql);
+    $stmt->execute([$module_id]);
 
-        //check user info, make sure user_id = module.cid (creator id)
-        $creator_sql = "SELECT id FROM module WHERE id = ? AND cid = ?";
-        $stmt = $conn->prepare($creator_sql);
-        $stmt->execute([$module_id, $user_id]);
+    if (!empty($_POST['stages'])) {
+        foreach ($_POST['stages'] as $stage_num => $stage_data) {
+            // insert stage
+            $stmt = $conn->prepare("INSERT INTO module_stage (mid, stage_num, title) VALUES (:mid, :stage_num, :title)");
+            $stmt->execute([
+                ':mid' => $module_id,
+                ':stage_num' => $stage_num,
+                ':title' => $stage_data['title']
+            ]);
+            $msid = $conn->lastInsertId();
 
-        if (!$stmt->fetch()) {
-            throw new Exception("Unauthorized edit attempt; this incident will be reported.");
+            // insert video if exists
+            $video_url = $stage_data['video_url'] ?? null;
+            if (!empty($video_url)) {
+                $stmt = $conn->prepare("INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES (?, ?, ?)");
+                $stmt->execute([$msid, $video_url, $stage_num]);
+            }
+
+            // insert question
+            $question = $stage_data['question'] ?? '';
+            $stmt = $conn->prepare("INSERT INTO module_stage_questions (msid, question_text, order_num) VALUES (?, ?, ?)");
+            $stmt->execute([$msid, $question, $stage_num]);
+            $msqid = $conn->lastInsertId();
+
+            // insert answers
+            $ans_num = 1;
+            foreach ($stage_data['answers'] as $answer) {
+                $stmt = $conn->prepare("INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$msqid, $answer['text'], $answer['is_correct'], $ans_num]);
+                $ans_num++;
+            }
         }
-
-        //end checking user info.
-
-        $module_update_sql = "
-            UPDATE module 
-            SET name = ?, description = ?, exp_level = ?, num_lessons = ?, est_comp_time = ?, notes = ?
-            WHERE id = ? AND cid = ?
-        ";
-        $stmt = $conn->prepare($module_update_sql);
-
-        $stmt->execute([
-            $module_name,
-            $mod_description,
-            $exp_level,
-            $num_lessons,
-            $est_comp_time,
-            $notes,
-            $module_id,
-            $user_id
-        ]);
-
-
-        $delete_sql = "DELETE FROM module_stage WHERE mid = ?"; //deletes old stage info. this 'editing' is actually just deleting and re-inserting data. only happens AFTER user has submitted editing of form
-        $stmt = $conn->prepare($delete_sql);
-        $stmt->execute([$module_id]);
-
-        
-
-   
-    }   else {
+    }
+}   else {
 
         $module_insert_sql = " 
                 INSERT INTO module 
