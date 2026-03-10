@@ -20,11 +20,10 @@ if (!isset($_SESSION['user'])) {
 
 
     <div id="step-1" class="container mt-5">
-        <div class="outter-box">
-            <div class="inner-box">
-                <p class="lead fw-bold">Tell us a little bit about you!</p>
-                <div class="subtext text-muted"> 
-                    <p>This information will be stored alongside your general user data.</p>
+            <div class="index-inner-box">
+                <h1>Tell us a little bit about you!</h1>
+                <div> 
+                    <p>**This information will be stored alongside your general user data.</p>
                 </div>
             </div>
         </div>
