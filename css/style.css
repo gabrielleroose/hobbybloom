@@ -40,7 +40,7 @@ footer {
 
 .index-main-container {
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  /* padding: 1rem 0 3rem 3rem; */
   width: 80%;
   margin: 0 auto;
 
@@ -57,6 +57,39 @@ footer {
   transition: transform 0.3s ease-in-out;
 
 }
+
+.index-inner-box{
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  
+  transition: transform 0.3s ease-in-out;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  margin: 0 auto;
+  /* margin-bottom: 2rem; */
+  margin: 1.5rem 2rem;
+
+  
+  font-family: sans-serif;
+  color: navy;
+}
+
+.index-inner-box h1{
+  font-size: var(--text-size-2xl);
+  font-weight: 500;
+}
+
 
 .input-button {
   background-color: rgb(141, 209, 240);
