@@ -43,8 +43,8 @@ footer {
   width: 80%;
   margin: 0 auto;
 
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
+  /* glassmorphism
+  background: rgba(255, 255, 255, 0.2); */
 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -146,35 +146,74 @@ footer {
 }
 
 
-.form {
-  background: #6096ba;
-  width: 75%;
+.index-form {
+  width: 85%;
   margin: 0 auto;
-  padding: 3rem 3rem 5rem;
-  border-radius: 1rem;
+  margin-bottom: 3rem;
+  padding: 1rem 3rem 5rem;
+  border-radius: 2rem;
+
+
+    /* glassmorphism */
+    background: rgba(255, 255, 255, 0.2);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    
+    transition: transform 0.3s ease-in-out;
+}
+
+.index-form-title{
+  /* color: #1E5077; */
+  color: navy;
+  font-size: var(--text-size-2xl);
+  text-align: center;
+  margin-bottom: 3rem;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .form-label {
   font-size: var(--text-size-xl);
-  font-weight: 600;
-  color: #010319;
+  font-weight: 400;
+  /* color: #1E5077; */
+  color: navy;
+  font-family: sans-serif;
+  display: none;
 }
 
 .form-control {
-  background-color: white;
+  /* background-color: white; */
   border: 1px solid #010319;
   border-radius: .5rem;
-  padding: .5rem;
+  /* padding: .5rem; */
+  padding: .75rem;
   margin-left: 1rem;
-  text-align: center;
+  width: 45%;
+  text-align: left;
+
+      /* glassmorphism */
+      background: rgba(255, 255, 255, 0.2);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+      
+      transition: transform 0.3s ease-in-out;
 }
 
 .form-control::placeholder {
-  color: lightgrey;
+  color: navy;
   font-size: var(--text-size-md);
 }
 
-/* STYLES FOR INDEX.PHP */
 
 .step-container {
   transition: opacity 0.3s ease;
