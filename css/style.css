@@ -167,6 +167,15 @@ footer {
     transition: transform 0.3s ease-in-out;
 }
 
+.index-form-input{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+
 .index-form-title{
   /* color: #1E5077; */
   color: navy;
@@ -187,13 +196,9 @@ footer {
 }
 
 .form-control {
-  /* background-color: white; */
-  border: 1px solid #010319;
   border-radius: .5rem;
-  /* padding: .5rem; */
   padding: .75rem;
-  margin-left: 1rem;
-  width: 45%;
+  width: 65%;
   text-align: left;
 
       /* glassmorphism */
@@ -212,6 +217,14 @@ footer {
 .form-control::placeholder {
   color: navy;
   font-size: var(--text-size-md);
+}
+
+.index-name-info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 
