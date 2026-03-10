@@ -2277,7 +2277,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   font-family: sans-serif;
 
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  padding: 1rem 3rem 3rem 3rem;
 
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
@@ -2295,15 +2295,24 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   flex-direction: column;
 }
 
+.account-settings h1{
+  color: #1E5077;
+}
+
 .account-username {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 40%;
   color: #153853;
   font-weight: bold;
   font-size: var(--text-size-lg);
 
+}
+
+.account-username label{
+  color: #1E5077;
+  margin-top: 2rem;
 }
 
 .username-input {
@@ -2346,11 +2355,24 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
  
    transition: transform 0.3s ease-in-out;
    width: 60%;
-   padding: 10px;
+   padding: 1rem;
    margin-top: 5px;
    border-radius: 2rem;
+   color: #1E5077;
 
 }
+
+.account-input.age{
+  width: 20%;
+
+}
+
+.account-input.hometown{
+  width: 60%;
+
+}
+
+
 
 .account-input{
    /* glassmorphism */
@@ -2365,11 +2387,71 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
  
    transition: transform 0.3s ease-in-out;
 
-   width: 90%;
-  
-  
+   width: 60%;
+
+   padding: 1rem;
+   border-radius: 2rem;
+   margin-top: .75rem;
+   color: #1E5077;
+ 
+}
+
+.account-delete{
+  margin: 0 auto;
+  background-color: rgba(255, 0, 0, 0.1);
+  padding: 1.5rem;
+  border-radius: 2rem;
+  border: 1px solid red;
+  margin-top: 1rem;
+}
+
+.account-save{
+  display: flex;
+  justify-content: center;
 
 }
+
+.account-save-button{
+  background-color: #1E5077;
+  color: #F1F2F5;
+  width: 30%;
+  padding: .75rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  margin-top: 3rem;
+  font-size: var(--text-size-md);
+
+
+
+}
+
+
+.account-delete h3{
+  color: #ff4d4d;
+  margin-top: 0;
+  font-size: var(--text-size-lg);
+}
+
+.account-delete p{
+  color: black;
+  font-size: var(--text-size-md);
+}
+
+.account-delete button{
+  background-color: #ff4d4d;
+  color: #F1F2F5;
+  border: none;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+
+
+
+
 
 /* ************************************* SHARE STYLES ************************************* */
 /* ************************************* SHARE STYLES ************************************* */
