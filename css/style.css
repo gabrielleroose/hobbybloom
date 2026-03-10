@@ -1421,6 +1421,12 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   min-width: 90px;
   /* color: #e7ecef; */
   color: navy;
+  margin-top: 3rem;
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   /* border: 3px solid green; */
 }
 
@@ -1456,6 +1462,14 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   scrollbar-width: none;
   /* background-color: #1f5077; */
   padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-x: auto;
+  white-space: nowrap;
+
   border-radius: 2rem;
   max-width: 80%;
   width: 75%;
