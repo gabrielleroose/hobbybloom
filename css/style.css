@@ -40,7 +40,6 @@ footer {
 
 .index-main-container {
   border-radius: 2rem;
-  /* padding: 1rem 0 3rem 3rem; */
   width: 80%;
   margin: 0 auto;
 
@@ -77,7 +76,6 @@ footer {
   align-items: center;
   border-radius: 2rem;
   margin: 0 auto;
-  /* margin-bottom: 2rem; */
   margin: 1.5rem 2rem;
 
   
@@ -146,6 +144,113 @@ footer {
   font-size: 30px;
   text-align: center;
 }
+
+
+.form {
+  background: #6096ba;
+  width: 75%;
+  margin: 0 auto;
+  padding: 3rem 3rem 5rem;
+  border-radius: 1rem;
+}
+
+.form-label {
+  font-size: var(--text-size-xl);
+  font-weight: 600;
+  color: #010319;
+}
+
+.form-control {
+  background-color: white;
+  border: 1px solid #010319;
+  border-radius: .5rem;
+  padding: .5rem;
+  margin-left: 1rem;
+  text-align: center;
+}
+
+.form-control::placeholder {
+  color: lightgrey;
+  font-size: var(--text-size-md);
+}
+
+/* STYLES FOR INDEX.PHP */
+
+.step-container {
+  transition: opacity 0.3s ease;
+}
+
+.d-none-custom {
+  display: none !important;
+}
+
+.info-box {
+  background-color: #2c6ca3;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.info-box h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.info-box p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.hobby-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.hobby-btn {
+  background-color: #b0d4e9;
+  border: 1px solid #7eaec9;
+  border-radius: 8px;
+  padding: 15px 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.hobby-btn:hover {
+  background-color: #9bc5dd;
+}
+
+.hobby-btn.selected {
+  background-color: #2c6ca3;
+  color: white;
+  border-color: #1a4f7a;
+}
+
+.next-arrow-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  padding: 10px 30px;
+  background-color: #e0e0e0;
+  border-radius: 50px;
+}
+
+.next-arrow-btn:hover {
+  background-color: #ccc;
+}
+
 
 
 /* *************************************** TEAM STYLES *************************************** */
@@ -989,112 +1094,6 @@ h2 {
   font-size: 14px;
   color: #999;
   line-height: 1.5;
-}
-
-
-.form {
-  background: #6096ba;
-  width: 75%;
-  margin: 0 auto;
-  padding: 3rem 3rem 5rem;
-  border-radius: 1rem;
-}
-
-.form-label {
-  font-size: var(--text-size-xl);
-  font-weight: 600;
-  color: #010319;
-}
-
-.form-control {
-  background-color: white;
-  border: 1px solid #010319;
-  border-radius: .5rem;
-  padding: .5rem;
-  margin-left: 1rem;
-  text-align: center;
-}
-
-.form-control::placeholder {
-  color: lightgrey;
-  font-size: var(--text-size-md);
-}
-
-/* STYLES FOR INDEX.PHP */
-
-.step-container {
-  transition: opacity 0.3s ease;
-}
-
-.d-none-custom {
-  display: none !important;
-}
-
-.info-box {
-  background-color: #2c6ca3;
-  color: white;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.info-box h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.info-box p {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin: 0;
-}
-
-.hobby-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 40px;
-}
-
-.hobby-btn {
-  background-color: #b0d4e9;
-  border: 1px solid #7eaec9;
-  border-radius: 8px;
-  padding: 15px 5px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-  color: #333;
-  font-weight: 500;
-}
-
-.hobby-btn:hover {
-  background-color: #9bc5dd;
-}
-
-.hobby-btn.selected {
-  background-color: #2c6ca3;
-  color: white;
-  border-color: #1a4f7a;
-}
-
-.next-arrow-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #333;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto;
-  padding: 10px 30px;
-  background-color: #e0e0e0;
-  border-radius: 50px;
-}
-
-.next-arrow-btn:hover {
-  background-color: #ccc;
 }
 
 
