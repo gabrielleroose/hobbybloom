@@ -156,8 +156,8 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <?php if (!empty($recommendations)): ?>
     <div class="dashboard-circles">
-        <h2>Recommended For You</h2>
         <div class="horizontal-scroll">
+            <h2>Recommended For You</h2>
             <?php foreach ($recommendations as $rec): ?>
             <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
                 <div class="story-circle">
