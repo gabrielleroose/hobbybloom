@@ -22,7 +22,17 @@ require_once 'db.php';
 <header>
     <div class="navbar"></div>
     <nav>
-        <div class="branding"><p>Hobby<span class="bloom">Bloom</span></p></div>
+        <div class="branding">
+            <div class="branding-spacer"></div>
+                <p>Hobby<span class="bloom">Bloom</span></p>
+
+                <div class="branding-info">
+                    <a class="menu-item wide-view" href="account.php">Account</a>
+                    <a class="menu-item wide-view" href="logout.php">Logout</a>
+
+                </div>
+        
+        </div>
         <div class="menu">
             <div class="menu-box">
                 <a class="menu-item" href="dashboard.php">Dashboard</a>
@@ -31,8 +41,7 @@ require_once 'db.php';
                 <a class="menu-item" href="activity.php">Activity</a>
                 <a class="menu-item" href="calendar.php">Calendar</a>
                 <a class="menu-item wide-view" href="share.php">Share</a>
-                <a class="menu-item wide-view" href="account.php">Account</a>
-                <a class="menu-item wide-view" href="logout.php">Logout</a>
+    
             </div>
         </div>
     </nav>
