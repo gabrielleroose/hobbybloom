@@ -33,14 +33,20 @@ if (!isset($_SESSION['user'])) {
             
             <form id="userForm" action="save_onboarding.php" method="post">
 
-                <div class="index-form-input">
-                    <label for="first_name" class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" minlength="2" maxlength="50" required>
-                </div>
+                <div class="index-name-info">
 
-                <div class="index-form-input">
-                    <label for="last_name" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" minlength="2" maxlength="50" required>
+                    <div class="index-form-input">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" minlength="2" maxlength="50" required>
+                    </div>
+
+                
+
+                    <div class="index-form-input">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" minlength="2" maxlength="50" required>
+                    </div>
+
                 </div>
                 
                 <div class="index-form-input">
@@ -56,9 +62,9 @@ if (!isset($_SESSION['user'])) {
                 <div class="index-form-input">
                     <label for="from" class="form-label">Where are you located?</label>
                     <div class="subtext text-muted" style="margin-top: -10px; margin-bottom: 5px; font-size: 0.8rem;">
-                        (So we can show you local Circles)
+            
                     </div>
-                    <input type="text" class="form-control" id="from" name="from" placeholder="Location" minlength="2" maxlength="50" required>
+                    <input type="text" class="form-control" id="from" name="from" placeholder="Location (so we can show you local Circles)" minlength="2" maxlength="50" required>
                 </div>
 
                 <div class="index-form-input">
