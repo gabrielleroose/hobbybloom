@@ -28,19 +28,29 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
 
-        <section class="form">
-            <h2 class="form-title">Let's Build Your Profile</h2>
+        <section class="index-form">
+            <h2 class="index-form-title">Build Your Profile</h2>
             
             <form id="userForm" action="save_onboarding.php" method="post">
+
+                <div class="index-form-input">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" minlength="2" maxlength="50" required>
+                </div>
+
+                <div class="index-form-input">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" minlength="2" maxlength="50" required>
+                </div>
                 
                 <div class="index-form-input">
                     <label for="username" class="form-label">What should we call you?</label>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="e.g. HobbyMaster201" minlength="2" maxlength="50" required>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username (e.g. HobbyMaster201)" minlength="2" maxlength="50" required>
                 </div>
                 
                 <div class="index-form-input">
                     <label for="age" class="form-label">How old are you?</label>
-                    <input type="number" class="form-control" id="age" name="age" placeholder="21" min="13" max="100" required>
+                    <input type="number" class="form-control" id="age" name="age" placeholder="Age" min="13" max="100" required>
                 </div>
 
                 <div class="index-form-input">
@@ -48,12 +58,12 @@ if (!isset($_SESSION['user'])) {
                     <div class="subtext text-muted" style="margin-top: -10px; margin-bottom: 5px; font-size: 0.8rem;">
                         (So we can show you local Circles)
                     </div>
-                    <input type="text" class="form-control" id="from" name="from" placeholder="e.g. Bloomington Campus" minlength="2" maxlength="50" required>
+                    <input type="text" class="form-control" id="from" name="from" placeholder="Location" minlength="2" maxlength="50" required>
                 </div>
 
                 <div class="index-form-input">
                     <label for="bio" class="form-label">What is one hobby you've always wanted to try?</label>
-                    <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="e.g. I've always wanted to learn to play guitar, but I don't know where to start!" maxlength="500"></textarea>
+                    <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="What is one hobby you have always wanted to try? (e.g. I've always wanted to learn to play guitar, but I don't know where to start!)" maxlength="500"></textarea>
                 </div>
 
                 <div class="mt-4 text-center">

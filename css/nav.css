@@ -39,6 +39,7 @@ nav {
 .branding {
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: navy;
+  /* color: #1E5077; */
   font-size: var(--text-size-3xl);
   display: flex;
   justify-content: center;
