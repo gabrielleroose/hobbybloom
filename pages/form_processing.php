@@ -35,17 +35,60 @@ try {
     $cid             = $user_id;
     $exp_level       = $_POST['exp_level'] ?? null;
     $mod_description = $_POST['description'] ?? null;
-    $num_lessons     = isset($_POST['stage_num']) ? (int)$_POST['stage_num'] : 0;
+    $num_lessons = !empty($_POST['stages']) ? (int)($_POST['stage_num']) : 0;
     $est_comp_time   = $_POST['estimate'] ?? null;
     $notes           = $_POST['notes'] ?? null;
 
-    // module insert
-    $module_insert_sql = " 
-        INSERT INTO module 
-        (name, cid, description, exp_level, num_lessons, est_comp_time, notes)
-        VALUES 
-        (:module_name, :cid, :mod_description, :exp_level, :num_lessons, :est_comp_time, :notes)
-    ";
+    $module_id = isset($_POST['module_id']) ? (int)$_POST['module_id'] : null;
+    $is_edit = $module_id > 0;
+
+    if ($is_edit) {
+    // update module info
+    $delete_sql = "DELETE FROM module_stage WHERE mid = ?";
+    $stmt = $conn->prepare($delete_sql);
+    $stmt->execute([$module_id]);
+
+    if (!empty($_POST['stages'])) {
+        foreach ($_POST['stages'] as $stage_num => $stage_data) {
+            // insert stage
+            $stmt = $conn->prepare("INSERT INTO module_stage (mid, stage_num, title) VALUES (:mid, :stage_num, :title)");
+            $stmt->execute([
+                ':mid' => $module_id,
+                ':stage_num' => $stage_num,
+                ':title' => $stage_data['title']
+            ]);
+            $msid = $conn->lastInsertId();
+
+            // insert video if exists
+            $video_url = $stage_data['video_url'] ?? null;
+            if (!empty($video_url)) {
+                $stmt = $conn->prepare("INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES (?, ?, ?)");
+                $stmt->execute([$msid, $video_url, $stage_num]);
+            }
+
+            // insert question
+            $question = $stage_data['question'] ?? '';
+            $stmt = $conn->prepare("INSERT INTO module_stage_questions (msid, question_text, order_num) VALUES (?, ?, ?)");
+            $stmt->execute([$msid, $question, $stage_num]);
+            $msqid = $conn->lastInsertId();
+
+            // insert answers
+            $ans_num = 1;
+            foreach ($stage_data['answers'] as $answer) {
+                $stmt = $conn->prepare("INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$msqid, $answer['text'], $answer['is_correct'], $ans_num]);
+                $ans_num++;
+            }
+        }
+    }
+}   else {
+
+        $module_insert_sql = " 
+                INSERT INTO module 
+                (name, cid, description, exp_level, num_lessons, est_comp_time, notes)
+                VALUES 
+                (:module_name, :cid, :mod_description, :exp_level, :num_lessons, :est_comp_time, :notes)
+            ";
 
     $stmt = $conn->prepare($module_insert_sql);
     $stmt->execute([

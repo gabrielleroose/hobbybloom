@@ -1,10 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;  
-DROP TABLE IF EXISTS module_comments;
+
 DROP TABLE IF EXISTS reports;
 DROP TABLE IF EXISTS circle_members;
 DROP TABLE IF EXISTS event_invites;
 DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS module_stage_videos;
 DROP TABLE IF EXISTS feed;
 DROP TABLE IF EXISTS log;
 DROP TABLE IF EXISTS module_stage_progress;
@@ -12,6 +11,9 @@ DROP TABLE IF EXISTS module_stage_questions_user_answers;
 DROP TABLE IF EXISTS module_stage_questions_answers;
 DROP TABLE IF EXISTS module_stage_questions;
 DROP TABLE IF EXISTS module_stage;
+DROP TABLE IF EXISTS module_stage_videos;
+DROP TABLE IF EXISTS module_user_completion;
+DROP TABLE IF EXISTS module_comments;
 DROP TABLE IF EXISTS module;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS user_follows;
@@ -199,67 +201,7 @@ CREATE TABLE module_stage_videos (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-
-CREATE TABLE module_stage (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-mid INT NOT NULL,
-stage_num INT NOT NULL DEFAULT 1,
-title varchar(100),
-UNIQUE (mid, stage_num),
-FOREIGN KEY (mid) REFERENCES module(id)
-ON DELETE CASCADE 
-ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE module_stage_questions (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-msid INT NOT NULL,
-question_text varchar(255),
-order_num INT NOT NULL,
-FOREIGN KEY (msid) REFERENCES module_stage(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE module_stage_questions_answers (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-msqid INT NOT NULL,
-answer varchar(255),
-is_correct INT NOT NULL DEFAULT 0,
-ans_num INT NOT NULL,
-FOREIGN KEY (msqid) REFERENCES module_stage_questions(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE module_stage_questions_user_answers (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    uid INT NOT NULL, 
-    msqaid INT NOT NULL,
-    FOREIGN KEY (uid) REFERENCES users(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE module_stage_progress (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-uid INT NOT NULL,
-mid INT NOT NULL,
-msid INT NOT NULL,
-FOREIGN KEY (uid) REFERENCES users(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE,
-FOREIGN KEY (mid) REFERENCES module(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE,
-FOREIGN KEY (msid) REFERENCES module_stage(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
+------------- calendar tables below ---------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,

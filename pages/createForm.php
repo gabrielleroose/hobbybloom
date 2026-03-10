@@ -355,10 +355,13 @@ if (isset($_POST['module_edit'])) {
 
             <p id="formattedOutput"></p>
 
-            <?php if (!isset($_POST['module_edit'])): ?>
-            <button type="submit">Create Module</button>
+            <?php if (!$module_id): ?>
+                <button type="submit" name="create_module">Create Module</button>
+            <?php else: ?>
+                <input type="hidden" name="module_id" value="<?= htmlspecialchars($module_id) ?>">
+                <button type="submit" name="edit_module">Confirm Module Changes</button>
             <?php endif ?>
-
+            
             </div>
 
 
