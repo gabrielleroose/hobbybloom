@@ -68,9 +68,9 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
 
-                <div style="margin-bottom: 20px;">
+                <div class="account-privacy">
                     <label style="font-weight: bold; color: #333;">Account Privacy:</label>
-                    <select name="is_private" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                    <select name="is_private" class="account-privacy-input">
                         <option value="0" <?= ($user['is_private'] == 0) ? 'selected' : '' ?>>Public (Everyone can see my activity)</option>
                         <option value="1" <?= ($user['is_private'] == 1) ? 'selected' : '' ?>>Private (Only followers see my activity)</option>
                     </select>
@@ -79,22 +79,22 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div style="display: flex; gap: 20px; margin-bottom: 20px;">
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Age:</label>
-                        <input type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <input class="account-input"  type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                     </div>
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Hometown:</label>
-                        <input type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <input class="account-input" type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                     </div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="font-weight: bold; color: #333;">Bio:</label>
-                    <textarea name="bio" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                    <textarea  class="account-input" name="bio" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
-                    <input type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input class="account-input" type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
 
                 <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
