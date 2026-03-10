@@ -294,10 +294,16 @@ if (isset($_POST['module_edit'])) {
             <textarea name="description" rows="4" cols="40"
             value="<?= htmlspecialchars($module_info['description'] ?? '') ?>"></textarea><br><br>
 
-            <label>Number of videos:</label><br>
+            <!-- <label>Number of videos:</label><br>
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
-            <div id="videoInputs"></div><br>
+            <div id="videoInputs"></div><br> -->
+            
+            
+            <label class="quiz_check">
+                <input type="checkbox" id="enable_stages">
+                Include Quiz Stages?
+            </label><br><br>
 
             <div>
                 <label>Number of lessons:</label><br>
@@ -361,7 +367,7 @@ if (isset($_POST['module_edit'])) {
                 <input type="hidden" name="module_id" value="<?= htmlspecialchars($module_id) ?>">
                 <button type="submit" name="edit_module">Confirm Module Changes</button>
             <?php endif ?>
-            
+
             </div>
 
 
