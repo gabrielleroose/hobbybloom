@@ -176,6 +176,13 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
             <h2>Your Circles</h2>
 
             <div class="dashboard-circles-flex">
+
+            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: #cccccc;"></div>
+                        <p>General</p>
+                    </div>
+                </a>
             
                 <?php if (empty($myHobbies)): ?>
                     <div style="padding: 20px; text-align: center; width: 100%;">
@@ -195,12 +202,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
-                    <div class="story-circle">
-                        <div class="circle-img" style="background-color: #cccccc;"></div>
-                        <p>General</p>
-                    </div>
-                </a>
+        
 
             </div>
             

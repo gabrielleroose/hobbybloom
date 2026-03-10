@@ -1320,7 +1320,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* border: 2px solid red; */
   background-color: #1e507781;
   border-radius: 2rem;
-  width: 22%;
+  width: 35%;
   font-family: sans-serif;
 
 
@@ -1342,8 +1342,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .dash-module {
-  max-width: 800px;
-  width: 40%;
+  /* max-width: 800px; */
+  width: 75%;
   height: 275px;
   margin: 0 auto;
   margin-top: 4rem;
@@ -1458,7 +1458,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding: 1rem;
   border-radius: 2rem;
   max-width: 80%;
-  width: 55%;
+  width: 75%;
   /* height: 250px; */
   height: auto;
   margin: 0 auto;
@@ -1498,7 +1498,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .dash-calendar {
   /* width: 100%; */
-  width: 30%;
+  width: 40%;
   /* max-width: 300px; */
   height: 400px;
   padding: 15px;
