@@ -1251,7 +1251,6 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   flex-direction: column;
   margin: 0 auto;
   justify-content: center;
-
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
 
@@ -1272,7 +1271,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding-left: 4rem;
   font-size: var(--text-size-2xl);
   font-style: italic;
-  color: #F1F2F5;
+  /* color: #F1F2F5; */
+  color: navy;
 }
 
 .dash-display {
@@ -1282,7 +1282,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* border: 2px solid pink; */
   height: 275px;
   border-radius: 20px;
-  color: white;
+  /* color: white; */
+  color: navy;
   /* padding-left: 3rem; */
   /* font-size: var(--text-size-3xl); */
   display: flex;
@@ -1347,7 +1348,6 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   margin: 0 auto;
   margin-top: 4rem;
   border-radius: 2rem;
-
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -1371,7 +1371,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .dash-module-heading {
   font-size: var(--text-size-2xl);
-  color: #F1F2F5;
+  /* color: #F1F2F5; */
+  color: navy;
   font-family: sans-serif;
   /* padding: 1rem 0 0 1rem; */
   padding-left: 1.25rem;
@@ -1379,10 +1380,10 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .dash-module p {
   margin: none;
+  color: navy;
 }
 
 .dash-module-text {
-  color: white;
   padding: 0rem 0 2rem 2rem;
   font-size: var(--text-size-lg);
   font-family: sans-serif;
@@ -1393,7 +1394,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   text-align: right;
   /* padding-right: 1rem; */
   padding: 2.5rem 1rem 0 0;
-  color: #F1F2F5;
+  /* color: #F1F2F5; */
+  color: navy;
   text-decoration: none;
   font-size: var(--text-size-md);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -1409,6 +1411,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .dashboard-circles {
   margin: 4rem 0 0 3rem;
   padding-bottom: 2rem;
+  /* color: navy; */
 
   /* border: 3px solid pink; */
 }
@@ -1416,7 +1419,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .story-circle {
   text-align: center;
   min-width: 90px;
-  color: #e7ecef;
+  /* color: #e7ecef; */
+  color: navy;
   /* border: 3px solid green; */
 }
 
@@ -1439,6 +1443,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .dashboard-circles-flex {
   display: flex;
+  flex-direction: column;
   overflow-x: auto;
   margin-top: 5rem;
   /* border: 3px solid navy; */
@@ -1454,7 +1459,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   border-radius: 2rem;
   max-width: 80%;
   width: 55%;
-  height: 250px;
+  /* height: 250px; */
+  height: auto;
   margin: 0 auto;
 
   /* glassmorphism */
@@ -1477,7 +1483,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .horizontal-scroll h2 {
   font-size: var(--text-size-2xl);
-  color: #f1f2f5;
+  /* color: #f1f2f5; */
+  color: navy;
 }
 
 
@@ -1497,8 +1504,9 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: 2rem;
-  color: white;
-  border: 2px solid orange;
+  /* color: white; */
+  color: navy;
+  /* border: 2px solid orange; */
 
   font-family: sans-serif;
 
@@ -1526,7 +1534,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .dash-calendar a {
   text-align: right;
-  color: #F1F2F5;
+  /* color: #F1F2F5; */
+  color: navy;
   text-decoration: none;
   margin-top: 2.75rem;
   transition: transform 0.3s ease-in-out;
