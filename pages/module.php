@@ -88,7 +88,9 @@ $googleId = $_SESSION['google_id'] ?? null;
             //loops through question array information
             foreach($questions as $question) {
                 $question_id = $question['id'];
+                echo "<div class= 'module-question'";
                 echo "<p><strong>Question:</strong> " . htmlspecialchars($question['question_text']) . "</p>";
+                echo "</div>";
 
                 $a_sql = "SELECT id, answer, is_correct FROM module_stage_questions_answers WHERE msqid = ?";
                 $a_stmt = $conn->prepare($a_sql);

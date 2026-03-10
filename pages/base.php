@@ -40,7 +40,7 @@ require_once 'db.php';
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="activity.php">Activity</a>
                 <a class="menu-item" href="calendar.php">Calendar</a>
-                <a class="menu-item wide-view" href="share.php">Share</a>
+                <!-- <a class="menu-item wide-view" href="share.php">Share</a> -->
     
             </div>
         </div>
