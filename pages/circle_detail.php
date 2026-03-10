@@ -242,14 +242,16 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="submit" class="light-btn" style="background-color: white; color: #333; border: none; font-weight: bold; border-radius: 20px; padding: 0 20px;">Send</button>
                 </form>
             </div>
+        </div>
 
         </div> 
+        
     </div> 
     <script>
         const chatBox = document.getElementById('chatBox');
         chatBox.scrollTop = chatBox.scrollHeight;
     </script>
-    <?php include __DIR__ . '/../includes/footer.php'; ?>
+
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     const reportBtn = document.getElementById('reportCircleBtn');
@@ -279,5 +281,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>
+
 </body>
 </html>
