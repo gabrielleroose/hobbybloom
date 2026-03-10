@@ -49,7 +49,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="account-body">
     <div class="account-main-container">
         <div class="account-settings">
-            <h1 style="color: white;">Account Settings</h1>
+            <h1>Account Settings</h1>
             <?php if (isset($_GET['success'])): ?>
                 <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">Profile updated successfully!</p>
             <?php endif; ?>
@@ -71,33 +71,35 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="account-privacy">
                     <label style="font-weight: bold; color: #333;">Account Privacy:</label>
                     <select name="is_private" class="account-privacy-input">
-                        <option value="0" <?= ($user['is_private'] == 0) ? 'selected' : '' ?>>Public (Everyone can see my activity)</option>
-                        <option value="1" <?= ($user['is_private'] == 1) ? 'selected' : '' ?>>Private (Only followers see my activity)</option>
+                        <option value="0" <?= ($user['is_private'] == 0) ? 'selected' : '' ?>>Public (everyone can see my activity)</option>
+                        <option value="1" <?= ($user['is_private'] == 1) ? 'selected' : '' ?>>Private (only followers see my activity)</option>
                     </select>
                 </div>
 
                 <div style="display: flex; gap: 20px; margin-bottom: 20px;">
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Age:</label>
-                        <input class="account-input"  type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <input class="account-input age"  type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" >
                     </div>
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Hometown:</label>
-                        <input class="account-input" type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <input class="account-input hometown" type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" >
                     </div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="font-weight: bold; color: #333;">Bio:</label>
-                    <textarea  class="account-input" name="bio" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                    <textarea  class="account-input" name="bio" rows="3"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
                 </div>
 
                 <div style="margin-bottom: 20px;">
                     <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
-                    <input class="account-input" type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input class="account-input" type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego">
                 </div>
 
-                <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer;">Save Changes</button>
+                <div class="account-save">
+                    <button type="submit" class="account-save-button">Save Changes</button>
+                </div>
             </form>
 
             <hr style="margin: 40px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.2);">
@@ -135,11 +137,11 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
             <hr style="margin: 40px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.2);">
 
-            <div style="background-color: rgba(255, 0, 0, 0.1); padding: 20px; border-radius: 10px; border: 1px solid red;">
-                <h3 style="color: #ff4d4d; margin-top: 0;">Danger Zone</h3>
-                <p style="color: #333; font-size: 14px;">Once you delete your account, there is no going back. Please be certain.</p>
+            <div class="account-delete">
+                <h3>Danger Zone</h3>
+                <p>Once you delete your account, there is no going back. Please be certain.</p>
                 <form action="delete_account.php" method="POST" onsubmit="return confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.');">
-                    <button type="submit" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;">Delete Account</button>
+                    <button type="submit">Delete Account</button>
                 </form>
             </div>
         </div>
