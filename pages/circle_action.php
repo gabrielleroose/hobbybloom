@@ -30,13 +30,20 @@ if ($action === 'toggle_circle') {
 if ($action === 'toggle_follow') {
     $targetId = $_POST['target_id'] ?? 0;
     if ($targetId > 0 && $targetId != $userId) {
-        $stmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
+        $stmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
+        $stmt->execute([$targetId]);
+        $isPrivate = $stmt->fetchColumn();
+
+        $stmt = $conn->prepare("SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = ?");
         $stmt->execute([$userId, $targetId]);
+        $existing = $stmt->fetch();
         
-        if ($stmt->fetch()) {
+        if ($existing) {
             $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$userId, $targetId]);
         } else {
-            $conn->prepare("INSERT INTO user_follows (follower_id, followed_id) VALUES (?, ?)")->execute([$userId, $targetId]);
+            $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
+            $conn->prepare("INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)")
+                 ->execute([$userId, $targetId, $newStatus]);
         }
     }
 }

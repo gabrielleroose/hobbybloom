@@ -11,6 +11,14 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $userId = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
+$stmt->execute([$userId]);
+if (empty($stmt->fetchColumn())) {
+    header("Location: index.php?onboarding=1");
+    exit();
+}
+
 $searchQuery = trim($_GET['q'] ?? '');
 $filterCategory = $_GET['category'] ?? '';
 $viewMode = $_GET['view'] ?? 'suggested';
@@ -123,7 +131,6 @@ if (!empty($myHobbies)) {
             box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2);
         }
 
-        /* SEARCH SIDEBAR STYLING */
         .search-row {
             background: rgba(255, 255, 255, 0.2);
             padding: 20px;
@@ -141,7 +148,6 @@ if (!empty($myHobbies)) {
             margin-bottom: 10px;
         }
 
-        /* NEW: ADDED SEARCH BUTTON STYLE */
         .search-hub-btn {
             width: 100%;
             padding: 10px;

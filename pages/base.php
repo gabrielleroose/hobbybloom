@@ -1,5 +1,12 @@
 <?php
 require_once 'db.php';
+
+$reqCount = 0;
+if (isset($_SESSION['user']['id'])) {
+    $stmtCount = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'pending'");
+    $stmtCount->execute([$_SESSION['user']['id']]);
+    $reqCount = (int)$stmtCount->fetchColumn();
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +22,19 @@ require_once 'db.php';
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        .notification-badge {
+            background-color: #ff4d4d;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 50%;
+            position: relative;
+            top: -10px;
+            right: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 
@@ -27,9 +47,13 @@ require_once 'db.php';
                 <p>Hobby<span class="bloom">Bloom</span></p>
 
                 <div class="branding-info">
-                    <a class="menu-item wide-view" href="account.php">Account</a>
+                    <a class="menu-item wide-view" href="account.php">
+                        Account
+                        <?php if ($reqCount > 0): ?>
+                            <span class="notification-badge"><?= $reqCount ?></span>
+                        <?php endif; ?>
+                    </a>
                     <a class="menu-item wide-view" href="logout.php">Logout</a>
-
                 </div>
         
         </div>
