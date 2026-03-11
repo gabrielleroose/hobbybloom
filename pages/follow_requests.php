@@ -1,17 +1,14 @@
 <?php
 session_start();
 require_once 'db.php';
-require_once 'base.php';
 
-if (!isset($_SESSION['user']['id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-$myId = $_SESSION['user']['id'];
 $message = "";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['follower_id'])) {
+    if (!isset($_SESSION['user']['id'])) {
+        exit("Unauthorized");
+    }
+    
+    $myId = $_SESSION['user']['id'];
     $followerId = (int)$_POST['follower_id'];
     
     if ($_POST['action'] === 'approve') {
@@ -24,6 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['fol
         $message = "Request declined. ❌";
     }
 }
+
+require_once 'base.php'; 
+
+if (!isset($_SESSION['user']['id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$myId = $_SESSION['user']['id'];
 
 $stmt = $conn->prepare("
     SELECT u.id, u.username, p.profile_color 
