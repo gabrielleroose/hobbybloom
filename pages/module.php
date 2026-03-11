@@ -29,6 +29,29 @@ $googleId = $_SESSION['google_id'] ?? null;
         exit;
     }
 
+
+    function get_current_url() {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST']; // Includes the port if specified in the request
+    $url = $_SERVER['REQUEST_URI'];
+    
+    return $protocol . "://" . $host . $url;
+}
+
+    $current_url = get_current_url();
+
+    $query_mid = NULL;
+
+    if (str_contains($current_url, '?')) {
+    $url_parts = explode('?', $current_url, 2); //since the recommended 
+
+    $module_id_url = $url_parts[1];
+
+    $module_id_url = explode('=', $module_id_url, 2);
+
+    $query_mid = (int) $module_id_url[1];
+    }
+
     try {
         $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
         $stmt = $conn->prepare($user_id_sql);
@@ -39,11 +62,14 @@ $googleId = $_SESSION['google_id'] ?? null;
             throw new Exception("User session not found. Please log in again.");
         }
 
+        if (!$query_mid) {
         $mod_id = $_REQUEST['module_id'] ?? null;
         if (!$mod_id) {
             throw new Exception("No module selected.");
         }
-
+    } else {
+        $mod_id = $query_mid;
+    }
         
         //selecting module stage information below
         $mod_stage_sql = "
