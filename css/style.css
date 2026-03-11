@@ -2675,7 +2675,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   border: 4px solid yellow;
 
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  padding: 1.5rem 3rem 3rem 3rem;
 
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
@@ -2692,11 +2692,228 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 
 
-.create-module-main h2 {
-  font-size: var(--text-size-2xl);
-  color: #f1f2f5;
+.create-module-heading {
+  /* color: #f1f2f5; */
+  color: #2C6CA3;
   /* margin-bottom: 2rem; */
+  text-align: center;
+
+
+  padding: 1rem;
+  width: 30%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  border-radius: 6rem;
+  height: auto;    
+  /* glassmorphism */
+    background: rgba(255, 255, 255, 0.2);
+    /* background: rgba(31, 80, 119, .2); */
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  
+    transition: transform 0.3s ease-in-out;
 }
+
+.create-module-heading h2{
+  font-size: var(--text-size-2xl);
+  margin: 0;
+
+}
+
+.create-module-inner{
+  border: 3px solid red;
+  border-radius: 2rem;
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  width: 70%;
+
+
+  /* background: rgba(31, 80, 119, .2); */
+  background: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* glassmorphism */
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
+}
+
+.create-module-inner-form form{
+  /* border: 3px solid orange; */
+  /* background-color: white; */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.module_display_entry_button.createForm{
+  width: 25%;
+}
+
+.create-module-label{
+  /* color: #F1F2F5; */
+  color: #1E5077;
+  font-weight: bold;
+  font-size: var(--text-size-lg);
+  font-family: sans-serif;
+  margin-bottom: 2rem;
+
+  display: none;
+
+}
+
+.create-module-label.quiz{
+  display: block;
+}
+
+.create-module-input{
+  /* border: 5px solid orange; */
+
+  width: 80%;
+  margin-bottom: 2rem;
+
+  /* color: #153853; */
+  /* color: #F1F2F5; */
+  color: #1E5077;
+  font-size: var(--text-size-md);
+  font-family: sans-serif;
+
+  padding: 1.5rem;
+  border-radius: 2rem;
+
+    /* glassmorphism */
+    background: rgba(255, 255, 255, 0.5);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  
+    transition: transform 0.3s ease-in-out;
+}
+
+.create-module-input::placeholder{
+  /* color: #F1F2F5; */
+  color: #1E5077;
+  font-size: var(--text-size-lg);
+  /* font-weight: bold; */
+}
+
+.create-module-input-exp{
+  color: #1E5077;
+  font-size: var(--text-size-lg);
+  /* font-weight: bold; */
+  margin-bottom: 2rem;
+
+  width: 80%;
+  font-family: sans-serif;
+
+  padding: 1.5rem;
+  border-radius: 2rem;
+
+    /* glassmorphism */
+    background: rgba(255, 255, 255, 0.5);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  
+    transition: transform 0.3s ease-in-out;
+}
+
+.create-form-output{
+  color: #F1F2F5;
+  font-weight: bold;
+  font-size: var(--text-size-md);
+}
+
+
+
+.username-input {
+  padding: 1rem;
+  border-radius: 2rem;
+  margin-top: .5rem;
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+  color: #153853;
+  font-size: var(--text-size-md);
+
+}
+
+.create-form-quiz{
+  /* border: 3px solid orange; */
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  justify-content: center;
+
+}
+
+.quiz_check {
+  display: flex !important;
+  flex-direction: row;    
+  align-items: center;     
+  cursor: pointer;
+  /* width: 100%; */
+}
+
+.quiz_check input[type="checkbox"] {
+  width: auto;         /* Prevents the checkbox from taking up 80% width */
+  margin-bottom: 0;    /* Removes the bottom margin used on text inputs */
+  margin-right: 1rem;  /* Adds a small gap between the box and the text */
+  padding: 1rem;
+  color: red;
+}
+
+.stages-visible {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;    
+  justify-content: center;
+}
+
+
+#stages_section {
+  width: 70%;
+  margin: 0 auto;       
+}
+
 
 /* ************************************* BEGIN MODULE STYLES ************************************* */
 /* ************************************* BEGIN MODULE STYLES ************************************* */
