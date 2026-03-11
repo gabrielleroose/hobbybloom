@@ -84,125 +84,7 @@ if (isset($_POST['module_delete'])) {
     <title>Browse Modules | HobbyBloom</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
-    <style>
-        .module_back_container {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            gap: 40px !important;
-            padding: 50px 20px !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-        }
 
-        .module_outter_card {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(12px);
-            border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            width: 450px !important; 
-            height: 720px !important; 
-            padding: 35px !important;
-            box-sizing: border-box !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            position: relative;
-        }
-
-        .module_inner_card {
-            width: 100% !important;
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            padding-left: 0 !important; 
-        }
-
-        .module-comments-container {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 25px;
-            padding: 15px;
-            height: 280px !important; 
-            margin: 15px 0;
-            display: flex !important;
-            flex-direction: column !important;
-            box-sizing: border-box !important;
-        }
-
-        .comments-scroll-box {
-            flex: 1 !important;
-            overflow-y: auto !important; 
-            padding-right: 10px;
-            display: flex;
-            flex-direction: column; 
-            text-align: left;
-        }
-
-        .comment-item {
-            background: rgba(255, 255, 255, 0.6);
-            padding: 10px 12px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            word-wrap: break-word;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .profile-link {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: inherit;
-            transition: opacity 0.2s;
-        }
-
-        .profile-link:hover {
-            opacity: 0.7;
-        }
-
-        .user-color-circle {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .begin-module-wrapper {
-            width: 100% !important;
-            margin-top: auto !important;
-        }
-
-        .module_display_entry_button {
-            width: 100% !important;
-            padding: 16px !important;
-            font-weight: bold !important;
-            border-radius: 20px !important;
-            background: #1f5077 !important;
-            color: white !important;
-            border: none !important;
-            cursor: pointer !important;
-            margin: 0 !important;
-        }
-
-        .create-button-wrapper {
-            width: 100%;
-            margin-top: 50px;
-            padding-bottom: 60px;
-            text-align: center;
-        }
-
-        .create-module-button {
-            background: white;
-            padding: 15px 40px;
-            border-radius: 35px;
-            border: 1px solid #1f5077;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body class="module-body">
     <div class="module_back_container">
@@ -220,74 +102,87 @@ if (isset($_POST['module_delete'])) {
         ?>
             <div class="module_outter_card">
                 <div class="module_inner_card">
-                    <div class="module_header" style="text-align: center; width: 100%;">
-                        <h3><?= htmlspecialchars($mod['name'] ?? '')?></h3>
-                        <h6>Created by: <?= htmlspecialchars($mod['username'] ?? '') ?></h6>
-                        <h6>Contact the creator here: <?= htmlspecialchars($mod['email'] ?? '')?><h6>
-                        <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+                    <div class="module-header">
+                        <h3 class="module-name"><?= htmlspecialchars($mod['name'] ?? '')?></h3>
+
                     </div>
-                    
-                    <div class="mod_description">
-                        <p><?= htmlspecialchars($mod['description'] ?? '')?></p>
-                        <p style="font-size: 0.85rem; font-style: italic; margin-top: 5px;">
-                            Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
-                        </p>
-                    </div>
-                    
-                    <div class="module-comments-container">
-                        <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
-                            <?php if (empty($comments)): ?>
-                                <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
-                            <?php else: ?>
-                                <?php foreach ($comments as $c): ?>
-                                    <div class="comment-item">
-                                        <a href="profile.php?user_id=<?= $c['user_actual_id'] ?>" class="profile-link">
-                                            <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>;"></div>
-                                            <strong>@<?= htmlspecialchars($c['username']) ?></strong>
-                                        </a>
-                                        <div style="flex: 1; margin-left: 5px;">
-                                            <?= htmlspecialchars($c['comment_text']) ?>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+
                         
-                        <script>
-                            var d = document.getElementById("box-<?= $mod['id'] ?>");
-                            d.scrollTop = d.scrollHeight;
-                        </script>
+                                <p class="mod_description"><?= htmlspecialchars($mod['description'] ?? '')?></p>
 
-                        <form method="POST" class="comment-input-form" style="display: flex; gap: 8px; margin-top: 10px;">
-                            <input type="hidden" name="module_id" value="<?= $mod['id'] ?>">
-                            <input type="text" name="comment_text" class="comment-input-field" placeholder="Write a comment..." required style="flex:1; padding:10px; border-radius:20px; border:1px solid #ccc;">
-                            <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
-                        </form>
+                                <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
+
+        
+                                <div class="mod_exp">
+                                <p>
+                                    Level: <?= htmlspecialchars($mod['exp_level'] ?? 'beginner') ?> | Lessons: <?= htmlspecialchars($mod['num_lessons'] ?? '0') ?>
+                                </p>
+                             </div>
+                        
+                             <div class="module-author">
+                                <p>Created by: <?= htmlspecialchars($mod['username'] ?? '') ?></p>
+                                <p>Contact the creator here: <?= htmlspecialchars($mod['email'] ?? '')?><p>
+                            </div>
+                    
+                
+                <div class="module-back">
+                                <div class="module-comments-container">
+                                    <div class="comments-scroll-box" id="box-<?= $mod['id'] ?>">
+                                        <?php if (empty($comments)): ?>
+                                            <p style="font-size: 0.8rem; color: #666; font-style: italic; text-align: center; margin-top: 80px;">No comments yet.</p>
+                                        <?php else: ?>
+                                            <?php foreach ($comments as $c): ?>
+                                                <div class="comment-item">
+                                                    <a href="profile.php?user_id=<?= $c['user_actual_id'] ?>" class="profile-link">
+                                                        <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>;"></div>
+                                                        <strong>@<?= htmlspecialchars($c['username']) ?></strong>
+                                                    </a>
+                                                    <div style="flex: 1; margin-left: 10px;">
+                                                        <?= htmlspecialchars($c['comment_text']) ?>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <script>
+                                        var d = document.getElementById("box-<?= $mod['id'] ?>");
+                                        d.scrollTop = d.scrollHeight;
+                                    </script>
+
+                                    <form method="POST" class="comment-input-form">
+                                        <input type="hidden" name="module_id" value="<?= $mod['id'] ?>">
+                                        <input type="text" name="comment_text" class="comment-input-field" placeholder="Write a comment..." required style="flex:1; padding:10px; border-radius:20px; border:1px solid #ccc;">
+                                        <button type="submit" name="submit_comment" class="comment-btn" style="background:#1f5077; color:white; border:none; padding:5px 15px; border-radius:20px;">Post</button>
+                                    </form>
+                                </div>
+                        </div>
+                                <form class="begin-module-flex"  action="./module.php" method="POST">
+                                    <input type="hidden">
+                                <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                                </form>
+                
+
+                                <form action="modules_display.php" method="POST">
+                                    <?php if ($mod['cid'] == $user_id): ?> 
+                                        <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                                    <?php endif ?>
+                                </form>
+
+                                <form action="createForm.php" method="POST">
+                                    <?php if ($mod['cid'] == $user_id): ?>
+                                        <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
+                                    <?php endif ?>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <div class="create-button-wrapper">
+                        <button class="create-module-button" onclick="location.href='createForm.php'">
+                            <a href="createForm.php">Create New Module</a>
+                        </button>
                     </div>
-                    <form  action="./module.php" method="POST">
-                        <input type="hidden">
-                       <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
-                    </form>
-
-                    <form action="modules_display.php" method="POST">
-                        <?php if ($mod['cid'] == $user_id): ?> 
-                            <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
-                        <?php endif ?>
-                    </form>
-
-                    <form action="createForm.php" method="POST">
-                        <?php if ($mod['cid'] == $user_id): ?>
-                            <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
-                        <?php endif ?>
-                    </form>
-                </div>
-            </div>
-        <?php endforeach; ?>
-
-        <div class="create-button-wrapper">
-            <button class="create-module-button" onclick="location.href='createForm.php'">
-                <a href="createForm.php" style="text-decoration:none; color:#1f5077; font-weight:bold;">Create New Module</a>
-            </button>
         </div>
     </div>
 
