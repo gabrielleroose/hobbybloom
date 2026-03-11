@@ -17,6 +17,16 @@ if (!isset($_SESSION['user'])) {
 
 $userId = $_SESSION['user']['id'];
 
+
+$stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
+$stmt->execute([$userId]);
+$onboardingCheck = $stmt->fetchColumn();
+
+if (empty($onboardingCheck)) {
+    header("Location: index.php?onboarding=1"); 
+    exit();
+}
+
 $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
 $stmt->execute([$userId]);
 $chosenUsername = $stmt->fetchColumn();
@@ -231,5 +241,15 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'onboarding') {
+        showToast("Welcome to the community, <?= htmlspecialchars($chosenUsername) ?>! ✨");
+        
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
+
 </body>
 </html>

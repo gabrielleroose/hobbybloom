@@ -9,6 +9,14 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $userId = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
+$stmt->execute([$userId]);
+if (empty($stmt->fetchColumn())) {
+    header("Location: index.php?onboarding=1");
+    exit();
+}
+
 $currentTab = $_GET['tab'] ?? 'friends';
 
 if ($currentTab === 'global') {
