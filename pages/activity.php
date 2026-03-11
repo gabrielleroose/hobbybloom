@@ -22,19 +22,19 @@ $currentTab = $_GET['tab'] ?? 'friends';
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE p.is_private = 0
         UNION
         SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
         FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0 AND e.created_at >= NOW() - INTERVAL 1 DAY
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         UNION
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         ORDER BY activity_date DESC LIMIT 50
     ");
@@ -42,10 +42,10 @@ if ($currentTab === 'global') {
 } elseif ($currentTab === 'followers') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) AS is_following, 
+        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following, 
         uf.created_at AS activity_date, '' AS target_name, '' AS target_id, '' AS extra_info, 1 AS status 
         FROM user_follows uf JOIN users u ON uf.follower_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
-        WHERE uf.followed_id = ? ORDER BY uf.created_at DESC
+        WHERE uf.followed_id = ? AND uf.status = 'accepted' ORDER BY uf.created_at DESC
     ");
     $feedStmt->execute([$userId, $userId]);
 } elseif ($currentTab === 'me') {
@@ -64,16 +64,20 @@ if ($currentTab === 'global') {
 } else {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following
-        FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id 
+        JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
         SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status, 1 AS is_following
-        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
+        JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 1 AS is_following
-        FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
+        JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 1 AS is_following
-        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ?
+        FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
+        JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         ORDER BY activity_date DESC LIMIT 50
     ");
     $feedStmt->execute([$userId, $userId, $userId, $userId]);
@@ -117,6 +121,15 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body class="activity-body">
     <div class="activity-page-container">
+        
+        <?php if ($currentTab === 'followers'): ?>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <a href="follow_requests.php" style="background: #ffd700; color: #1f5077; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    📬 View Pending Follow Requests <?= ($reqCount > 0) ? "($reqCount)" : "" ?>
+                </a>
+            </div>
+        <?php endif; ?>
+
         <div class="glass-tab-container">
             <div class="glass-tabs">
                 <a href="activity.php?tab=friends" class="tab-btn <?= $currentTab === 'friends' ? 'active' : '' ?>">My Friends</a>
@@ -127,6 +140,12 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="activity-feed-list">
+            <?php if (empty($activities)): ?>
+                <div style="text-align: center; color: #666; padding: 50px;">
+                    <p>No activity to show here yet! ✨</p>
+                </div>
+            <?php endif; ?>
+
             <?php foreach ($activities as $act): 
                 $dateStr = date('M j, Y', strtotime($act['activity_date']));
                 $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
@@ -141,6 +160,8 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 } elseif ($act['activity_type'] === 'event') {
                     $actionText = "scheduled the event";
                     $targetLink = "calendar.php";
+                } elseif ($act['activity_type'] === 'follower_list') {
+                    $actionText = "started following you";
                 }
             ?>
                 <div class="activity-feed-item">
