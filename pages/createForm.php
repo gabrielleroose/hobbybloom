@@ -243,9 +243,9 @@ if (isset($_POST['module_edit'])) {
 ?>
 
 
-<form action="save_module.php" method="POST">
+<!-- <form action="save_module.php" method="POST">
     <input type="hidden" name="circle_id" value="<?= htmlspecialchars($circleId) ?>">
-</form>
+</form> -->
 
 
 <!DOCTYPE html>
@@ -294,6 +294,26 @@ if (isset($_POST['module_edit'])) {
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
             <div id="videoInputs"></div><br> -->
+            <div class="create-form-video">
+                <label class="quiz_check create-module-label quiz">
+                    <input type="checkbox" id="enable_videos">
+                    Include Module Videos?
+                </label>
+            </div>
+
+            <div id="videos_section" style="display:none;">
+                
+                <label class="quiz_check create-module-label">Number of videos:</label>
+                <input 
+                    class="create-module-input"
+                    type="number"
+                    id="videoCount"
+                    min="0"
+                    max="5"
+                    placeholder="Insert up to 5 videos">
+
+                <div id="videoInputs"></div>
+            </div>
 
                 <div class="create-form-quiz">
 
@@ -332,7 +352,7 @@ if (isset($_POST['module_edit'])) {
 
                     <p class="create-form-output" id="formattedOutput"></p>
 
-                    </form>
+                  
 
             </div>
 
@@ -347,7 +367,7 @@ if (isset($_POST['module_edit'])) {
 
     </div>
 
-
+            </form>
 
     </div>
     <script>
