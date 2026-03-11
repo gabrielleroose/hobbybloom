@@ -10,14 +10,43 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userId = $_SESSION['user']['id'];
 
-$stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
+$stmt = $conn->prepare("
+    SELECT u.first_name, p.is_private 
+    FROM users u 
+    JOIN user_profiles p ON u.id = p.user_id 
+    WHERE u.id = ?
+");
 $stmt->execute([$userId]);
-if (empty($stmt->fetchColumn())) {
+$userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (empty($userData)) {
     header("Location: index.php?onboarding=1");
     exit();
 }
 
+$isPrivate = (int)$userData['is_private'];
 $currentTab = $_GET['tab'] ?? 'friends';
+
+$achievementSQL = "
+    SELECT DISTINCT 'achievement' AS activity_type, u.id AS user_id, u.username, p.profile_color, 0 AS target_id, 
+    CASE 
+        WHEN (SELECT COUNT(*) FROM log WHERE uid = u.id AND complete = 1) >= 5 THEN 'Module Master'
+        WHEN (SELECT COUNT(*) FROM circle WHERE uid = u.id) >= 3 THEN 'Circle Architect'
+        WHEN p.login_streak >= 7 THEN 'Firestarter'
+        WHEN (SELECT COUNT(*) FROM user_follows WHERE follower_id = u.id) >= 5 THEN 'Social Butterfly'
+        WHEN (SELECT COUNT(*) FROM circle WHERE uid = u.id) >= 1 THEN 'Community Leader'
+        WHEN (SELECT COUNT(*) FROM log WHERE uid = u.id AND complete = 1) >= 1 THEN 'First Steps'
+        ELSE 'Hobbyist'
+    END AS target_name, 
+    '' AS extra_info, NOW() AS activity_date, 1 AS status";
+
+$hasEarnedBadge = "AND (
+    (SELECT COUNT(*) FROM log WHERE uid = u.id AND complete = 1) >= 1 OR 
+    p.login_streak >= 7 OR 
+    (SELECT COUNT(*) FROM user_follows WHERE follower_id = u.id) >= 5 OR 
+    (SELECT COUNT(*) FROM circle WHERE uid = u.id) >= 1 OR
+    (SELECT COUNT(*) FROM circle WHERE uid = u.id) >= 3
+)";
 
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
@@ -36,9 +65,12 @@ if ($currentTab === 'global') {
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status,
         (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
+        UNION
+        $achievementSQL, (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        FROM users u JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0 $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId, $userId, $userId]);
+    $feedStmt->execute([$userId, $userId, $userId, $userId, $userId]);
 } elseif ($currentTab === 'followers') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
@@ -58,9 +90,12 @@ if ($currentTab === 'global') {
         UNION
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 0 AS is_following
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE m.cid = ?
+        UNION
+        $achievementSQL, 0 AS is_following
+        FROM users u JOIN user_profiles p ON u.id = p.user_id WHERE u.id = ? $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId, $userId]);
+    $feedStmt->execute([$userId, $userId, $userId, $userId]);
 } else {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following
@@ -78,9 +113,13 @@ if ($currentTab === 'global') {
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 1 AS is_following
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
+        UNION
+        $achievementSQL, 1 AS is_following
+        FROM users u JOIN user_profiles p ON u.id = p.user_id 
+        JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted' $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
     ");
-    $feedStmt->execute([$userId, $userId, $userId, $userId]);
+    $feedStmt->execute([$userId, $userId, $userId, $userId, $userId]);
 }
 $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -104,6 +143,8 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             flex-wrap: wrap;
         }
+        .achievement-item { border-left: 5px solid #ffd700; background-color: #fffdf2; }
+
         .activity-main-content { display: flex; align-items: center; flex: 1; min-width: 300px; }
         .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; flex-shrink: 0; }
         .activity-text { color: #333; line-height: 1.4; }
@@ -122,10 +163,10 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="activity-body">
     <div class="activity-page-container">
         
-        <?php if ($currentTab === 'followers'): ?>
+        <?php if ($currentTab === 'followers' && $isPrivate === 1): ?>
             <div style="text-align: center; margin-bottom: 25px;">
                 <a href="follow_requests.php" style="background: #ffd700; color: #1f5077; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    📬 View Pending Follow Requests <?= ($reqCount > 0) ? "($reqCount)" : "" ?>
+                    📬 View Pending Follow Requests
                 </a>
             </div>
         <?php endif; ?>
@@ -151,9 +192,11 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                 $avatarColor = !empty($act['profile_color']) ? $act['profile_color'] : '#' . substr(md5($act['username']), 0, 6);
                 
                 $targetLink = "#";
+                $isAchievement = ($act['activity_type'] === 'achievement');
+
                 if ($act['activity_type'] === 'module_progress' || $act['activity_type'] === 'module_created') {
                     $actionText = ($act['activity_type'] === 'module_created') ? "published module" : (($act['status'] == 1) ? "completed module" : "started module");
-                    $targetLink = "module.php?module_id=" . $act['target_id'];
+                    $targetLink = "module.php?id=" . $act['target_id'];
                 } elseif ($act['activity_type'] === 'circle') {
                     $actionText = "created the circle";
                     $targetLink = "circle_detail.php?hobby=" . urlencode($act['target_name']);
@@ -162,16 +205,21 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                     $targetLink = "calendar.php";
                 } elseif ($act['activity_type'] === 'follower_list') {
                     $actionText = "started following you";
+                } elseif ($isAchievement) {
+                    $actionText = "earned the badge";
+                    $targetLink = "profile.php?id=" . $act['user_id'];
                 }
             ?>
-                <div class="activity-feed-item">
+                <div class="activity-feed-item <?= $isAchievement ? 'achievement-item' : '' ?>">
                     <div class="activity-main-content">
                         <a href="profile.php?id=<?= $act['user_id'] ?>" class="activity-avatar" style="background-color: <?= $avatarColor ?>;"><?= strtoupper(substr($act['username'], 0, 1)) ?></a>
                         <div class="activity-text">
                             <a href="profile.php?id=<?= $act['user_id'] ?>">@<?= htmlspecialchars($act['username']) ?></a> 
                             <span style="color: #666;"> <?= $actionText ?> </span>
                             <?php if ($act['target_name']): ?>
-                                <a href="<?= $targetLink ?>"><?= htmlspecialchars($act['target_name']) ?></a>
+                                <a href="<?= $targetLink ?>" style="<?= $isAchievement ? 'color: #d4af37; font-weight: bold;' : '' ?>">
+                                    <?= ($isAchievement ? '🏆 ' : '') . htmlspecialchars($act['target_name']) ?>
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>

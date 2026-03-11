@@ -110,7 +110,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                         Followers (<?= count($followers) ?>)
                         
                         <?php if ($user['is_private'] == 1): ?>
-                            <a href="follow_requests.php" style="font-size: 12px; color: #ffd700; text-decoration: underline; font-weight: bold;">
+                            <a href="follow_requests.php" style="background-color: #ffd700; color: #153853; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: inline-block;">
                                 Manage Requests <?= ($reqCount > 0) ? "($reqCount)" : "" ?>
                             </a>
                         <?php endif; ?>
@@ -120,8 +120,17 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                             <li style="color: #333; font-style: italic;">No followers yet.</li>
                         <?php else: ?>
                             <?php foreach ($followers as $f): ?>
-                                <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
                                     <a href="profile.php?id=<?= $f['id'] ?>" style="color: #1f5077; text-decoration: none; font-weight: bold;"><?= htmlspecialchars($f['username']) ?></a>
+                                    
+                                    <form action="circle_action.php" method="POST" style="margin: 0;" onsubmit="return confirm('Remove this follower? They will no longer see your private activity.');">
+                                        <input type="hidden" name="action" value="toggle_follow">
+                                        <input type="hidden" name="target_id" value="<?= $f['id'] ?>">
+                                        <input type="hidden" name="hobby" value="account_redirect">
+                                        <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase;">
+                                            Remove
+                                        </button>
+                                    </form>
                                 </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -135,8 +144,17 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                             <li style="color: #333; font-style: italic;">You aren't following anyone yet.</li>
                         <?php else: ?>
                             <?php foreach ($following as $f): ?>
-                                <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <li style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
                                     <a href="profile.php?id=<?= $f['id'] ?>" style="color: #1f5077; text-decoration: none; font-weight: bold;"><?= htmlspecialchars($f['username']) ?></a>
+                                    
+                                    <form action="circle_action.php" method="POST" style="margin: 0;" onsubmit="return confirm('Unfollow <?= htmlspecialchars($f['username']) ?>?');">
+                                        <input type="hidden" name="action" value="toggle_follow">
+                                        <input type="hidden" name="target_id" value="<?= $f['id'] ?>">
+                                        <input type="hidden" name="hobby" value="account_redirect">
+                                        <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase;">
+                                            Unfollow
+                                        </button>
+                                    </form>
                                 </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
