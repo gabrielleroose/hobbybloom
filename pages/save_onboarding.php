@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'db.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -9,17 +10,21 @@ if (!isset($_SESSION['user']['id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $_SESSION['user']['id'];
     
-    $username = trim($_POST['username']);
-    $age = $_POST['age'];
-    $hometown = $_POST['from']; 
-    $bio = $_POST['bio'] ?? '';
-    $hobbies = $_POST['selected_hobbies'];
+    $firstName = trim($_POST['first_name']);
+    $lastName  = trim($_POST['last_name']);
+    $username  = trim($_POST['username']);
+    $age       = $_POST['age'];
+    
+    $hometown  = $_POST['from']; 
+    $bio       = $_POST['bio'] ?? '';
+    $hobbies   = $_POST['selected_hobbies'];
 
     try {
-        $stmt = $conn->prepare("UPDATE users SET age = ?, username = ? WHERE id = ?");
-        $stmt->execute([$age, $username, $userId]);
+        $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, age = ?, username = ? WHERE id = ?");
+        $stmt->execute([$firstName, $lastName, $age, $username, $userId]);
         
-        $_SESSION['user']['name'] = $username;
+        $_SESSION['user']['username'] = $username;
+        $_SESSION['user']['first_name'] = $firstName;
 
         $check = $conn->prepare("SELECT profile_id FROM user_profiles WHERE user_id = ?");
         $check->execute([$userId]);
@@ -34,11 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute([$userId, $hometown, $bio, $hobbies]);
         }
 
-        header("Location: dashboard.php");
+        header("Location: dashboard.php?success=onboarding");
         exit();
 
     } catch (PDOException $e) {
-        die("Error: " . $e->getMessage());
+        die("Error saving your profile: " . $e->getMessage());
     }
 }
 ?>

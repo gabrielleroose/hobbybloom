@@ -9,24 +9,42 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $myId = $_SESSION['user']['id'];
-$targetId = $_GET['id'] ?? $myId;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
-    $stmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
-    $stmt->execute([$myId, $targetId]);
-    
-    if ($stmt->fetch()) {
-        $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$myId, $targetId]);
-    } else {
-        $conn->prepare("INSERT INTO user_follows (follower_id, followed_id) VALUES (?, ?)")->execute([$myId, $targetId]);
-    }
-    header("Location: profile.php?id=" . $targetId);
+$stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
+$stmt->execute([$myId]);
+if (empty($stmt->fetchColumn())) {
+    header("Location: index.php?onboarding=1");
     exit();
 }
 
-// 1. Fetch user data (Added login_streak for the Firestarter badge)
+$targetId = isset($_GET['id']) ? (int)$_GET['id'] : $myId;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
+    try {
+        $privStmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
+        $privStmt->execute([$targetId]);
+        $isPrivate = $privStmt->fetchColumn();
+
+        $checkStmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
+        $checkStmt->execute([$myId, $targetId]);
+        
+        if ($checkStmt->fetch()) {
+            $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$myId, $targetId]);
+        } else {
+            $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
+            $sql = "INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)";
+            $ins = $conn->prepare($sql);
+            $ins->execute([$myId, $targetId, $newStatus]);
+        }
+        header("Location: profile.php?id=" . $targetId);
+        exit();
+    } catch (PDOException $e) {
+        die("Follow Error: " . $e->getMessage());
+    }
+}
+
 $stmt = $conn->prepare("
-    SELECT u.username, u.age, p.hometown, p.bio, p.hobbies, p.profile_color, p.login_streak 
+    SELECT u.username, u.age, p.hometown, p.bio, p.hobbies, p.profile_color, p.login_streak, p.is_private 
     FROM users u 
     LEFT JOIN user_profiles p ON u.id = p.user_id 
     WHERE u.id = ?
@@ -41,40 +59,36 @@ if (!$profileUser) {
 $bgColor = $profileUser['profile_color'] ?? '#1f5077';
 $hobbiesArr = $profileUser['hobbies'] ? explode(', ', $profileUser['hobbies']) : [];
 
-$isFollowing = false;
-if ($myId != $targetId) {
-    $fStmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
-    $fStmt->execute([$myId, $targetId]);
-    $isFollowing = $fStmt->fetch() ? true : false;
-}
+$statusStmt = $conn->prepare("SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = ?");
+$statusStmt->execute([$myId, $targetId]);
+$followStatus = $statusStmt->fetchColumn();
 
-// --- 2. CALCULATE EARNED TROPHIES FOR PUBLIC DISPLAY ---
 $earnedBadges = [];
-
-// Modules Completed
 $stmt = $conn->prepare("SELECT COUNT(*) FROM log WHERE uid = ? AND complete = 1");
 $stmt->execute([$targetId]);
 $modulesCompleted = (int)$stmt->fetchColumn();
 
-// Following Count
-$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ?");
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'accepted'");
+$stmt->execute([$targetId]);
+$followerCount = (int)$stmt->fetchColumn();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND status = 'accepted'");
 $stmt->execute([$targetId]);
 $followingCount = (int)$stmt->fetchColumn();
 
-// Circles Created
 $stmt = $conn->prepare("SELECT COUNT(*) FROM circle WHERE uid = ?");
 $stmt->execute([$targetId]);
 $circlesCreated = (int)$stmt->fetchColumn();
 
 $streak = (int)($profileUser['login_streak'] ?? 0);
 
-// Check which badges they have fully unlocked
 if ($modulesCompleted >= 1) $earnedBadges[] = ['title' => 'First Steps', 'icon' => '🐣', 'color' => '#ff9999'];
 if ($modulesCompleted >= 5) $earnedBadges[] = ['title' => 'Module Master', 'icon' => '🎓', 'color' => '#ffd700'];
 if ($streak >= 7) $earnedBadges[] = ['title' => 'Firestarter', 'icon' => '🔥', 'color' => '#ffb6c1'];
 if ($followingCount >= 5) $earnedBadges[] = ['title' => 'Social Butterfly', 'icon' => '🦋', 'color' => '#a8d0e6'];
 if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'icon' => '👑', 'color' => '#9370db'];
 
+$canViewContent = ($profileUser['is_private'] == 0 || $followStatus === 'accepted' || $myId == $targetId);
 ?>
 
 <!DOCTYPE html>
@@ -95,69 +109,79 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
             <h1 style="color: white; margin: 0; font-size: 32px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($profileUser['username']) ?></h1>
             
             <?php if ($myId != $targetId): ?>
-                <form method="POST" style="margin-top: 15px;">
-                    <input type="hidden" name="toggle_follow" value="1">
-                    <?php if ($isFollowing): ?>
-                        <button type="submit" style="background-color: white; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Following ✓</button>
-                    <?php else: ?>
-                        <button type="submit" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">+ Follow</button>
-                    <?php endif; ?>
-                </form>
-            <?php endif; ?>
-            <?php if ($myId != $targetId): ?>
-                <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin-top:10px;">
-                    Report User
-                </button>
+                <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <form method="POST" style="margin: 0;">
+                        <input type="hidden" name="toggle_follow" value="1">
+                        <?php if ($followStatus === 'accepted'): ?>
+                            <button type="submit" style="background-color: white; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Following ✓</button>
+                        <?php elseif ($followStatus === 'pending'): ?>
+                            <button type="submit" style="background-color: #ffd700; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Requested...</button>
+                        <?php else: ?>
+                            <button type="submit" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">+ Follow</button>
+                        <?php endif; ?>
+                    </form>
+                    <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:8px 16px; border:none; border-radius:20px; cursor:pointer; font-weight:bold; font-size: 12px;">
+                        Report User
+                    </button>
+                </div>
             <?php endif; ?>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin-top: 0; color: #333;">About Me</h3>
-                <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
-                <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
-                <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
+        <?php if ($canViewContent): ?>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: #333;">About Me</h3>
+                    <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
+                    <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
+                    <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
+                </div>
+
+                <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: #333;">Trophy Case 🏆</h3>
+                    <?php if (empty($earnedBadges)): ?>
+                        <p style="color: #999; font-style: italic;">No badges earned yet.</p>
+                    <?php else: ?>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                            <?php foreach ($earnedBadges as $badge): ?>
+                                <div title="<?= htmlspecialchars($badge['title']) ?>" style="display: flex; flex-direction: column; align-items: center; width: 60px;">
+                                    <div style="width: 50px; height: 50px; border-radius: 50%; background-color: <?= $badge['color'] ?>; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                        <?= $badge['icon'] ?>
+                                    </div>
+                                    <span style="font-size: 10px; text-align: center; margin-top: 5px; font-weight: bold; color: #555;">
+                                        <?= htmlspecialchars($badge['title']) ?>
+                                    </span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin-top: 0; color: #333;">Trophy Case 🏆</h3>
-                <?php if (empty($earnedBadges)): ?>
-                    <p style="color: #999; font-style: italic;">No badges earned yet.</p>
+                <h3 style="margin-top: 0; color: #333;">Interests & Circles</h3>
+                <?php if (empty($hobbiesArr)): ?>
+                    <p style="color: #999; font-style: italic;">No interests added yet.</p>
                 <?php else: ?>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                        <?php foreach ($earnedBadges as $badge): ?>
-                            <div title="<?= htmlspecialchars($badge['title']) ?>" style="display: flex; flex-direction: column; align-items: center; width: 60px;">
-                                <div style="width: 50px; height: 50px; border-radius: 50%; background-color: <?= $badge['color'] ?>; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                                    <?= $badge['icon'] ?>
-                                </div>
-                                <span style="font-size: 10px; text-align: center; margin-top: 5px; font-weight: bold; color: #555;">
-                                    <?= htmlspecialchars($badge['title']) ?>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <?php foreach ($hobbiesArr as $hobby): 
+                            $trimmedHobby = trim($hobby); 
+                        ?>
+                            <a href="circle_detail.php?hobby=<?= urlencode($trimmedHobby) ?>" style="text-decoration: none;">
+                                <span style="background-color: #eee; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #555; display: inline-block; transition: background-color 0.2s; border: 1px solid #ddd;">
+                                    <?= htmlspecialchars($trimmedHobby) ?>
                                 </span>
-                            </div>
+                            </a>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
             </div>
-        </div>
-
-        <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <h3 style="margin-top: 0; color: #333;">Interests & Circles</h3>
-            <?php if (empty($hobbiesArr)): ?>
-                <p style="color: #999; font-style: italic;">No interests added yet.</p>
-            <?php else: ?>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <?php foreach ($hobbiesArr as $hobby): 
-                        $trimmedHobby = trim($hobby); 
-                    ?>
-                        <a href="circle_detail.php?hobby=<?= urlencode($trimmedHobby) ?>" style="text-decoration: none;">
-                            <span style="background-color: #eee; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #555; display: inline-block; transition: background-color 0.2s; border: 1px solid #ddd;">
-                                <?= htmlspecialchars($trimmedHobby) ?>
-                            </span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
+        <?php else: ?>
+            <div style="background-color: white; padding: 60px 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
+                <h2 style="color: #333; margin-bottom: 10px;">This Account is Private</h2>
+                <p style="color: #666; max-width: 400px; margin: 0 auto;">Follow this user to see their bio, trophies, and interests!</p>
+            </div>
+        <?php endif; ?>
 
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
@@ -178,8 +202,8 @@ if ($circlesCreated >= 1) $earnedBadges[] = ['title' => 'Community Leader', 'ico
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        type: 'user',                    // same as PHP expects
-                        item_id: <?= json_encode($targetId) ?>,  // matches submit_report.php
+                        type: 'user',
+                        item_id: <?= json_encode($targetId) ?>,
                         reason: reason.trim()
                     })
                 });

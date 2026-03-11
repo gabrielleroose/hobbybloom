@@ -23,7 +23,7 @@ $followerStmt = $conn->prepare("
     SELECT u.id, u.username 
     FROM users u 
     JOIN user_follows f ON u.id = f.follower_id 
-    WHERE f.followed_id = ?
+    WHERE f.followed_id = ? AND f.status = 'accepted'
 ");
 $followerStmt->execute([$userId]);
 $followers = $followerStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -32,7 +32,7 @@ $followingStmt = $conn->prepare("
     SELECT u.id, u.username 
     FROM users u 
     JOIN user_follows f ON u.id = f.followed_id 
-    WHERE f.follower_id = ?
+    WHERE f.follower_id = ? AND f.status = 'accepted'
 ");
 $followingStmt->execute([$userId]);
 $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -106,7 +106,15 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div style="display: flex; gap: 40px; margin-bottom: 40px;">
                 <div style="flex: 1;">
-                    <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 5px;">Followers (<?= count($followers) ?>)</h3>
+                    <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        Followers (<?= count($followers) ?>)
+                        
+                        <?php if ($user['is_private'] == 1): ?>
+                            <a href="follow_requests.php" style="font-size: 12px; color: #ffd700; text-decoration: underline; font-weight: bold;">
+                                Manage Requests <?= ($reqCount > 0) ? "($reqCount)" : "" ?>
+                            </a>
+                        <?php endif; ?>
+                    </h3>
                     <ul style="list-style: none; padding: 0; margin-top: 10px;">
                         <?php if (empty($followers)): ?>
                             <li style="color: #333; font-style: italic;">No followers yet.</li>
@@ -119,6 +127,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php endif; ?>
                     </ul>
                 </div>
+
                 <div style="flex: 1;">
                     <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 5px;">Following (<?= count($following) ?>)</h3>
                     <ul style="list-style: none; padding: 0; margin-top: 10px;">
