@@ -2453,7 +2453,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .account-main-container {
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  padding: 1.5rem 3rem 3rem 3rem;
   width: 80%;
   margin: 0 auto;
 
