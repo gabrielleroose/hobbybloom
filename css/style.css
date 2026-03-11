@@ -1401,9 +1401,13 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   transform: scale(1.025);
 }
 
+.dashboard-circles.circle {
+  margin-bottom: 5rem;
+ }
+
 .dashboard-circles {
   margin-top: 4rem;
-  padding-bottom: 2rem;
+  /* padding-bottom: 2rem; */
   /* color: navy; */
 
   /* border: 3px solid pink; */
@@ -1482,6 +1486,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* height: 250px; */
   height: auto;
   margin: 0 auto;
+  /* margin-bottom: 2rem; */
 
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
