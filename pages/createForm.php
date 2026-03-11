@@ -310,7 +310,8 @@ if (isset($_POST['module_edit'])) {
 
                     <div id="stages_section" style="display:none;">
                         <label class="create-module-label">Number of lessons:</label>
-                        <input class="create-module-input" type="number" id="stage_num" name="stage_num" placeholder="Number of Lessons" min="0" max="5">
+                        <input class="create-module-input" type="number" id="stage_num" name="stage_num" placeholder="Insert up to 5 stages in this module" min="0" max="5">
+
 
 
                         <div id="stages_container"></div> <!-- this is where the contents of the javascript below are loaded. -->
