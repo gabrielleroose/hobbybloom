@@ -54,7 +54,7 @@ $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $memStmt = $conn->prepare("
     SELECT u.id, u.username, p.profile_color,
-           (SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) as am_following
+           (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) as follow_status
     FROM users u
     JOIN user_profiles p ON u.id = p.user_id
     WHERE p.hobbies LIKE ? AND u.id != ?
@@ -113,6 +113,13 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             margin: 0 10px;
             flex-shrink: 0;
             border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
         }
         .chat-content {
             background: rgba(255,255,255,0.15);
@@ -176,6 +183,8 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         </button>
                     <?php endif; ?>
                 </div>
+            </div>
+
             <h2>Circle Members</h2>
             <div class="member-list">
                 <?php if (empty($members)): ?>
@@ -183,6 +192,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <?php foreach ($members as $mem): 
                         $mColor = !empty($mem['profile_color']) ? $mem['profile_color'] : '#' . substr(md5($mem['username']), 0, 6);
+                        $status = $mem['follow_status'];
                     ?>
                         <div class="member-row">
                             <div style="display: flex; align-items: center;">
@@ -193,8 +203,12 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="action" value="toggle_follow">
                                 <input type="hidden" name="target_id" value="<?= $mem['id'] ?>">
                                 <input type="hidden" name="hobby" value="<?= htmlspecialchars($currentHobby) ?>">
-                                <button type="submit" class="light-btn" style="font-size: 12px;">
-                                    <?= $mem['am_following'] ? 'Following' : 'Follow' ?>
+                                <button type="submit" class="light-btn" style="font-size: 12px; font-weight: bold;">
+                                    <?php 
+                                        if ($status === 'accepted') echo 'Following ✓';
+                                        elseif ($status === 'pending') echo 'Requested...';
+                                        else echo '+ Follow';
+                                    ?>
                                 </button>
                             </form>
                         </div>
@@ -231,9 +245,15 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
                         $c = !empty($msg['profile_color']) ? $msg['profile_color'] : '#' . substr(md5($msg['username']), 0, 6);
                     ?>
                         <div class="chat-message-container <?= $isMine ? 'mine' : '' ?>">
-                            <div class="chat-avatar" style="background-color: <?= $c ?>;"></div>
+                            <a href="profile.php?id=<?= $msg['user_id'] ?>" class="chat-avatar" style="background-color: <?= $c ?>;">
+                                <?= strtoupper(substr($msg['username'], 0, 1)) ?>
+                            </a>
                             <div class="chat-content">
-                                <small style="display: block; font-weight: bold; font-size: 10px; margin-bottom: 2px; opacity: 0.8;"><?= htmlspecialchars($msg['username']) ?></small>
+                                <a href="profile.php?id=<?= $msg['user_id'] ?>" style="text-decoration: none;">
+                                    <small style="display: block; font-weight: bold; font-size: 10px; margin-bottom: 2px; color: <?= $isMine ? 'white' : '#1f5077' ?>; opacity: 0.9;">
+                                        @<?= htmlspecialchars($msg['username']) ?>
+                                    </small>
+                                </a>
                                 <div style="font-size: 14px;"><?= htmlspecialchars($msg['message']) ?></div>
                             </div>
                         </div>
@@ -246,8 +266,6 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        </div> 
-        
     </div> 
     <script>
         const chatBox = document.getElementById('chatBox');

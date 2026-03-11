@@ -39,7 +39,10 @@ if ($action === 'toggle_follow') {
         $existing = $stmt->fetch();
         
         if ($existing) {
-            $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$userId, $targetId]);
+            $conn->prepare("DELETE FROM user_follows WHERE 
+                (follower_id = ? AND followed_id = ?) OR 
+                (follower_id = ? AND followed_id = ?)")
+                 ->execute([$userId, $targetId, $targetId, $userId]);
         } else {
             $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
             $conn->prepare("INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)")
@@ -50,6 +53,8 @@ if ($action === 'toggle_follow') {
 
 if ($hobby === 'activity_redirect') {
     header("Location: activity.php");
+} elseif ($hobby === 'account_redirect') {
+    header("Location: account.php?success=followed");
 } else {
     header("Location: circle_detail.php?hobby=" . urlencode($hobby));
 }

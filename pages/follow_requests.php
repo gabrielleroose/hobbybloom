@@ -2,6 +2,16 @@
 session_start();
 require_once 'db.php';
 
+$backUrl = 'account.php';
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $referer = $_SERVER['HTTP_REFERER'];
+    if (strpos($referer, 'activity.php') !== false) {
+        $backUrl = 'activity.php?tab=followers';
+    } elseif (strpos($referer, 'account.php') !== false) {
+        $backUrl = 'account.php';
+    }
+}
+
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['follower_id'])) {
     if (!isset($_SESSION['user']['id'])) {
@@ -67,8 +77,10 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div style="width: 100%; max-width: 600px; margin: 0 auto;">
             <?php if (empty($requests)): ?>
                 <div style="background: white; padding: 40px; border-radius: 15px; text-align: center; color: #666;">
-                    <p>No pending follow requests at the moment.</p>
-                    <a href="account.php" style="color: #1f5077; text-decoration: none; font-weight: bold;">Return to Settings</a>
+                    <p style="margin-bottom: 20px;">No pending follow requests at the moment.</p>
+                    <a href="<?= $backUrl ?>" style="background-color: #1f5077; color: white; text-decoration: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; display: inline-block;">
+                        Return to <?= strpos($backUrl, 'activity') !== false ? 'Activity' : 'Settings' ?>
+                    </a>
                 </div>
             <?php else: ?>
                 <?php foreach ($requests as $r): 
@@ -91,6 +103,12 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </form>
                     </div>
                 <?php endforeach; ?>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="<?= $backUrl ?>" style="background-color: #1f5077; color: white; text-decoration: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block;">
+                        ← Back to <?= strpos($backUrl, 'activity') !== false ? 'Activity' : 'Settings' ?>
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
     </div>
