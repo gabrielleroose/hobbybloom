@@ -174,7 +174,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     </div>
     <?php endif; ?>
 
-    <div class="dashboard-circles">
+    <div class="dashboard-circles circle">
         <div class="horizontal-scroll">
             <h2 class="dash-heading">Your Circles</h2>
 
