@@ -91,11 +91,11 @@ $googleId = $_SESSION['google_id'] ?? null;
         $unique_videos = [];
 
         foreach ($mod_stages as $stage) {
-            $url = $stage['video_url'];
+            $video_url = $stage['video_url'];
 
-            if (!$url) continue;
+            if (!$video_url) continue;
 
-            if ($url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $url, $matches)) {
+            if ($video_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
                 $video_id = $matches[2];
                 $embed = "https://www.youtube.com/embed/" . $video_id;
 
@@ -112,19 +112,6 @@ $googleId = $_SESSION['google_id'] ?? null;
             $displayed_videos = [];
 
 
-        if ($num_unique_videos == 1) {
-            $video_url = $unique_videos[0];
-
-            echo '<div class="module-single-video">';
-            echo '<iframe width="560" height="315"
-                src="' . htmlspecialchars($video_url) . '"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-            </iframe>';
-            echo '</div><br><br>';
-        }
 
         foreach ($mod_stages as $stage) {
          
@@ -140,11 +127,25 @@ $googleId = $_SESSION['google_id'] ?? null;
             
             echo "<div class='stage_title'>";
             echo $stage['title'];
-            echo "<br><br>";
+            echo "</div><br><br>";
+
+            if ($num_unique_videos == 1 && $stage['stage_num'] == 1) {
+                $video_url = $unique_videos[0];
+
+                echo '<div class="module-single-video">';
+                echo '<iframe width="560" height="315"
+                    src="' . htmlspecialchars($video_url) . '"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>';
+                echo '</div><br><br>';
+            }
 
             $video_url = $stage['video_url'];
 
-            if ($url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
+            if ($video_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
 
                 $video_id = $matches[2];
                 $embed_url = "https://www.youtube.com/embed/" . $video_id;
@@ -163,7 +164,7 @@ $googleId = $_SESSION['google_id'] ?? null;
 
             }
         }
-            echo "</div><br><br>";
+            
             
             
             
