@@ -11,7 +11,7 @@ if (!isset($_SESSION['user']['id'])) {
 $myId = $_SESSION['user']['id'];
 
 $stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
-$stmt->execute([$userId]);
+$stmt->execute([$myId]);
 if (empty($stmt->fetchColumn())) {
     header("Location: index.php?onboarding=1");
     exit();
@@ -20,22 +20,27 @@ if (empty($stmt->fetchColumn())) {
 $targetId = isset($_GET['id']) ? (int)$_GET['id'] : $myId;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_follow'])) {
-    $privStmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
-    $privStmt->execute([$targetId]);
-    $isPrivate = $privStmt->fetchColumn();
+    try {
+        $privStmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
+        $privStmt->execute([$targetId]);
+        $isPrivate = $privStmt->fetchColumn();
 
-    $checkStmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
-    $checkStmt->execute([$myId, $targetId]);
-    
-    if ($checkStmt->fetch()) {
-        $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$myId, $targetId]);
-    } else {
-        $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
-        $conn->prepare("INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)")
-             ->execute([$myId, $targetId, $newStatus]);
+        $checkStmt = $conn->prepare("SELECT 1 FROM user_follows WHERE follower_id = ? AND followed_id = ?");
+        $checkStmt->execute([$myId, $targetId]);
+        
+        if ($checkStmt->fetch()) {
+            $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")->execute([$myId, $targetId]);
+        } else {
+            $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
+            $sql = "INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)";
+            $ins = $conn->prepare($sql);
+            $ins->execute([$myId, $targetId, $newStatus]);
+        }
+        header("Location: profile.php?id=" . $targetId);
+        exit();
+    } catch (PDOException $e) {
+        die("Follow Error: " . $e->getMessage());
     }
-    header("Location: profile.php?id=" . $targetId);
-    exit();
 }
 
 $stmt = $conn->prepare("
