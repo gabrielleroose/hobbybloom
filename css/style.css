@@ -1601,7 +1601,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   color: firebrick;
 }
 
-/* ******************************* MODULE CSS ******************************* */
+/* ******************************* MODULES DISPLAY CSS ******************************* */
 /* ******************************* ******************************* */
 
 .module-body {
@@ -1960,12 +1960,40 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   display: none;
 }
 
+/* ******************************* MODULES.PHP CSS ******************************* */
+/* ******************************* ******************************* */
+
 
 .stage_title{
-  color: navy;
-  font-size: var(--text-size-3xl);
-  text-align: center;
+  /* color: navy; */
+  color: #2C6CA3;
+  font-size: var(--text-size-2xl);
+  margin: 0 auto;
   margin-top: 1rem;
+
+  padding: 1rem;
+  border-radius: 6rem;
+  width: 40%;
+
+  display: flex;
+  justify-content: center;
+  font-family: sans-serif;
+
+
+  /* glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  /* background: rgba(31, 80, 119, .2); */
+
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease-in-out;
+
 }
 
 .module-question{
@@ -2595,8 +2623,6 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   margin-top: 3rem;
   font-size: var(--text-size-md);
 
-
-
 }
 
 
@@ -2693,7 +2719,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   flex-wrap: nowrap;
 
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  padding: 3rem;
 
   margin: 0 auto;
   width: 80%;
