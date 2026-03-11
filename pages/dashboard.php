@@ -125,7 +125,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
         
         <div class="dash-display-streak" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <p class="streaks">Streaks</p>
+                <p class="dash-heading">Streaks</p>
                 <p class="day-streak" style="padding-top: 2rem;">🔥<?= $streak ?> Days</p>
             </div>
             
@@ -137,9 +137,11 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
 
         <div class="dash-calendar" >
-            <h3>Upcoming Schedule</h3>
+            <h2 class="dash-heading schedule">Upcoming Schedule</h2>
             <div id="calendar-mini"></div>
-            <a href="calendar.php">View Full Calendar →</a>
+            <div class="dash-calendar-button">
+            <a class="dash-calendar-view" href="calendar.php">View Full Calendar →</a>
+            </div>
         </div>
     </div>
 
@@ -148,7 +150,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
             <p class="dash-module-text">📘 Continue: <strong><?= htmlspecialchars($currentModule['name']) ?></strong></p>
             <a href="module.php?id=<?= $currentModule['id'] ?>" class="resume-btn">Resume Module</a>
         <?php else: ?>
-            <p class="dash-module-heading">Modules</p>
+            <h2 class="dash-heading">Modules</h2>
             <p class="dash-module-text">✨You're all caught up! Start a new module.</p>
             <a href="modules_display.php" class="dash-module-button">Browse Modules →</a>
         <?php endif; ?>
@@ -157,13 +159,14 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     <?php if (!empty($recommendations)): ?>
     <div class="dashboard-circles">
         <div class="horizontal-scroll">
-            <h2>Recommended For You</h2>
+            <h2 class="dash-heading">Recommended For You</h2>
             <?php foreach ($recommendations as $rec): ?>
             <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
                 <div class="story-circle">
                     <div class="circle-img" style="background-color: #<?= substr(md5($rec['name']), 0, 6) ?>;"></div>
-                    <p style="font-size: 0.8rem; font-weight: bold;"><?= htmlspecialchars($rec['name']) ?></p>
-                    <p style="font-size: 0.7rem; color: #ccc;"><?= htmlspecialchars($rec['exp_level']) ?></p>
+                    <p class="circle-recommended-exp"><?= htmlspecialchars($rec['exp_level']) ?></p>
+                    <p class="circle-recommended-name"><?= htmlspecialchars($rec['name']) ?></p>
+                
                 </div>
             </a>
             <?php endforeach; ?>
@@ -173,7 +176,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <div class="dashboard-circles">
         <div class="horizontal-scroll">
-            <h2>Your Circles</h2>
+            <h2 class="dash-heading">Your Circles</h2>
 
             <div class="dashboard-circles-flex">
 
