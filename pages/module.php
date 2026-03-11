@@ -29,6 +29,29 @@ $googleId = $_SESSION['google_id'] ?? null;
         exit;
     }
 
+
+    function get_current_url() {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST']; // Includes the port if specified in the request
+    $url = $_SERVER['REQUEST_URI'];
+    
+    return $protocol . "://" . $host . $url;
+}
+
+    $current_url = get_current_url();
+
+    $query_mid = NULL;
+
+    if (str_contains($current_url, '?')) {
+    $url_parts = explode('?', $current_url, 2); //since the recommended 
+
+    $module_id_url = $url_parts[1];
+
+    $module_id_url = explode('=', $module_id_url, 2);
+
+    $query_mid = (int) $module_id_url[1];
+    }
+
     try {
         $user_id_sql = "SELECT id FROM users WHERE google_id = :gid";
         $stmt = $conn->prepare($user_id_sql);
@@ -39,19 +62,72 @@ $googleId = $_SESSION['google_id'] ?? null;
             throw new Exception("User session not found. Please log in again.");
         }
 
+        if (!$query_mid) {
         $mod_id = $_REQUEST['module_id'] ?? null;
         if (!$mod_id) {
             throw new Exception("No module selected.");
         }
+    } else {
+        $mod_id = $query_mid;
+    }
+        
         //selecting module stage information below
-        $mod_stage_sql = "SELECT ms.id, ms.title, ms.stage_num, msv.video_url FROM module_stage AS ms JOIN module AS m ON ms.mid = m.id 
-        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid WHERE ms.mid = :mid";
+        $mod_stage_sql = "
+        SELECT ms.id, ms.title, ms.stage_num, MIN(msv.video_url) AS video_url
+        FROM module_stage AS ms
+        JOIN module AS m ON ms.mid = m.id
+        LEFT JOIN module_stage_videos AS msv ON ms.id = msv.msid
+        WHERE ms.mid = :mid
+        GROUP BY ms.id
+        ORDER BY ms.stage_num
+        ";
         $stmt = $conn->prepare($mod_stage_sql);
         $stmt->execute(['mid' => $mod_id]);
         $mod_stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo "<pre>";
         $hasStages = !empty($mod_stages);
-        
+
+        $seen_videos = [];
+        $unique_videos = [];
+
         foreach ($mod_stages as $stage) {
+            $url = $stage['video_url'];
+
+            if (!$url) continue;
+
+            if ($url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $url, $matches)) {
+                $video_id = $matches[2];
+                $embed = "https://www.youtube.com/embed/" . $video_id;
+
+                if (!in_array($embed, $seen_videos)) {
+                    $seen_videos[] = $embed;
+                    $unique_videos[] = $embed;
+                }
+            }
+            }
+
+            $num_unique_videos = count($unique_videos);
+
+        
+            $displayed_videos = [];
+
+
+        if ($num_unique_videos == 1) {
+            $video_url = $unique_videos[0];
+
+            echo '<div class="module-single-video">';
+            echo '<iframe width="560" height="315"
+                src="' . htmlspecialchars($video_url) . '"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>';
+            echo '</div><br><br>';
+        }
+
+        foreach ($mod_stages as $stage) {
+         
             $stage_id = $stage['id'];
             
             $q_sql = "SELECT id, question_text FROM module_stage_questions WHERE msid = ?";
@@ -65,22 +141,28 @@ $googleId = $_SESSION['google_id'] ?? null;
             echo "<div class='stage_title'>";
             echo $stage['title'];
             echo "<br><br>";
-            
+
             $video_url = $stage['video_url'];
 
-            //extracts id, attempts to discern common youtube patterns.
-            if (preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
-                $video_id = $matches[2];
-                $video_url = "https://www.youtube.com/embed/" . $video_id;
-                }
-            echo '<iframe width="560" height="315"
-            src="' . htmlspecialchars($video_url) . '"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen>
-            </iframe>';
+            if ($url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
 
+                $video_id = $matches[2];
+                $embed_url = "https://www.youtube.com/embed/" . $video_id;
+
+                if ($num_unique_videos > 1 && !in_array($embed_url, $displayed_videos)) {
+
+                $displayed_videos[] = $embed_url;
+
+                echo '<iframe width="560" height="315"
+                src="' . htmlspecialchars($embed_url) . '"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+                </iframe>';
+
+            }
+        }
             echo "</div><br><br>";
             
             
