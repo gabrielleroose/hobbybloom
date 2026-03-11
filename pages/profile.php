@@ -68,7 +68,11 @@ $stmt = $conn->prepare("SELECT COUNT(*) FROM log WHERE uid = ? AND complete = 1"
 $stmt->execute([$targetId]);
 $modulesCompleted = (int)$stmt->fetchColumn();
 
-$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ?");
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'accepted'");
+$stmt->execute([$targetId]);
+$followerCount = (int)$stmt->fetchColumn();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND status = 'accepted'");
 $stmt->execute([$targetId]);
 $followingCount = (int)$stmt->fetchColumn();
 
