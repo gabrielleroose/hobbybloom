@@ -78,18 +78,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php else: ?>
             <form method="POST">
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Circle / Hobby Name:</label>
-                    <input type="text" name="name" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;" placeholder="e.g., Photography">
+                    <label class="create-circle-label" >Circle / Hobby Name:</label>
+                    <input class="create-circle-input" type="text" name="name" placeholder="Circle/Hobby Name: e.g., Photography">
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Description:</label>
-                    <textarea name="description" rows="4" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;" placeholder="What is this circle about?"></textarea>
+                    <label class="create-circle-label" >Description:</label>
+                    <textarea class="create-circle-input" name="description" rows="4" placeholder="Description of Circle: What is this circle about?"></textarea>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Category:</label>
-                    <select name="category" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; background-color: white; cursor: pointer;">
+                    <label class="create-circle-label">Category:</label>
+                    <select class="create-circle-input" name="category">
                         <option value="General">General / Other</option>
                         <option value="Arts">Arts & Creativity</option>
                         <option value="Technical">Technical & Learning</option>
@@ -97,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </select>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Circle Theme Color:</label>
+                <div class="circle-theme-color" style="margin-bottom: 20px;">
+                    <label class="create-circle-label theme">Circle Theme Color:</label>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <input type="color" name="color" value="#1f5077" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
                         <span style="color: #666; font-size: 14px;">Pick a primary color for this group!</span>
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
 
                 <div style="text-align: center;">
-                    <button type="submit" class="light-btn" style="background-color: #1f5077; color: white; border: none; font-size: 16px; padding: 10px 30px; border-radius: 5px;">Create Circle</button>
+                    <button class="create-module-button" type="submit" class="light-btn" >Create Circle</button>
                 </div>
             </form>
         <?php endif; ?>
