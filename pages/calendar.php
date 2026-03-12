@@ -87,7 +87,6 @@ $gcConnected = !empty($gcRow['gc_access_token']);
                 </div>
             </div>
 
-
             <div class="invite-panel" id="panel-circles">
                 <div class="circle-list" id="circleList">
                     <?php
@@ -96,14 +95,19 @@ $gcConnected = !empty($gcRow['gc_access_token']);
                         $ownedCircles->execute([$_SESSION['user']['id']]);
                         $owned = $ownedCircles->fetchAll(PDO::FETCH_ASSOC);
 
-                        $joinedCircles = $conn->prepare("
-                            SELECT c.circle_id, c.name, c.color
-                            FROM circle c
-                            INNER JOIN circle_members cm ON c.circle_id = cm.circle_id
-                            WHERE cm.user_id = ?
-                        ");
-                        $joinedCircles->execute([$_SESSION['user']['id']]);
-                        $joined = $joinedCircles->fetchAll(PDO::FETCH_ASSOC);
+                        // Pull joined circles from user_profiles.hobbies instead of circle_members
+                        $profileStmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
+                        $profileStmt->execute([$_SESSION['user']['id']]);
+                        $hobbiesStr = $profileStmt->fetchColumn();
+                        $hobbiesArr = $hobbiesStr ? array_map('trim', explode(',', $hobbiesStr)) : [];
+
+                        $joined = [];
+                        if (!empty($hobbiesArr)) {
+                            $placeholders = str_repeat('?,', count($hobbiesArr) - 1) . '?';
+                            $joinedStmt = $conn->prepare("SELECT circle_id, name, color FROM circle WHERE name IN ($placeholders)");
+                            $joinedStmt->execute($hobbiesArr);
+                            $joined = $joinedStmt->fetchAll(PDO::FETCH_ASSOC);
+                        }
 
                         $allCircles = [];
                         $addedIds = [];
@@ -114,19 +118,13 @@ $gcConnected = !empty($gcRow['gc_access_token']);
                             }
                         }
 
-
-                        $countStmt = $conn->prepare("SELECT COUNT(*) FROM circle_members WHERE circle_id = ?");
-
                         foreach ($allCircles as $c) {
-                            $countStmt->execute([$c['circle_id']]);
-                            $memberCount = $countStmt->fetchColumn();
                             $color = htmlspecialchars($c['color'] ?? '#1f5077');
                             echo "
                             <div class='circle-item' data-circle-id='{$c['circle_id']}'>
                                 <div class='circle-item-header'>
                                     <span class='circle-dot' style='background:{$color}'></span>
                                     <span class='circle-name'>" . htmlspecialchars($c['name']) . "</span>
-                                    <span class='circle-count'>{$memberCount} members</span>
                                     <button class='circle-toggle-btn' data-circle-id='{$c['circle_id']}' data-circle-name='" . htmlspecialchars($c['name']) . "'>Add All</button>
                                 </div>
                             </div>";
@@ -144,13 +142,10 @@ $gcConnected = !empty($gcRow['gc_access_token']);
             </div>
         </div>
 
-
         <span class="selected-label" id="selectedLabel" style="display:none;">Invited</span>
         <div class="selected-invitees" id="selectedInvitees"></div>
 
     </div>
-
-
 
     <div id="inviteActions" style="display:none;">
         <button class="btn btn-success" id="acceptInvite">✓ Accept</button>
@@ -167,15 +162,11 @@ $gcConnected = !empty($gcRow['gc_access_token']);
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-
     let selectedDate    = null;
     let editingEventId  = null;
     let followingLoaded = false;
 
-
     const invitedUsers = new Map();
-
-
     const circleUserMap = new Map();
 
     const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -186,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     calendar.render();
-
 
     const gcSyncBtn = document.getElementById('gcSyncBtn');
     let googleEvents = [];
@@ -228,10 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     let gcSource = calendar.addEventSource([]);
-
-
 
     document.querySelectorAll('.invite-tab').forEach(tab => {
         tab.addEventListener('click', function () {
@@ -245,7 +232,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
 
     function loadFollowing() {
         followingLoaded = true;
@@ -273,7 +259,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
     }
-
 
     let searchTimeout = null;
     const searchInput  = document.getElementById('userSearchInput');
@@ -333,7 +318,6 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.textContent = 'Add All';
             btn.classList.remove('added');
         } else {
-
             fetch('search_users.php?mode=circle_members&circle_id=' + encodeURIComponent(circleId))
                 .then(r => r.json())
                 .then(data => {
@@ -350,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
     function addInvitee(uid, username) {
         uid = String(uid);
         if (invitedUsers.has(uid)) return;
@@ -365,10 +348,8 @@ document.addEventListener('DOMContentLoaded', function () {
         renderChips();
         syncFollowingCheckboxes();
 
-
         circleUserMap.forEach((uids, circleId) => {
             if (uids.includes(uid)) {
-
                 const btn = document.querySelector(`.circle-toggle-btn[data-circle-id="${circleId}"]`);
                 if (btn) {
                     btn.textContent = 'Add All';
@@ -407,7 +388,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     function openCreateModal(dateStr) {
         selectedDate   = dateStr;
         editingEventId = null;
@@ -435,7 +415,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('deleteEvent').style.display = 'inline-block';
             document.getElementById('inviteSection').style.display = 'block';
 
-
             (event.extendedProps.inviteList || []).forEach(inv => {
                 if (inv.id && inv.username) addInvitee(inv.id, inv.username);
             });
@@ -459,21 +438,17 @@ document.addEventListener('DOMContentLoaded', function () {
         renderChips();
         syncFollowingCheckboxes();
 
-
         document.querySelectorAll('.circle-toggle-btn').forEach(btn => {
             btn.textContent = 'Add All';
             btn.classList.remove('added');
         });
 
-
         document.getElementById('userSearchInput').value = '';
         userDropdown.classList.remove('open');
         userDropdown.innerHTML = '';
 
-
         followingLoaded = false;
         document.getElementById('followingList').innerHTML = '<div class="user-dropdown-empty">Loading…</div>';
-
 
         document.querySelectorAll('.invite-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.invite-panel').forEach(p => p.classList.remove('active'));
@@ -499,7 +474,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modalOverlay').addEventListener('click', closeModal);
     document.getElementById('cancelEvent').addEventListener('click', closeModal);
 
-
     document.getElementById('saveEvent').addEventListener('click', function () {
         const title       = document.getElementById('eventTitle').value.trim();
         const time        = document.getElementById('eventTime').value;
@@ -519,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title, date: selectedDate, time,
                 location, description,
                 invitees,
-                circles: [] 
+                circles: []
             })
         })
         .then(r => r.json())
@@ -558,7 +532,6 @@ document.addEventListener('DOMContentLoaded', function () {
             body:    JSON.stringify({ id: editingEventId, status: 'declined' })
         }).then(() => { calendar.refetchEvents(); closeModal(); });
     });
-
 
     function escapeHtml(str) {
         return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
