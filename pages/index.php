@@ -10,37 +10,42 @@ if (!isset($_SESSION['user'])) {
 <!DOCTYPE HTML>
 <html>
 <head> 
+    <title>Getting Started | HobbyBloom</title>
     <link href="../css/style.css" rel="stylesheet"> 
     <link href="../css/nav.css" rel="stylesheet">
+    <style>
+        .d-none-custom { display: none !important; }
+    </style>
 </head>
 <body class="index-body"> 
 
 <div class="index-main-container">
 
+    <form id="userForm" action="save_onboarding.php" method="post">
 
-
-    <div id="step-1" class="container mt-5">
-            <div class="index-inner-box">
-                <h1>Tell us a little bit about you!</h1>
-                <div> 
-                    <p>**This information will be stored alongside your general user data.</p>
+        <div id="step-1-wrapper">
+            <div id="step-1" class="container mt-5">
+                <div class="index-inner-box">
+                    <h1>Tell us a little bit about you!</h1>
+                    <div> 
+                        <p>**This information will be stored alongside your general user data.</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <section class="index-form">
-            <h2 class="index-form-title">Build Your Profile</h2>
-            
-            <form id="userForm" action="save_onboarding.php" method="post">
+            <section class="index-form">
+                <h2 class="index-form-title">Build Your Profile</h2>
+                
+                <div class="index-name-info">
+                    <div class="index-form-input">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" minlength="2" maxlength="50" required>
+                    </div>
 
-                <div class="index-form-input">
-                    <label for="first_name" class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" minlength="2" maxlength="50" required>
-                </div>
-
-                <div class="index-form-input">
-                    <label for="last_name" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" minlength="2" maxlength="50" required>
+                    <div class="index-form-input">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" minlength="2" maxlength="50" required>
+                    </div>
                 </div>
                 
                 <div class="index-form-input">
@@ -55,75 +60,72 @@ if (!isset($_SESSION['user'])) {
 
                 <div class="index-form-input">
                     <label for="from" class="form-label">Where are you located?</label>
-                    <div class="subtext text-muted" style="margin-top: -10px; margin-bottom: 5px; font-size: 0.8rem;">
-                        (So we can show you local Circles)
-                    </div>
                     <input type="text" class="form-control" id="from" name="from" placeholder="Location" minlength="2" maxlength="50" required>
                 </div>
 
                 <div class="index-form-input">
                     <label for="bio" class="form-label">What is one hobby you've always wanted to try?</label>
-                    <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="What is one hobby you have always wanted to try? (e.g. I've always wanted to learn to play guitar, but I don't know where to start!)" maxlength="500"></textarea>
+                    <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us about a hobby you want to learn..." maxlength="500"></textarea>
                 </div>
 
                 <div class="mt-4 text-center">
                     <button type="button" class="index-next-button" onclick="goToStep2()">Next</button>
                 </div>
-                
-                <input type="hidden" name="selected_hobbies" id="selected_hobbies_input">
-            </form>
-        </section>
-    </div>
+            </section>
+        </div> <div id="step-2" class="container mt-5 d-none-custom">
+            <h1 class="mb-4">Profile Curation</h1>
+            
+            <div class="info-box">
+                <h3>Please select some hobbies that interest you!</h3>
+                <p>These answers will be used to curate some recommended modules and circles.</p>
+            </div>
 
-    <div id="step-2" class="container mt-5 d-none-custom">
-        <h1 class="mb-4">Profile Curation</h1>
-        
-        <div class="info-box">
-            <h3>Please select some hobbies that interest you!</h3>
-            <p>These answers will be used to curate some recommended modules and circles.</p>
+            <div class="hobby-grid">
+                <div class="hobby-btn" onclick="toggleHobby(this)">Cooking</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Knitting</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Lego</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Sewing</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Painting</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Hiking</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Reading</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Gardening</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Baking</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Meditation</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Music</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Movies</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Gaming</div>
+                <div class="hobby-btn" onclick="toggleHobby(this)">Yoga</div>
+            </div>
+
+            <div class="text-center pb-5">
+                <button type="button" class="next-arrow-btn" onclick="submitFullForm()">
+                    Finish &rarr;
+                </button>
+            </div>
         </div>
 
-        <div class="hobby-grid">
-            <div class="hobby-btn" onclick="toggleHobby(this)">Cooking</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Knitting</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Lego</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Sewing</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Painting</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Hiking</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Reading</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Gardening</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Baking</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Meditation</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Music</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Movies</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Gaming</div>
-            <div class="hobby-btn" onclick="toggleHobby(this)">Yoga</div>
-        </div>
+        <input type="hidden" name="selected_hobbies" id="selected_hobbies_input">
 
-        <div class="text-center pb-5">
-            <button class="next-arrow-btn" onclick="submitFullForm()">
-                Next &rarr;
-            </button>
-        </div>
-    </div>
-
-</div>
+    </form> </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
     function goToStep2() {
+        const first = document.getElementById('first_name').value;
+        const last = document.getElementById('last_name').value;
         const username = document.getElementById('username').value;
         const age = document.getElementById('age').value;
-        const from = document.getElementById('from').value;
         
-        if(username === "" || age === "" || from === "") {
-            alert("Please fill out all required fields.");
+        if(first === "" || last === "" || username === "" || age === "") {
+            alert("Please fill out your name and details to continue.");
             return;
         }
 
-        document.getElementById('step-1').classList.add('d-none-custom');
+        document.getElementById('step-1-wrapper').classList.add('d-none-custom');
         document.getElementById('step-2').classList.remove('d-none-custom');
+        
+        window.scrollTo(0, 0);
     }
 
     function toggleHobby(element) {
@@ -132,6 +134,12 @@ if (!isset($_SESSION['user'])) {
 
     function submitFullForm() {
         const selectedButtons = document.querySelectorAll('.hobby-btn.selected');
+        
+        if (selectedButtons.length === 0) {
+            alert("Please select at least one hobby!");
+            return;
+        }
+
         let hobbies = [];
         selectedButtons.forEach(btn => {
             hobbies.push(btn.innerText);

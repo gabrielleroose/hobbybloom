@@ -42,6 +42,15 @@ try {
     $module_id = isset($_POST['module_id']) ? (int)$_POST['module_id'] : null;
     $is_edit = $module_id > 0;
 
+    if (!empty($_POST['videos'])) { //different implementation from videos unique video filtering seen on module.php. this handles the issue of duplicates before they even reach the db, also ensures they're the correct format
+    $module_videos = $_POST['videos'] ?? []; // video array
+    $module_videos = array_filter(array_map('trim', $module_videos));
+    $unique_module_videos = array_unique($module_videos);
+    
+}
+        
+    
+
     if ($is_edit) {
     // update module info
     $delete_sql = "DELETE FROM module_stage WHERE mid = ?";
@@ -90,18 +99,36 @@ try {
                 (:module_name, :cid, :mod_description, :exp_level, :num_lessons, :est_comp_time, :notes)
             ";
 
-    $stmt = $conn->prepare($module_insert_sql);
-    $stmt->execute([
-        ':module_name'   => $module_name,
-        ':cid'           => $cid,
-        ':mod_description' => $mod_description,
-        ':exp_level'    => $exp_level,
-        ':num_lessons'  => $num_lessons,
-        ':est_comp_time'=> $est_comp_time,
-        ':notes'        => $notes 
-    ]);
+        $stmt = $conn->prepare($module_insert_sql);
+        $stmt->execute([
+            ':module_name'   => $module_name,
+            ':cid'           => $cid,
+            ':mod_description' => $mod_description,
+            ':exp_level'    => $exp_level,
+            ':num_lessons'  => $num_lessons,
+            ':est_comp_time'=> $est_comp_time,
+            ':notes'        => $notes 
+        ]);
+
+        
+    
 
     $mid = $conn->lastInsertId();
+    
+    foreach ($unique_module_videos as $index=>$unique_url) {
+
+        if ($unique_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $unique_url, $matches)) {
+            $video_id = $matches[2];
+            $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', $matches[2]);
+            $embed = "https://www.youtube.com/embed/" . $video_id;
+            $insert_video_url_sql = "INSERT INTO module_stage_videos (video_url, mid) VALUES (?, ?)";
+
+            $stmt = $conn->prepare($insert_video_url_sql);
+            $stmt = $stmt->execute([$embed, $mid]);
+
+                        }
+            }
+
 
     if (!empty($_POST['stages'])) {
         foreach ($_POST['stages'] as $stage_num => $stage_data) {
