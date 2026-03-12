@@ -171,7 +171,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     <?php if (!empty($recommendations)): ?>
     <div class="dashboard-circles">
         <div class="horizontal-scroll">
-            <h2 class="dash-heading">Recommended For You</h2>
+            <h2 class="dash-heading">Recommended Modules For You</h2>
             <div class="dash-rec-circles">
 
             <?php foreach ($recommendations as $rec): ?>

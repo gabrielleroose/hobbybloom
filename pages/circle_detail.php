@@ -99,7 +99,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 20px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
-            color: white;
+            color: #1E5077;
         }
         .chat-message-container {
             display: flex;
@@ -121,13 +121,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: bold;
             text-decoration: none;
         }
-        .chat-content {
-            background: rgba(255,255,255,0.15);
-            padding: 8px 12px;
-            border-radius: 12px;
-            max-width: 75%;
-            color: white;
-        }
+        
         .chat-message-container.mine .chat-content { background: <?= htmlspecialchars($headerColor) ?>; }
         
         .member-list { background-color: white; border-radius: 10px; padding: 15px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -236,7 +230,7 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
 
             <div class="chat-container">
-                <h2 style="margin: 0 0 15px 0; color: white;">Circle Discussion</h2>
+                <h2 style="margin: 0 0 15px 0; color: #1E5077;">Circle Discussion</h2>
                 <div class="chat-box" id="chatBox">
                     <?php foreach ($chatMessages as $msg): 
                         $isMine = ($msg['user_id'] == $userId);
