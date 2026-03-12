@@ -90,6 +90,7 @@ $googleId = $_SESSION['google_id'] ?? null;
         $seen_videos = [];
         $unique_videos = [];
 
+        if ($hasStages) {
         foreach ($mod_stages as $stage) {
             $video_url = $stage['video_url'];
 
@@ -97,6 +98,7 @@ $googleId = $_SESSION['google_id'] ?? null;
 
             if ($video_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $video_url, $matches)) {
                 $video_id = $matches[2];
+                $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', $matches[2]);
                 $embed = "https://www.youtube.com/embed/" . $video_id;
 
                 if (!in_array($embed, $seen_videos)) {
@@ -104,7 +106,8 @@ $googleId = $_SESSION['google_id'] ?? null;
                     $unique_videos[] = $embed;
                 }
             }
-            }
+         }
+        
 
             $num_unique_videos = count($unique_videos);
 
@@ -196,6 +199,25 @@ $googleId = $_SESSION['google_id'] ?? null;
             echo "</div>";
         }
 
+    } else { //IF NO MOD STAGES
+        $module_stage_videos_sql = "SELECT video_url FROM module_stage_videos WHERE mid = ?";  //NEW VIDEO DISPLAY, GABBY <<<<<<<<<<<<<<<<<<
+        $stmt = $conn->prepare($module_stage_videos_sql);
+        $stmt->execute([$mod_id]);
+        $module_videos = $stmt->fetchAll(PDO::FETCH_COLUMN); // fetch as simple array of video URLs
+
+            // loop through videos by index
+        foreach ($module_videos as $i => $video_url) {
+            echo '<iframe width="560" height="315"
+                src="' . htmlspecialchars($video_url) . '"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>';
+}
+                
+
+            }
 
     } catch (Exception $e) {
         echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
