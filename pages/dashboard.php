@@ -170,6 +170,8 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="dashboard-circles">
         <div class="horizontal-scroll">
             <h2 class="dash-heading">Recommended For You</h2>
+            <div class="dash-rec-circles">
+
             <?php foreach ($recommendations as $rec): ?>
             <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
                 <div class="story-circle">
@@ -180,6 +182,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             </a>
             <?php endforeach; ?>
+            </div>
         </div>
     </div>
     <?php endif; ?>
