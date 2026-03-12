@@ -8,30 +8,52 @@ if (!isset($_SESSION['user']['id'])) {
     exit;
 }
 
-$user_id  = $_SESSION['user']['id'];
-$query    = trim($_GET['q'] ?? '');
-$mode     = $_GET['mode'] ?? 'search'; // 'search' | 'following' | 'circle_members'
+$user_id   = $_SESSION['user']['id'];
+$query     = trim($_GET['q'] ?? '');
+$mode      = $_GET['mode'] ?? 'search';
 $circle_id = intval($_GET['circle_id'] ?? 0);
 
 try {
     if ($mode === 'circle_members') {
-        // Return all members of a circle (excluding the current user)
+
+        $circleStmt = $conn->prepare("SELECT name FROM circle WHERE circle_id = ?");
+        $circleStmt->execute([$circle_id]);
+        $circleName = $circleStmt->fetchColumn();
+
+        if (!$circleName) {
+            echo json_encode(['success' => true, 'users' => []]);
+            exit;
+        }
+
+
         $stmt = $conn->prepare("
             SELECT u.id, u.username
-            FROM circle_members cm
-            JOIN users u ON u.id = cm.user_id
-            WHERE cm.circle_id = ?
-              AND cm.user_id != ?
+            FROM users u
+            JOIN user_profiles p ON p.user_id = u.id
+            WHERE u.id != ?
+              AND (
+                  p.hobbies = ?
+                  OR p.hobbies LIKE ?
+                  OR p.hobbies LIKE ?
+                  OR p.hobbies LIKE ?
+              )
             ORDER BY u.username ASC
         ");
-        $stmt->execute([$circle_id, $user_id]);
+        $stmt->execute([
+            $user_id,
+            $circleName,                   
+            $circleName . ', %',             
+            '%, ' . $circleName,             
+            '%, ' . $circleName . ', %'      
+        ]);
+
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode(['success' => true, 'users' => $users]);
         exit;
     }
 
     if ($mode === 'following') {
-        // Return all users the current user follows
+
         $stmt = $conn->prepare("
             SELECT u.id, u.username
             FROM user_follows uf
@@ -41,7 +63,7 @@ try {
         ");
         $stmt->execute([$user_id]);
     } else {
-        // Search all users by username (excluding self)
+
         if (strlen($query) < 1) {
             echo json_encode(['success' => true, 'users' => []]);
             exit;
