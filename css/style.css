@@ -3280,3 +3280,100 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   transform: translateX(2px);
   transition: 0.2s ease-in-out;
 }
+
+
+/* ------------------- internal calendar styles ----------------*/
+
+        /* ── Day numbers (date cells) ── */
+        .fc-daygrid-day-number {
+          font-size: 14px;
+          font-weight: 600;
+          color: #2c3e50;
+          text-decoration: none;
+          padding: 4px 8px;
+      }
+      
+      /* ── Column headers (Mon, Tue, etc.) ── */
+      .fc-col-header-cell-cushion {
+          font-size: 13px;
+          font-weight: 700;
+          color: #1f5077;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          text-decoration: none;
+      }
+      
+      /* ── Month/year title in toolbar ── */
+      .fc-toolbar-title {
+          font-size: 22px;
+          font-weight: 700;
+          color: #1f5077;
+      }
+      
+      /* ── Navigation buttons (prev/next/today) ── */
+      .fc-button {
+          font-size: 13px;
+          font-weight: 600;
+          background-color: #1f5077 !important;
+          border-color: #1f5077 !important;
+          color: #fff !important;
+      }
+      
+      .fc-button:hover {
+          background-color: #174063 !important;
+      }
+      
+      /* ── Event title text ── */
+      .fc-event-title {
+          font-size: 12px;
+          font-weight: 600;
+          color: #ffffff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+      
+      /* ── Event time text ── */
+      .fc-event-time {
+          font-size: 11px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 0.85);
+      }
+      
+      /* ── Event container itself ── */
+      .fc-daygrid-event {
+          border-radius: 4px;
+          padding: 2px 5px;
+          background-color: #1f5077;
+          border: none;
+      }
+      
+      .fc-daygrid-event:hover {
+          background-color: #174063;
+          cursor: pointer;
+      }
+      
+      /* ── "more" link (+3 more) ── */
+      .fc-daygrid-more-link {
+          font-size: 11px;
+          font-weight: 600;
+          color: #1f5077;
+      }
+      
+      /* ── Today's date cell highlight ── */
+      .fc-day-today .fc-daygrid-day-number {
+          background-color: #1f5077;
+          color: #ffffff;
+          border-radius: 50%;
+          width: 26px;
+          height: 26px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      
+      /* ── Weekend day numbers ── */
+      .fc-day-sat .fc-daygrid-day-number,
+      .fc-day-sun .fc-daygrid-day-number {
+          color: #e74c3c;
+      }
