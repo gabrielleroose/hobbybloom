@@ -133,11 +133,11 @@ if (isset($_POST['module_delete'])) {
                                         <?php else: ?>
                                             <?php foreach ($comments as $c): ?>
                                                 <div class="comment-item">
-                                                    <a href="profile.php?user_id=<?= $c['user_actual_id'] ?>" class="profile-link">
-                                                        <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>;"></div>
-                                                        <strong>@<?= htmlspecialchars($c['username']) ?></strong>
+                                                    <a href="profile.php?id=<?= $c['user_actual_id'] ?>" class="profile-link" style="text-decoration: none; display: flex; align-items: center;">
+                                                        <div class="user-color-circle" style="background-color: <?= htmlspecialchars($c['profile_color'] ?: '#cccccc') ?>; width: 25px; height: 25px; border-radius: 50%; margin-right: 8px;"></div>
+                                                        <strong style="color: #1f5077;">@<?= htmlspecialchars($c['username']) ?></strong>
                                                     </a>
-                                                    <div style="flex: 1; margin-left: 10px;">
+                                                    <div style="flex: 1; margin-left: 10px; color: #333;">
                                                         <?= htmlspecialchars($c['comment_text']) ?>
                                                     </div>
                                                 </div>

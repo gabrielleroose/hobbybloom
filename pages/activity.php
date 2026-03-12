@@ -27,6 +27,10 @@ if (empty($userData)) {
 $isPrivate = (int)$userData['is_private'];
 $currentTab = $_GET['tab'] ?? 'friends';
 
+$reqStmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'pending'");
+$reqStmt->execute([$userId]);
+$reqCount = (int)$reqStmt->fetchColumn();
+
 $achievementSQL = "
     SELECT DISTINCT 'achievement' AS activity_type, u.id AS user_id, u.username, p.profile_color, 0 AS target_id, 
     CASE 
@@ -51,22 +55,22 @@ $hasEarnedBadge = "AND (
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE p.is_private = 0
         UNION
         SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status
         FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0 AND e.created_at >= NOW() - INTERVAL 1 DAY
         UNION
         SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         UNION
         SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status,
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0
         UNION
-        $achievementSQL, (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following
+        $achievementSQL, (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status
         FROM users u JOIN user_profiles p ON u.id = p.user_id WHERE p.is_private = 0 $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
     ");
@@ -74,7 +78,7 @@ if ($currentTab === 'global') {
 } elseif ($currentTab === 'followers') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'follower_list' AS activity_type, u.id AS user_id, u.username, p.profile_color, 
-        (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id AND status = 'accepted') AS is_following, 
+        (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) AS follow_status, 
         uf.created_at AS activity_date, '' AS target_name, '' AS target_id, '' AS extra_info, 1 AS status 
         FROM user_follows uf JOIN users u ON uf.follower_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
         WHERE uf.followed_id = ? AND uf.status = 'accepted' ORDER BY uf.created_at DESC
@@ -82,39 +86,39 @@ if ($currentTab === 'global') {
     $feedStmt->execute([$userId, $userId]);
 } elseif ($currentTab === 'me') {
     $feedStmt = $conn->prepare("
-        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 0 AS is_following
+        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, NULL AS follow_status
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id WHERE l.uid = ?
         UNION
-        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 0 AS is_following
+        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, NULL AS follow_status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE c.uid = ?
         UNION
-        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 0 AS is_following
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, NULL AS follow_status
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id WHERE m.cid = ?
         UNION
-        $achievementSQL, 0 AS is_following
+        $achievementSQL, NULL AS follow_status
         FROM users u JOIN user_profiles p ON u.id = p.user_id WHERE u.id = ? $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
     ");
     $feedStmt->execute([$userId, $userId, $userId, $userId]);
 } else {
     $feedStmt = $conn->prepare("
-        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 1 AS is_following
+        SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status, 'accepted' AS follow_status
         FROM log l JOIN users u ON l.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id JOIN module m ON l.mid = m.id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
-        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status, 1 AS is_following
+        SELECT DISTINCT 'event' AS activity_type, u.id AS user_id, u.username, p.profile_color, e.id AS target_id, e.title AS target_name, e.location AS extra_info, e.created_at AS activity_date, 1 AS status, 'accepted' AS follow_status
         FROM events e JOIN users u ON e.created_by = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
-        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 1 AS is_following
+        SELECT DISTINCT 'circle' AS activity_type, u.id AS user_id, u.username, p.profile_color, c.circle_id AS target_id, c.name AS target_name, c.color AS extra_info, c.created_at AS activity_date, 1 AS status, 'accepted' AS follow_status
         FROM circle c JOIN users u ON c.uid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
-        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 1 AS is_following
+        SELECT DISTINCT 'module_created' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, m.created_at AS activity_date, 1 AS status, 'accepted' AS follow_status
         FROM module m JOIN users u ON m.cid = u.id LEFT JOIN user_profiles p ON u.id = p.user_id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted'
         UNION
-        $achievementSQL, 1 AS is_following
+        $achievementSQL, 'accepted' AS follow_status
         FROM users u JOIN user_profiles p ON u.id = p.user_id 
         JOIN user_follows uf ON u.id = uf.followed_id WHERE uf.follower_id = ? AND uf.status = 'accepted' $hasEarnedBadge
         ORDER BY activity_date DESC LIMIT 50
@@ -166,7 +170,7 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if ($currentTab === 'followers' && $isPrivate === 1): ?>
             <div style="text-align: center; margin-bottom: 25px;">
                 <a href="follow_requests.php" style="background: #ffd700; color: #1f5077; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    📬 View Pending Follow Requests
+                    📬 View Pending Follow Requests <?= ($reqCount > 0) ? "($reqCount)" : "" ?>
                 </a>
             </div>
         <?php endif; ?>
@@ -229,8 +233,23 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="action" value="toggle_follow">
                                 <input type="hidden" name="target_id" value="<?= $act['user_id'] ?>">
                                 <input type="hidden" name="hobby" value="activity_redirect"> 
-                                <button type="submit" class="action-btn <?= ($act['is_following'] > 0) ? 'unfollow-btn' : '' ?>">
-                                    <?= ($act['is_following'] > 0) ? 'Following ✓' : '+ Follow' ?>
+                                
+                                <?php 
+                                    $fStatus = $act['follow_status'] ?? null; 
+                                    $btnText = '+ Follow';
+                                    $btnClass = '';
+
+                                    if ($fStatus === 'accepted') {
+                                        $btnText = 'Following ✓';
+                                        $btnClass = 'unfollow-btn';
+                                    } elseif ($fStatus === 'pending') {
+                                        $btnText = 'Requested...';
+                                        $btnClass = 'unfollow-btn';
+                                    }
+                                ?>
+
+                                <button type="submit" class="action-btn <?= $btnClass ?>">
+                                    <?= $btnText ?>
                                 </button>
                             </form>
                         <?php endif; ?>
