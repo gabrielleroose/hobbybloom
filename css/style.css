@@ -1501,6 +1501,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* margin-top: 3rem; */
   /* border: 3px solid navy; */
   padding-top: 1rem;
+  width: 100%;
 
 
 }
@@ -1512,7 +1513,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding: 1rem;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   overflow-x: auto;
@@ -1523,16 +1524,25 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   width: 75%;
   /* height: 250px; */
   height: auto;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   /* margin-bottom: 2rem; */
 
 
 
 }
 
-.horizontal-scroll:hover {
-  transform: scale(1.05);
+.dash-rec-circles{
+  /* border: 3px solid red; */
+  display: flex;
+  gap: 10px;
 }
+
+/* .dash-rec-circles:hover{
+  transform: scale(1.05);
+
+} */
+
+
 
 
 
@@ -3150,6 +3160,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   padding: 2rem;
   gap: 2rem;
   align-items: flex-start;
+  width: 100%;
 }
 
 .search-row {
