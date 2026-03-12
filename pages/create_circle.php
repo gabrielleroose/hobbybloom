@@ -59,12 +59,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <?php include 'base.php'; ?>
 
 <div class="create-circle-main-container">
-    <div style="background-color: #1f5077; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <h1 style="color: white; margin: 0; font-size: 32px;">Create a New Circle</h1>
-        <p style="color: #ccc; margin-top: 10px;">Start a community around your favorite hobby!</p>
+    <div class="create-circle-top">
+        <h1 class="create-module-heading">Create a New Circle</h1>
+        <p>Start a community around your favorite hobby!</p>
     </div>
 
-    <section class="form" style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <section class="create-circle-form">
         
         <?php if ($error): ?>
             <p style="color: red; text-align: center; font-weight: bold;"><?= htmlspecialchars($error) ?></p>

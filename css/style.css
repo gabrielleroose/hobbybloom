@@ -3172,7 +3172,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .create-circle-main-container {
   border-radius: 2rem;
-  padding: 1rem 0 3rem 3rem;
+  padding: 1rem 3rem 3rem 3rem;
   width: 80%;
   margin: 0 auto;
 
@@ -3188,6 +3188,27 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
   transition: transform 0.3s ease-in-out;
 }
+
+.create-circle-top{
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.create-circle-top p{
+  font-size: var(--text-size-lg);
+  color: #1E5077;
+
+}
+
+.create-circle-form{
+  border: 3px solid red;
+  margin: 0 auto;
+  width: 80%;
+}
+
+style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
+
+style="background-color: #1f5077; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
 
 
 /* Circles Layout Overhaul */
