@@ -297,7 +297,7 @@ if (isset($_POST['module_edit'])) {
             <div class="create-form-video">
                 <label class="quiz_check create-module-label quiz">
                     <input type="checkbox" id="enable_videos">
-                    Include Module Videos?
+                    Only include module videos?
                 </label>
             </div>
 
@@ -319,7 +319,7 @@ if (isset($_POST['module_edit'])) {
 
                     <label class="quiz_check create-module-label quiz">
                         <input class="create-module-input" type="checkbox" id="enable_stages">
-                        Include Quiz Stages?
+                        Include interactive quiz stages with videos?
                     </label>
 
                 </div>
@@ -413,6 +413,22 @@ if (isset($_POST['module_edit'])) {
         </div>
     `;
     }
+</script>
+<script>
+    const enableVideos = document.getElementById("enable_videos");
+    const videoSection = document.getElementById("videos_section");
+
+    enableVideos.addEventListener("change", function() {
+
+        if (this.checked) {
+            videoSection.style.display = "block";
+      } else {
+            videoSection.style.display = "none";
+            document.getElementById("videoInputs").innerHTML = "";
+            document.getElementById("videoCount").value = "";
+    }
+
+});
 </script>
 
 
@@ -524,6 +540,47 @@ if (isset($_POST['module_edit'])) {
             generateStages(count);
 
         });
+    });
+    //non-stage video generation
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const videoCountInput = document.getElementById("videoCount");
+        const videoContainer = document.getElementById("videoInputs");
+
+        function generateVideoInputs(count) {
+
+            videoContainer.innerHTML = "";
+
+            for (let i = 1; i <= count; i++) {
+
+                const videoDiv = document.createElement("div");
+
+                videoDiv.innerHTML = `
+                    <label>Video ${i} URL:</label><br>
+                    <input 
+                        class="create-module-input"
+                        type="url"
+                        name="videos[]"
+                        placeholder="Enter video URL">
+                    <br><br>
+                `;
+
+                videoContainer.appendChild(videoDiv);
+            }
+        }
+
+        videoCountInput.addEventListener("input", function () {
+
+            const count = this.valueAsNumber;
+
+            if (!count || count < 0 || count > 5) {
+                videoContainer.innerHTML = "";
+                return;
+            }
+
+            generateVideoInputs(count);
+        });
+
     });
 </script>
 
