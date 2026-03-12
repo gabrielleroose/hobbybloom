@@ -148,28 +148,6 @@ if (!empty($myHobbies)) {
             margin-bottom: 10px;
         }
 
-        .search-hub-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #1f5077;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .search-hub-btn:hover {
-            background-color: #153853;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
 
         .filter-chip {
             padding: 6px 18px;
@@ -198,13 +176,15 @@ if (!empty($myHobbies)) {
         </div>
     </div>
 
-    <div class="page-container">
+    <div class="circle-page-container">
         <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 15px;">Circles Hub</p>
+            <p>Circles Hub</p>
             <form method="GET" action="circles.php">
                 <input type="hidden" name="view" value="<?= htmlspecialchars($viewMode) ?>">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
-                <button type="submit" class="search-hub-btn">Search Circles</button>
+                <div class="search-hub" >
+                <button class="search-hub-btn" type="submit">Search Circles</button>
+                </div>
             </form>
             <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none; background: rgba(31, 80, 119, 0.1); border: 1px solid #1f5077; color: #1f5077; border-radius: 25px; font-weight: 600;">+ Create Circle</a>
         </aside>
@@ -310,6 +290,6 @@ if (!empty($myHobbies)) {
     </section>
 <?php endif; ?>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
-</body>
 
+</body>
 </html>

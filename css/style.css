@@ -14,6 +14,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  width: 100%;
 }
 
 body {
@@ -430,21 +431,22 @@ footer {
   background-color: #BDC29D;
 }
 
-.page-container {
+.circle-page-container {
   /* max-width: 600px; */
   margin: 0 auto;
+  margin-top: 1rem;
   /* padding: 20px; */
   font-family: sans-serif;
   /* border: 2px solid green; */
   display: flex;
   flex-direction: row;
   /* align-items: flex-start; */
-  width: 85%;
+  width: 100%;
   height: auto;
-  padding: 1rem;
+  /* padding: 1rem; */
   /* border: 3px solid peru; */
   /* align-items: stretch; */
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 .page-container-inside {
@@ -476,19 +478,23 @@ footer {
   transition: transform 0.3s ease-in-out;
 
 
-
-  align-items: flex-start;
+  position: sticky;
+  /* align-items: flex-start; */
   text-align: left;
   padding: 2rem 0 0 1.5rem;
+  margin-left: 2rem;
+
+  max-height: 325px;
 
 }
 
 .search-row p {
   /* color: white; */
-  color: #1E5077;
-  font-size: var(--text-size-xl);
+  color: #2C6CA3;
+  font-size: var(--text-size-2xl);
   margin: 0 0 15px 0;
   font-weight: bold;
+  margin-bottom: 2rem;
 }
 
 
@@ -513,8 +519,34 @@ footer {
 }
 
 .search-bar::placeholder {
-  color: #ccc;
+  color: #1E5077;
 }
+
+.search-hub{
+  display: flex;
+  width: 100% !important;
+  /* margin: 0 auto; */
+  justify-content: center;
+  margin-top: .5rem;
+  margin-bottom: 7rem;
+}
+
+.search-hub-btn {
+  width: 60%;
+  padding: 10px;
+  background-color: #1f5077;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-hub-btn:hover {
+  background-color: #153853;
+}
+
 
 .create-new-circle-btn {
   width: 70%;
@@ -585,6 +617,7 @@ footer {
   display: flex;
 }
 
+
 .your-circles-wrapper {
   /* gap: 15px; */
   scrollbar-width: none;
@@ -617,10 +650,12 @@ footer {
 
 .circles-flex {
   display: flex;
-  overflow-x: auto;
-  margin-top: 2rem;
+  /* overflow-x: auto; */
+  flex-wrap: wrap;
+  margin-top: 1rem;
   padding-top: 1rem;
-  gap: 25px;
+  gap: 10px;
+  text-decoration: none;
 }
 
 
@@ -687,12 +722,12 @@ footer {
   padding: 1rem 2rem 4rem 2rem;
   border-radius: 2rem;
   /* max-width: 80%; */
-  width: 85%;
+  width: 90%;
   height: auto;
-  min-height: 250px;
+  /* min-height: 250px; */
   margin: 0 auto;
 
-  margin-top: 3rem;
+  margin-top: 5rem;
 
   /* glassmorphism */
   background: rgba(255, 255, 255, 0.2);
@@ -738,6 +773,7 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-decoration: none;
 }
 
 .circles-circle:hover {
@@ -3157,18 +3193,10 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 /* Circles Layout Overhaul */
 .page-container {
   display: flex;
-  padding: 2rem;
-  gap: 2rem;
+  /* padding: 2rem; */
+  /* gap: 2rem; */
   align-items: flex-start;
   width: 100%;
-}
-
-.search-row {
-  width: 280px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 2rem;
-  padding: 2rem 1.5rem;
 }
 
 .page-container-inside {
@@ -3180,17 +3208,14 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 }
 
 .section-heading {
-  color: #1E5077 !important;
-  font-size: var(--text-size-xl) !important;
+  color: #2C6CA3 !important;
+  font-size: var(--text-size-2xl) !important;
   font-weight: 800 !important;
   margin-bottom: 1rem !important;
+  padding-left: 1.25rem;
+
 }
 
-.main-circles-activity-wrapper {
-  display: flex;
-  gap: 2rem;
-  width: 100%;
-}
 
 .your-circles-wrapper,
 .circles-activity-wrapper {
@@ -3207,8 +3232,8 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 .highlight-card {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   background: rgba(255, 255, 255, 0.5);
   padding: 12px;
   border-radius: 12px;
@@ -3243,11 +3268,21 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   font-size: 0.8rem;
 }
 
+.filter-row {
+  display: flex;
+  gap: 10px;
+  /* margin-bottom: 20px; */
+  flex-wrap: wrap;
+  /* border: 3px solid red; */
+  padding-left: 2rem;
+}
+
 .suggested-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
+  padding: 2rem;
 }
 
 .suggested-card {
@@ -3272,6 +3307,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .hobby-label {
   color: #1E5077;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .empty-msg {
