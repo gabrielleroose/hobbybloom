@@ -10,6 +10,7 @@ if (!isset($_SESSION['user']['id'])) {
 $userId = $_SESSION['user']['id'];
 $action = $_POST['action'] ?? '';
 $hobby = $_POST['hobby'] ?? 'General';
+$statusMessage = "updated";
 
 if ($action === 'toggle_circle') {
     $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
@@ -29,24 +30,34 @@ if ($action === 'toggle_circle') {
 
 if ($action === 'toggle_follow') {
     $targetId = $_POST['target_id'] ?? 0;
-    if ($targetId > 0 && $targetId != $userId) {
-        $stmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
-        $stmt->execute([$targetId]);
-        $isPrivate = $stmt->fetchColumn();
+    $actionType = $_POST['action_type'] ?? '';
 
-        $stmt = $conn->prepare("SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = ?");
-        $stmt->execute([$userId, $targetId]);
-        $existing = $stmt->fetch();
+    if ($targetId > 0 && $targetId != $userId) {
         
-        if ($existing) {
-            $conn->prepare("DELETE FROM user_follows WHERE 
-                (follower_id = ? AND followed_id = ?) OR 
-                (follower_id = ? AND followed_id = ?)")
-                 ->execute([$userId, $targetId, $targetId, $userId]);
+        if ($actionType === 'remove_follower') {
+            $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")
+                 ->execute([$targetId, $userId]);
+            $statusMessage = "removed";
         } else {
-            $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
-            $conn->prepare("INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)")
-                 ->execute([$userId, $targetId, $newStatus]);
+            $stmt = $conn->prepare("SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = ?");
+            $stmt->execute([$userId, $targetId]);
+            $existing = $stmt->fetch();
+
+            if ($existing) {
+                $conn->prepare("DELETE FROM user_follows WHERE follower_id = ? AND followed_id = ?")
+                     ->execute([$userId, $targetId]);
+                $statusMessage = "unfollowed";
+            } else {
+                $stmt = $conn->prepare("SELECT is_private FROM user_profiles WHERE user_id = ?");
+                $stmt->execute([$targetId]);
+                $isPrivate = $stmt->fetchColumn();
+
+                $newStatus = ($isPrivate == 1) ? 'pending' : 'accepted';
+                $statusMessage = ($newStatus === 'pending') ? 'requested' : 'followed';
+                
+                $conn->prepare("INSERT INTO user_follows (follower_id, followed_id, status) VALUES (?, ?, ?)")
+                     ->execute([$userId, $targetId, $newStatus]);
+            }
         }
     }
 }
@@ -54,7 +65,7 @@ if ($action === 'toggle_follow') {
 if ($hobby === 'activity_redirect') {
     header("Location: activity.php");
 } elseif ($hobby === 'account_redirect') {
-    header("Location: account.php?success=followed");
+    header("Location: account.php?success=" . $statusMessage);
 } else {
     header("Location: circle_detail.php?hobby=" . urlencode($hobby));
 }

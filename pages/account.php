@@ -10,6 +10,10 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userId = $_SESSION['user']['id'];
 
+$reqStmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'pending'");
+$reqStmt->execute([$userId]);
+$reqCount = (int)$reqStmt->fetchColumn();
+
 $stmt = $conn->prepare("
     SELECT u.username, u.age, p.hometown, p.bio, p.hobbies, p.profile_color, p.is_private 
     FROM users u 
@@ -50,8 +54,19 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="account-main-container">
         <div class="account-settings">
             <h1>Account Settings</h1>
+            
             <?php if (isset($_GET['success'])): ?>
-                <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">Profile updated successfully!</p>
+                <p style="color: #90ee90; font-weight: bold; text-align: center; background-color: #1f5077; padding: 10px; border-radius: 5px;">
+                    <?php 
+                        switch($_GET['success']) {
+                            case 'unfollowed': echo "Successfully unfollowed user."; break;
+                            case 'removed': echo "Follower removed."; break;
+                            case 'requested': echo "Follow request sent!"; break;
+                            case 'followed': echo "You are now following this user!"; break;
+                            default: echo "Profile updated successfully!";
+                        }
+                    ?>
+                </p>
             <?php endif; ?>
 
             <form action="update_account.php" method="POST">
@@ -79,7 +94,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div style="display: flex; gap: 20px; margin-bottom: 20px;">
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Age:</label>
-                        <input class="account-input age"  type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" >
+                        <input class="account-input age" type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" >
                     </div>
                     <div style="flex: 1;">
                         <label style="font-weight: bold; color: #333;">Hometown:</label>
@@ -89,7 +104,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <div style="margin-bottom: 20px;">
                     <label style="font-weight: bold; color: #333;">Bio:</label>
-                    <textarea  class="account-input" name="bio" rows="3"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                    <textarea class="account-input" name="bio" rows="3"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -125,6 +140,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                                     
                                     <form action="circle_action.php" method="POST" style="margin: 0;" onsubmit="return confirm('Remove this follower? They will no longer see your private activity.');">
                                         <input type="hidden" name="action" value="toggle_follow">
+                                        <input type="hidden" name="action_type" value="remove_follower">
                                         <input type="hidden" name="target_id" value="<?= $f['id'] ?>">
                                         <input type="hidden" name="hobby" value="account_redirect">
                                         <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase;">
