@@ -100,88 +100,93 @@ $canViewContent = ($profileUser['is_private'] == 0 || $followStatus === 'accepte
     <link href="../css/nav.css" rel="stylesheet">
 </head>
 <body class="profile-body">
-    <div class="profile-container">
+    <div class="profile-main-container">
+        <div class="profile-container">
+
+    
         
-        <div style="background-color: <?= htmlspecialchars($bgColor) ?>; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px;">
-            <div style="width: 80px; height: 80px; background-color: white; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; color: <?= htmlspecialchars($bgColor) ?>;">
-                <?= strtoupper(substr($profileUser['username'], 0, 1)) ?>
+            <div style="background-color: <?= htmlspecialchars($bgColor) ?>; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <div style="width: 80px; height: 80px; background-color: white; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; color: <?= htmlspecialchars($bgColor) ?>;">
+                    <?= strtoupper(substr($profileUser['username'], 0, 1)) ?>
+                </div>
+                <h1 style="color: white; margin: 0; font-size: 32px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($profileUser['username']) ?></h1>
+                
+                <?php if ($myId != $targetId): ?>
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <form method="POST" style="margin: 0;">
+                            <input type="hidden" name="toggle_follow" value="1">
+                            <?php if ($followStatus === 'accepted'): ?>
+                                <button type="submit" style="background-color: white; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Following ✓</button>
+                            <?php elseif ($followStatus === 'pending'): ?>
+                                <button type="submit" style="background-color: #ffd700; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Requested...</button>
+                            <?php else: ?>
+                                <button type="submit" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">+ Follow</button>
+                            <?php endif; ?>
+                        </form>
+                        <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:8px 16px; border:none; border-radius:20px; cursor:pointer; font-weight:bold; font-size: 12px;">
+                            Report User
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
-            <h1 style="color: white; margin: 0; font-size: 32px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"><?= htmlspecialchars($profileUser['username']) ?></h1>
-            
-            <?php if ($myId != $targetId): ?>
-                <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <form method="POST" style="margin: 0;">
-                        <input type="hidden" name="toggle_follow" value="1">
-                        <?php if ($followStatus === 'accepted'): ?>
-                            <button type="submit" style="background-color: white; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Following ✓</button>
-                        <?php elseif ($followStatus === 'pending'): ?>
-                            <button type="submit" style="background-color: #ffd700; color: #333; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">Requested...</button>
+
+            <?php if ($canViewContent): ?>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="profile-div">
+                        <h3>About Me</h3>
+                        <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
+                        <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
+                        <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
+                    </div>
+
+                    <div class="profile-div">
+                        <h3>Trophy Case 🏆</h3>
+                        <?php if (empty($earnedBadges)): ?>
+                            <p style="color: #999; font-style: italic;">No badges earned yet.</p>
                         <?php else: ?>
-                            <button type="submit" style="background-color: transparent; color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">+ Follow</button>
-                        <?php endif; ?>
-                    </form>
-                    <button id="reportUserBtn" style="background:#ff4d4d; color:white; padding:8px 16px; border:none; border-radius:20px; cursor:pointer; font-weight:bold; font-size: 12px;">
-                        Report User
-                    </button>
-                </div>
-            <?php endif; ?>
-        </div>
-
-        <?php if ($canViewContent): ?>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <h3 style="margin-top: 0; color: #333;">About Me</h3>
-                    <p><strong>Age:</strong> <?= htmlspecialchars($profileUser['age'] ?? 'Not specified') ?></p>
-                    <p><strong>Hometown:</strong> <?= htmlspecialchars($profileUser['hometown'] ?? 'Not specified') ?></p>
-                    <p><strong>Bio:</strong> <?= htmlspecialchars($profileUser['bio'] ?? 'No bio yet.') ?></p>
-                </div>
-
-                <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <h3 style="margin-top: 0; color: #333;">Trophy Case 🏆</h3>
-                    <?php if (empty($earnedBadges)): ?>
-                        <p style="color: #999; font-style: italic;">No badges earned yet.</p>
-                    <?php else: ?>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                            <?php foreach ($earnedBadges as $badge): ?>
-                                <div title="<?= htmlspecialchars($badge['title']) ?>" style="display: flex; flex-direction: column; align-items: center; width: 60px;">
-                                    <div style="width: 50px; height: 50px; border-radius: 50%; background-color: <?= $badge['color'] ?>; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                                        <?= $badge['icon'] ?>
+                            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                                <?php foreach ($earnedBadges as $badge): ?>
+                                    <div title="<?= htmlspecialchars($badge['title']) ?>" style="display: flex; flex-direction: column; align-items: center; width: 60px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 50%; background-color: <?= $badge['color'] ?>; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                            <?= $badge['icon'] ?>
+                                        </div>
+                                        <span style="font-size: 10px; text-align: center; margin-top: 5px; font-weight: bold; color: #1E5077;">
+                                            <?= htmlspecialchars($badge['title']) ?>
+                                        </span>
                                     </div>
-                                    <span style="font-size: 10px; text-align: center; margin-top: 5px; font-weight: bold; color: #555;">
-                                        <?= htmlspecialchars($badge['title']) ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="profile-div">
+                    <h3>Interests & Circles</h3>
+                    <?php if (empty($hobbiesArr)): ?>
+                        <p style="color: #999; font-style: italic;">No interests added yet.</p>
+                    <?php else: ?>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <?php foreach ($hobbiesArr as $hobby): 
+                                $trimmedHobby = trim($hobby); 
+                            ?>
+                                <a href="circle_detail.php?hobby=<?= urlencode($trimmedHobby) ?>" style="text-decoration: none;">
+                                    <span style="background-color: #eee; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #1E5077; display: inline-block; transition: background-color 0.2s; border: 1px solid #ddd;">
+                                        <?= htmlspecialchars($trimmedHobby) ?>
                                     </span>
-                                </div>
+                                </a>
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
                 </div>
-            </div>
+            <?php else: ?>
+                <div style="background-color: white; padding: 60px 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
+                    <h2 style="color: #333; margin-bottom: 10px;">This Account is Private</h2>
+                    <p style="color: #666; max-width: 400px; margin: 0 auto;">Follow this user to see their bio, trophies, and interests!</p>
+                </div>
+            <?php endif; ?>
 
-            <div style="background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <h3 style="margin-top: 0; color: #333;">Interests & Circles</h3>
-                <?php if (empty($hobbiesArr)): ?>
-                    <p style="color: #999; font-style: italic;">No interests added yet.</p>
-                <?php else: ?>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <?php foreach ($hobbiesArr as $hobby): 
-                            $trimmedHobby = trim($hobby); 
-                        ?>
-                            <a href="circle_detail.php?hobby=<?= urlencode($trimmedHobby) ?>" style="text-decoration: none;">
-                                <span style="background-color: #eee; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #555; display: inline-block; transition: background-color 0.2s; border: 1px solid #ddd;">
-                                    <?= htmlspecialchars($trimmedHobby) ?>
-                                </span>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php else: ?>
-            <div style="background-color: white; padding: 60px 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
-                <h2 style="color: #333; margin-bottom: 10px;">This Account is Private</h2>
-                <p style="color: #666; max-width: 400px; margin: 0 auto;">Follow this user to see their bio, trophies, and interests!</p>
-            </div>
-        <?php endif; ?>
+        </div>
 
     </div>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
