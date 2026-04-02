@@ -7,7 +7,8 @@ ini_set('display_errors', 1);
 require_once 'db.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/twig.php';
-
+require_once __DIR__ . '/../services/get_transcript.php';
+require_once __DIR__ . '/../services/ai.php';
 // get user's google_id
 $googleId = $_SESSION['google_id'] ?? null;
 
@@ -53,7 +54,7 @@ try {
 
     if ($is_edit) {
     // update module info
-    $delete_sql = "DELETE FROM module_stage WHERE mid = ?";
+    $delete_sql = "DELETE FROM module_stage WHERE mid = ?"; //this edit process actually just deletes the module's stages when the edit is finalized, then inserts the new information
     $stmt = $conn->prepare($delete_sql);
     $stmt->execute([$module_id]);
 
@@ -120,11 +121,32 @@ try {
         if ($unique_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $unique_url, $matches)) {
             $video_id = $matches[2];
             $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', $matches[2]);
+
+            $transcript_json = getTranscript($video_id); //FOR TRANSCRIPT PROCESSING DO NOT TOUCH PLEASE THANKS
+
+            $transcript_data = json_decode($transcript_json, true); //cleans data
+
+            $transcript_text = ""; //initiates variable outside of loop to consolidate transcript
+
+            $questions_json = generateQuestions($transcript_text, 1);
+            $questions_array = json_decode($questions_json, true);
+
+            if (is_array($transcript_data)) {
+                foreach ($transcript_data as $item) {
+                    $transcript_text .= " " . $item['text'];
+                }
+            }
+
+            echo "<pre>";
+            print_r($questions_array);
+            exit;
+            
             $embed = "https://www.youtube.com/embed/" . $video_id;
             $insert_video_url_sql = "INSERT INTO module_stage_videos (video_url, mid) VALUES (?, ?)";
 
             $stmt = $conn->prepare($insert_video_url_sql);
             $stmt = $stmt->execute([$embed, $mid]);
+
 
                         }
             }
