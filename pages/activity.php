@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 session_start();
 require_once 'db.php';
 //require_once 'base.php';
@@ -34,7 +31,6 @@ $reqStmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id =
 $reqStmt->execute([$userId]);
 $reqCount = (int)$reqStmt->fetchColumn();
 
-// ... [Keep all your achievementSQL and hasEarnedBadge logic here] ...
 $achievementSQL = "
     SELECT DISTINCT 'achievement' AS activity_type, u.id AS user_id, u.username, p.profile_color, 0 AS target_id, 
     CASE 
@@ -56,7 +52,6 @@ $hasEarnedBadge = "AND (
     (SELECT COUNT(*) FROM circle WHERE uid = u.id) >= 3
 )";
 
-// ... [Keep your giant IF/ELSE tab logic here] ...
 if ($currentTab === 'global') {
     $feedStmt = $conn->prepare("
         SELECT DISTINCT 'module_progress' AS activity_type, u.id AS user_id, u.username, p.profile_color, m.id AS target_id, m.name AS target_name, m.exp_level AS extra_info, l.last_visited AS activity_date, l.complete AS status,
@@ -136,6 +131,14 @@ require_once 'base.php';
 ?>
 
 <style>
+    /* Force the sage green background since the body tag is in base.php */
+    body { 
+        background-color: #a3b18a !important; 
+        margin: 0;
+        padding: 0;
+    }
+
+    .activity-page-container { padding: 40px 20px; min-height: 100vh; }
     .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
     .activity-feed-item { 
         background-color: white; 
