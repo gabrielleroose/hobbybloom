@@ -131,14 +131,21 @@ require_once 'base.php';
 ?>
 
 <style>
-    /* Force the sage green background since the body tag is in base.php */
     body { 
-        background-color: #a3b18a !important; 
+        background-color: #7b8c7c !important;
         margin: 0;
-        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
-    .activity-page-container { padding: 40px 20px; min-height: 100vh; }
+    .activity-page-container { 
+        flex: 1; 
+        padding: 40px 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
     .activity-feed-list { display: flex; flex-direction: column; gap: 15px; max-width: 900px; margin: 0 auto; }
     .activity-feed-item { 
         background-color: white; 
@@ -148,22 +155,25 @@ require_once 'base.php';
         align-items: center; 
         justify-content: space-between; 
         box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-        flex-wrap: wrap;
     }
     .achievement-item { border-left: 5px solid #ffd700; background-color: #fffdf2; }
-    .activity-main-content { display: flex; align-items: center; flex: 1; min-width: 300px; }
-    .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; flex-shrink: 0; }
+    .activity-main-content { display: flex; align-items: center; flex: 1; }
+    .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; }
     .activity-text { color: #333; line-height: 1.4; }
     .activity-text a { text-decoration: none; font-weight: 700; color: #1f5077; }
-    .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; white-space: nowrap; }
+    .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; }
     
     .glass-tab-container { display: flex; justify-content: center; margin: 20px 0 35px 0; }
     .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
     .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
     .tab-btn.active { background-color: #1f5077; color: white; }
     
-    .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-    .unfollow-btn { background-color: #e0e0e0; color: #444; border: 1px solid #ccc; }
+    .action-btn { background-color: #1f5077; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+
+    footer {
+        position: relative !important;
+        margin-top: auto;
+    }
 </style>
 
 <div class="activity-page-container">
