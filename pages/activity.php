@@ -130,7 +130,7 @@ $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <style>
     body { 
-        background-color: #7b8c7c !important;
+        background-color: #BDC29D;
         margin: 0;
         display: flex;
         flex-direction: column;
