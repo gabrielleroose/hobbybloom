@@ -287,20 +287,25 @@ VALUES
 (1, 'GRAB', 0, 4);
 
 INSERT INTO circle (name, uid, description, color, category) VALUES 
-('Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
-('Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
-('Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
-('Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
-('Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
-('Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
-('Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
-('Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
-('Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
-('Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
-('Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
-('Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
-('Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
-('Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
+('🥖 Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
+('👑 Clash Royale', 2, 'Come discuss decks, recent updates, and learn some tips :)', '#9370db', 'Technical'),
+('🧹 Cleaning', 2, 'All about how to best clean your living spaces!', '#cccccc', 'Wellness'),
+('🍳 Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
+('🍿 Film Lovers', 2, 'A place to meet fellow lovers of film, talk about the most recent box office hits, flops, or hidden gems.', '#5cacee', 'Arts'),
+('🎮 Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
+('🪴 Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
+('🥾 Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
+('🧶 Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
+('🧱 Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
+('🧘 Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
+('🎬 Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
+('🎵 Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
+('🎨 Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
+('📚 Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
+('🏎️ Rocket League', 2, 'Come chat about all things rocket league, Learn things if your new or expand knowledge if your an experienced play. Connects with the community.', '#1f5077', 'Technical'),
+('🧵 Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
+('🧘 Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
+
 
 INSERT INTO module_stage (id, mid, stage_num, title) VALUES
 (6, 3, 1, 'Sunny Side Up Rules'),
