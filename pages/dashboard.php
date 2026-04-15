@@ -193,9 +193,11 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 
             <div class="dashboard-circles-flex">
 
-            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
                     <div class="story-circle">
-                        <div class="circle-img" style="background-color: #cccccc;"></div>
+                        <div class="circle-icon" style="background-color: #cccccc;">
+                            <?= extractEmoji('General') ?>
+                        </div>
                         <p>General</p>
                     </div>
                 </a>
@@ -211,14 +213,14 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                     ?>
                     <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
                         <div class="story-circle">
-                            <div class="circle-img" style="background-color: <?= htmlspecialchars($color) ?>;"></div>
+                            <div class="circle-icon" style="background-color: <?= htmlspecialchars($color) ?>;">
+                                <?= extractEmoji($hobby) ?>
+                            </div>
                             <p><?= htmlspecialchars($hobby) ?></p>
                         </div>
                     </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
-
-        
 
             </div>
             
