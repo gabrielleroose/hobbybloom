@@ -16,7 +16,10 @@ $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
 if ($payload && isset($payload['sub'])) {
     $googleId = $payload['sub'];
     $email = $payload['email'];
-    $name = $payload['name'];
+    
+    $name = $payload['name'] ?? 'User';
+    $firstName = $payload['given_name'] ?? 'New';
+    $lastName = $payload['family_name'] ?? 'User';
 
     try {
         $stmt = $conn->prepare("SELECT id FROM users WHERE google_id = ?");
@@ -26,7 +29,6 @@ if ($payload && isset($payload['sub'])) {
         if ($existingUser) {
             $userId = $existingUser['id'];
             
-
             $stmtProfile = $conn->prepare("SELECT profile_id FROM user_profiles WHERE user_id = ?");
             $stmtProfile->execute([$userId]);
             $hasProfile = $stmtProfile->fetch();
@@ -34,13 +36,12 @@ if ($payload && isset($payload['sub'])) {
             $redirectLocation = $hasProfile ? 'dashboard.php' : 'index.php';
 
         } else {
-            $stmt = $conn->prepare("INSERT INTO users (google_id, email, username) VALUES (?, ?, ?)");
-            $stmt->execute([$googleId, $email, $name]);
+            $stmt = $conn->prepare("INSERT INTO users (google_id, email, username, first_name, last_name) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$googleId, $email, $name, $firstName, $lastName]);
             $userId = $conn->lastInsertId();
             
             $redirectLocation = 'index.php';
         }
-
 
         $_SESSION['user'] = [
             'id' => $userId, 
@@ -56,7 +57,7 @@ if ($payload && isset($payload['sub'])) {
         ]);
 
     } catch (PDOException $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Database error']);
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
     }
 
 } else {
