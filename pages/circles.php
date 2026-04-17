@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/base.php';
+//require_once __DIR__ . '/base.php';
 
 if (!isset($_SESSION['user']['id'])) {
     header("Location: login.php");
@@ -86,6 +86,8 @@ if (!empty($myHobbies)) {
     $feedStmt->execute($params);
     $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+require_once __DIR__ . '/base.php';
 ?>
 
 <!DOCTYPE html>

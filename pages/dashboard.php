@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/base.php';
+//require_once __DIR__ . '/base.php';
 
 if (!isset($conn)) {
     die("Database connection variable (\$conn) is missing. Check your db.php file.");
@@ -26,6 +26,8 @@ if (empty($onboardingCheck)) {
     header("Location: index.php?onboarding=1"); 
     exit();
 }
+
+require_once __DIR__ . '/base.php';
 
 $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
 $stmt->execute([$userId]);

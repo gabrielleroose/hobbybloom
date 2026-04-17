@@ -8,7 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
 
 require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
-include 'base.php';
+//include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
 if (!$googleId) {
@@ -71,10 +71,7 @@ if (isset($_POST['module_delete'])) {
     header("Location: modules_display.php");
     exit();
 }
-
-
-
-
+include 'base.php';
 ?>
 
 <!DOCTYPE html>
