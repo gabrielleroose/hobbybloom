@@ -62,6 +62,18 @@ if ($action === 'toggle_follow') {
     }
 }
 
+$isAjax = isset($_POST['ajax']) && $_POST['ajax'] === '1';
+
+if ($isAjax) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'success',
+        'message' => $statusMessage,
+        'action' => $action
+    ]);
+    exit();
+}
+
 if ($hobby === 'activity_redirect') {
     header("Location: activity.php");
 } elseif ($hobby === 'account_redirect') {

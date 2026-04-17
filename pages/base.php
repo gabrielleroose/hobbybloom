@@ -15,8 +15,10 @@ if (isset($_SESSION['user']['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/nav.css">    
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav.css">    
+    
     <style>
         #toast { visibility: hidden; min-width: 250px; background-color: #1f5077; color: #fff; text-align: center; border-radius: 10px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
@@ -69,8 +71,6 @@ if (isset($_SESSION['user']['id'])) {
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="activity.php">Activity</a>
                 <a class="menu-item" href="calendar.php">Calendar</a>
-                <!-- <a class="menu-item wide-view" href="share.php">Share</a> -->
-    
             </div>
         </div>
     </nav>
@@ -205,5 +205,3 @@ if (isset($_SESSION['user']['id'])) {
         return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 </script>
-</body>
-</html>

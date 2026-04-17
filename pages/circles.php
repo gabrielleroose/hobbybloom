@@ -1,9 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-//require_once __DIR__ . '/base.php';
+require_once __DIR__ . '/base.php';
 
 if (!isset($_SESSION['user']['id'])) {
     header("Location: login.php");
@@ -150,28 +146,6 @@ require_once __DIR__ . '/base.php';
             margin-bottom: 10px;
         }
 
-        .search-hub-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #1f5077;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .search-hub-btn:hover {
-            background-color: #153853;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
 
         .filter-chip {
             padding: 6px 18px;
@@ -200,13 +174,15 @@ require_once __DIR__ . '/base.php';
         </div>
     </div>
 
-    <div class="page-container">
+    <div class="circle-page-container">
         <aside class="search-row">
-            <p style="font-size: 1.5rem; font-weight: bold; color: #1f5077; margin-bottom: 15px;">Circles Hub</p>
+            <p>Circles Hub</p>
             <form method="GET" action="circles.php">
                 <input type="hidden" name="view" value="<?= htmlspecialchars($viewMode) ?>">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
-                <button type="submit" class="search-hub-btn">Search Circles</button>
+                <div class="search-hub" >
+                <button class="search-hub-btn" type="submit">Search Circles</button>
+                </div>
             </form>
             <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none; background: rgba(31, 80, 119, 0.1); border: 1px solid #1f5077; color: #1f5077; border-radius: 25px; font-weight: 600;">+ Create Circle</a>
         </aside>
@@ -221,6 +197,9 @@ require_once __DIR__ . '/base.php';
                         <?php else: ?>
                             <?php foreach ($searchResults as $circle): ?>
                                 <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                                    <div class="circle-icon" style="background-color: <?= $circle['color'] ?>; margin-bottom: 10px;">
+                                        <?= extractEmoji($circle['name']) ?>
+                                    </div>
                                     <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
                                     <p><?= htmlspecialchars($circle['description']) ?></p>
                                 </a>
@@ -242,6 +221,9 @@ require_once __DIR__ . '/base.php';
                     <div class="suggested-grid">
                         <?php foreach ($allCircles as $circle): ?>
                             <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                                <div class="circle-icon" style="background-color: <?= $circle['color'] ?>; margin-bottom: 10px;">
+                                    <?= extractEmoji($circle['name']) ?>
+                                </div>
                                 <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
                                 <p><?= htmlspecialchars($circle['description']) ?></p>
                             </a>
@@ -260,7 +242,9 @@ require_once __DIR__ . '/base.php';
                                     $color = $dbCircleColors[trim($hobby)] ?? '#cccccc';
                                 ?>
                                     <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" class="circles-circle">
-                                        <div class="circle-img" style="background-color: <?= $color ?>;"></div>
+                                        <div class="circle-icon" style="background-color: <?= $color ?>;">
+                                            <?= extractEmoji($hobby) ?>
+                                        </div>
                                         <p class="hobby-label"><?= htmlspecialchars($hobby) ?></p>
                                     </a>
                                 <?php endforeach; ?>
@@ -304,6 +288,9 @@ require_once __DIR__ . '/base.php';
         <div class="suggested-grid">
             <?php foreach ($suggestedCircles as $circle): ?>
                 <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                    <div class="circle-icon" style="background-color: <?= $circle['color'] ?>; margin-bottom: 10px;">
+                        <?= extractEmoji($circle['name']) ?>
+                    </div>
                     <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
                     <p><?= htmlspecialchars($circle['description']) ?></p>
                 </a>
@@ -312,6 +299,6 @@ require_once __DIR__ . '/base.php';
     </section>
 <?php endif; ?>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
-</body>
 
+</body>
 </html>

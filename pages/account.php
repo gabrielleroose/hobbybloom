@@ -76,7 +76,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; color: #333;">Profile Theme Color:</label>
+                    <label class="account-label">Profile Theme Color:</label>
                     <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
                         <input type="color" name="profile_color" value="<?= htmlspecialchars($user['profile_color'] ?? '#1f5077') ?>" style="width: 50px; height: 50px; border: none; padding: 0; cursor: pointer; border-radius: 5px;">
                         <span style="color: #666; font-size: 14px;">Pick a color for your public profile!</span>
@@ -84,7 +84,7 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="account-privacy">
-                    <label style="font-weight: bold; color: #333;">Account Privacy:</label>
+                    <label class="account-label" >Account Privacy:</label>
                     <select name="is_private" class="account-privacy-input">
                         <option value="0" <?= ($user['is_private'] == 0) ? 'selected' : '' ?>>Public (everyone can see my activity)</option>
                         <option value="1" <?= ($user['is_private'] == 1) ? 'selected' : '' ?>>Private (only followers see my activity)</option>
@@ -93,22 +93,22 @@ $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <div style="display: flex; gap: 20px; margin-bottom: 20px;">
                     <div style="flex: 1;">
-                        <label style="font-weight: bold; color: #333;">Age:</label>
+                        <label class="account-label">Age:</label>
                         <input class="account-input age" type="number" name="age" value="<?= htmlspecialchars($user['age'] ?? '') ?>" >
                     </div>
                     <div style="flex: 1;">
-                        <label style="font-weight: bold; color: #333;">Hometown:</label>
+                        <label class="account-label">Hometown:</label>
                         <input class="account-input hometown" type="text" name="from" value="<?= htmlspecialchars($user['hometown'] ?? '') ?>" >
                     </div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; color: #333;">Bio:</label>
+                    <label class="account-label">Bio:</label>
                     <textarea class="account-input" name="bio" rows="3"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; color: #333;">My Interests (comma separated):</label>
+                    <label class="account-label">My Interests (comma separated):</label>
                     <input class="account-input" type="text" name="selected_hobbies" value="<?= htmlspecialchars($user['hobbies'] ?? '') ?>" placeholder="Cooking, Gaming, Lego">
                 </div>
 

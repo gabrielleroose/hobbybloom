@@ -171,7 +171,9 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     <?php if (!empty($recommendations)): ?>
     <div class="dashboard-circles">
         <div class="horizontal-scroll">
-            <h2 class="dash-heading">Recommended For You</h2>
+            <h2 class="dash-heading">Recommended Modules For You</h2>
+            <div class="dash-rec-circles">
+
             <?php foreach ($recommendations as $rec): ?>
             <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
                 <div class="story-circle">
@@ -182,6 +184,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             </a>
             <?php endforeach; ?>
+            </div>
         </div>
     </div>
     <?php endif; ?>
@@ -192,9 +195,11 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
 
             <div class="dashboard-circles-flex">
 
-            <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
+                <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
                     <div class="story-circle">
-                        <div class="circle-img" style="background-color: #cccccc;"></div>
+                        <div class="circle-icon" style="background-color: #cccccc;">
+                            <?= extractEmoji('General') ?>
+                        </div>
                         <p>General</p>
                     </div>
                 </a>
@@ -210,14 +215,14 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                     ?>
                     <a href="circle_detail.php?hobby=<?= urlencode($hobby) ?>" style="text-decoration: none; color: inherit;">
                         <div class="story-circle">
-                            <div class="circle-img" style="background-color: <?= htmlspecialchars($color) ?>;"></div>
+                            <div class="circle-icon" style="background-color: <?= htmlspecialchars($color) ?>;">
+                                <?= extractEmoji($hobby) ?>
+                            </div>
                             <p><?= htmlspecialchars($hobby) ?></p>
                         </div>
                     </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
-
-        
 
             </div>
             

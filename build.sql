@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;  
 
 DROP TABLE IF EXISTS reports;
@@ -36,7 +37,7 @@ CREATE TABLE users (
     type TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE user_profiles (
     profile_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,7 +50,7 @@ CREATE TABLE user_profiles (
     login_streak INT DEFAULT 0,
     is_private TINYINT(1) DEFAULT 0, 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE user_follows (
     follower_id INT NOT NULL,
@@ -59,7 +60,7 @@ CREATE TABLE user_follows (
     PRIMARY KEY (follower_id, followed_id),
     FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (followed_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE circle (
     circle_id INT NOT NULL AUTO_INCREMENT,
@@ -71,7 +72,7 @@ CREATE TABLE circle (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (circle_id),
     FOREIGN KEY (uid) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE circle_messages (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -80,7 +81,7 @@ CREATE TABLE circle_messages (
     message TEXT NOT NULL, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE circle_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -91,7 +92,7 @@ CREATE TABLE circle_members (
     UNIQUE(circle_id, user_id),
     FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module (
     id INT NOT NULL AUTO_INCREMENT,
@@ -107,7 +108,7 @@ CREATE TABLE module (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (cid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -116,7 +117,7 @@ CREATE TABLE module_stage (
     title varchar(100),
     UNIQUE (mid, stage_num),
     FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage_questions (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -124,7 +125,7 @@ CREATE TABLE module_stage_questions (
     question_text varchar(255),
     order_num INT NOT NULL,
     FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage_questions_answers (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -133,7 +134,7 @@ CREATE TABLE module_stage_questions_answers (
     is_correct INT NOT NULL DEFAULT 0,
     ans_num INT NOT NULL,
     FOREIGN KEY (msqid) REFERENCES module_stage_questions(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage_questions_user_answers (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -141,7 +142,7 @@ CREATE TABLE module_stage_questions_user_answers (
     msqaid INT NOT NULL,
     FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (msqaid) REFERENCES module_stage_questions_answers(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage_progress (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -151,7 +152,7 @@ CREATE TABLE module_stage_progress (
     FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE, 
     FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (msid) REFERENCES module_stage(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_comments (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -161,7 +162,7 @@ CREATE TABLE module_comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_user_completion (
     id INT NOT NULL AUTO_INCREMENT,
@@ -175,7 +176,7 @@ CREATE TABLE module_user_completion (
     FOREIGN KEY (uid) REFERENCES users(id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE log (
     id INT NOT NULL AUTO_INCREMENT,
@@ -188,7 +189,7 @@ CREATE TABLE log (
     PRIMARY KEY (id),
     FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE feed (
     uid INT NOT NULL,
@@ -198,7 +199,7 @@ CREATE TABLE feed (
     FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (mid) REFERENCES module(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (lid) REFERENCES log(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE module_stage_videos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -208,9 +209,8 @@ CREATE TABLE module_stage_videos (
     FOREIGN KEY (msid) REFERENCES module_stage(id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-------------- calendar tables below ---------------
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE events (
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_events_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE event_invites (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -231,10 +231,8 @@ CREATE TABLE event_invites (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
--------------------- report table ----------------
 CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     reporter_id INT NOT NULL,
@@ -248,7 +246,7 @@ CREATE TABLE reports (
     FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (module_id) REFERENCES module(id) ON DELETE CASCADE,
     FOREIGN KEY (circle_id) REFERENCES circle(circle_id) ON DELETE CASCADE 
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- TEST DATA --
 INSERT INTO users (id, first_name, last_name, username, email, password, google_id) VALUES 
@@ -287,20 +285,24 @@ VALUES
 (1, 'GRAB', 0, 4);
 
 INSERT INTO circle (name, uid, description, color, category) VALUES 
-('Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
-('Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
-('Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
-('Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
-('Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
-('Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
-('Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
-('Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
-('Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
-('Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
-('Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
-('Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
-('Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
-('Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
+('🥖 Baking', 2, 'Sweet treats and sourdough. Share your best oven-baked results.', '#f4a460', 'Wellness'),
+('👑 Clash Royale', 2, 'Come discuss decks, recent updates, and learn some tips :)', '#9370db', 'Technical'),
+('🧹 Cleaning', 2, 'All about how to best clean your living spaces!', '#cccccc', 'Wellness'),
+('🍳 Cooking', 2, 'A place for beginners and chefs to share recipes and culinary adventures.', '#ff9999', 'Wellness'),
+('🍿 Film Lovers', 2, 'A place to meet fellow lovers of film, talk about the most recent box office hits, flops, or hidden gems.', '#5cacee', 'Arts'),
+('🎮 Gaming', 2, 'Find teammates, talk strategy, and discuss new releases.', '#9370db', 'Technical'),
+('🪴 Gardening', 2, 'Grow your own food and flowers! Share tips for happy plants.', '#26f749', 'Wellness'),
+('🥾 Hiking', 2, 'Let\'s hit the trails! Share gear reviews and scenic paths.', '#90ee90', 'Wellness'),
+('🧶 Knitting', 2, 'Yarn lovers unite!! Share your latest patterns and cozy creations.', '#e6e6fa', 'Arts'),
+('🧱 Lego', 2, 'Brick by brick, show off your sets and creative masterpieces.', '#ffd700', 'Technical'),
+('🧘 Meditation', 2, 'Find your zen. Share mindfulness techniques and peaceful spots.', '#afeeee', 'Wellness'),
+('🎬 Movies', 2, 'The silver screen community. Discuss reviews, actors, and directing.', '#5cacee', 'Arts'),
+('🎵 Music', 2, 'For the listeners and the players. Discuss theory, gear, and hits.', '#ac58ca', 'Arts'),
+('🎨 Painting', 2, 'From watercolors to acrylics, share your canvas and techniques.', '#ffcc00', 'Arts'),
+('📚 Reading', 2, 'A sanctuary for book lovers. Discuss your latest reads and favorites.', '#deb887', 'Arts'),
+('🏎️ Rocket League', 2, 'Come chat about all things rocket league, Learn things if your new or expand knowledge if your an experienced play. Connects with the community.', '#1f5077', 'Technical'),
+('🧵 Sewing', 2, 'Stitch your way to success. Share patterns and garment projects.', '#ff66b2', 'Arts'),
+('🧘 Yoga', 2, 'Stretch, breathe, and flow. A community for all skill levels.', '#ff881a', 'Wellness');
 
 INSERT INTO module_stage (id, mid, stage_num, title) VALUES
 (6, 3, 1, 'Sunny Side Up Rules'),
@@ -343,4 +345,3 @@ INSERT INTO module_stage_questions_answers (msqid, answer, is_correct, ans_num) 
 (6, 'The egg was cooked in a microwave', 0, 2),
 (6, 'The egg was flipped, but the yolk is still runny', 1, 3),
 (6, 'The egg was boiled in its shell', 0, 4);
-

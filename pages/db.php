@@ -24,4 +24,10 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
+
+function extractEmoji($string) {
+    preg_match('/^(\X)/u', $string, $matches);
+    return $matches[1] ?? '';
+}
+
 ?>
