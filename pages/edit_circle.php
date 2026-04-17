@@ -22,7 +22,22 @@ if (!$circle) {
     die("<div style='text-align:center; padding: 50px;'><h2 style='color:#1f5077;'>Circle not found or you do not have permission to edit it.</h2></div>");
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] === 'delete_circle') {
+    try {
+        $delMsg = $conn->prepare("DELETE FROM circle_messages WHERE hobby_name = ?");
+        $delMsg->execute([$circle['name']]);
+
+        $delCircle = $conn->prepare("DELETE FROM circle WHERE circle_id = ? AND uid = ?");
+        $delCircle->execute([$circleId, $userId]);
+
+        header("Location: dashboard.php?success=circle_deleted");
+        exit();
+    } catch (PDOException $e) {
+        $error = "Something went wrong while trying to delete the circle.";
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['action'])) {
     $description = trim($_POST["description"]);
     $color = $_POST["color"] ?? '#1f5077';
     $category = $_POST["category"] ?? 'General';
@@ -116,11 +131,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
                 </div>
 
-                <div style="text-align: center; display: flex; gap: 15px; justify-content: center;">
+                <div style="text-align: center; display: flex; gap: 15px; justify-content: center; margin-bottom: 30px;">
                     <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" style="background-color: #e0e0e0; color: #555; text-decoration: none; padding: 12px 30px; border-radius: 30px; font-weight: bold; transition: 0.3s;">Cancel</a>
                     <button type="submit" style="background-color: #1f5077; color: white; border: none; padding: 12px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;">Save Changes</button>
                 </div>
             </form>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+            <div style="text-align: center; background-color: rgba(255, 0, 0, 0.05); padding: 25px; border-radius: 10px; border: 1px dashed #ff4d4d;">
+                <h3 style="color: #d9534f; margin-top: 0;">Danger Zone</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Once you delete a circle, there is no going back. All chat history will be permanently deleted.</p>
+                <form method="POST" onsubmit="return confirm('Are you absolutely sure you want to delete this circle? This action cannot be undone.');">
+                    <input type="hidden" name="action" value="delete_circle">
+                    <button type="submit" style="background-color: #d9534f; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;">
+                        Delete Circle
+                    </button>
+                </form>
+            </div>
         <?php endif; ?>
     </section>
 </div>
