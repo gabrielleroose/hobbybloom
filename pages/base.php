@@ -47,6 +47,11 @@ if (isset($_SESSION['user']['id'])) {
                 <p>Hobby<span class="bloom">Bloom</span></p>
 
                 <div class="branding-info">
+                    <div class="nav-search-wrap">
+                        <span class="nav-search-icon">🔍</span>
+                        <input type="text" class="nav-search-input" id="navUserSearch" placeholder="Search users…" autocomplete="off">
+                        <div class="nav-search-dropdown" id="navSearchDropdown"></div>
+                    </div>
                     <a class="menu-item wide-view" href="account.php">
                         Account
                         <?php if ($reqCount > 0): ?>
@@ -86,6 +91,118 @@ if (isset($_SESSION['user']['id'])) {
         if (type === '1') showToast("Changes saved successfully! ✅");
         if (type === 'joined') showToast("Event added to your calendar! 📅");
         if (type === 'followed') showToast("New connection added! 🤝");
+    }
+    const navInput    = document.getElementById('navUserSearch');
+    const navDropdown = document.getElementById('navSearchDropdown');
+
+    if (navInput) {
+        let searchTimeout = null;
+
+        navInput.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            const q = this.value.trim();
+            if (!q) { navDropdown.classList.remove('open'); return; }
+
+            searchTimeout = setTimeout(() => {
+                fetch('nav_bar_search.php?mode=search&q=' + encodeURIComponent(q))
+                    .then(r => r.json())
+                    .then(data => {
+                        navDropdown.innerHTML = '';
+                        if (!data.success || !data.users.length) {
+                            navDropdown.innerHTML = '<div class="nav-search-empty">No users found.</div>';
+                        } else {
+                            data.users.forEach(u => renderSearchResult(u));
+                        }
+                        navDropdown.classList.add('open');
+                    })
+                    .catch(() => {
+                        navDropdown.innerHTML = '<div class="nav-search-empty">Search unavailable.</div>';
+                        navDropdown.classList.add('open');
+                    });
+            }, 280);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.nav-search-wrap')) {
+                navDropdown.classList.remove('open');
+            }
+        });
+    }
+
+    function renderSearchResult(u) {
+        const colors  = ['#1f5077','#27ae60','#8e44ad','#e67e22','#c0392b','#2980b9'];
+        const color   = colors[u.username.charCodeAt(0) % colors.length];
+        const initial = u.username.charAt(0).toUpperCase();
+
+        const item = document.createElement('div');
+        item.className = 'nav-search-item';
+
+        let followHtml = '';
+        let statusHtml = '';
+
+        if (u.follow_status === 'accepted') {
+            statusHtml = '<span class="nav-search-status">Following</span>';
+            followHtml = `<button class="nav-follow-btn following" data-uid="${u.id}" data-status="accepted">Following ✓</button>`;
+        } else if (u.follow_status === 'pending') {
+            statusHtml = '<span class="nav-search-status pending">Requested</span>';
+            followHtml = `<button class="nav-follow-btn pending" data-uid="${u.id}" data-status="pending">Pending…</button>`;
+        } else {
+            followHtml = `<button class="nav-follow-btn follow" data-uid="${u.id}" data-status="none">+ Follow</button>`;
+        }
+
+        item.innerHTML = `
+            <a href="profile.php?id=${u.id}" style="display:flex;align-items:center;gap:10px;flex:1;text-decoration:none;">
+                <div class="nav-search-avatar" style="background:${color}">${initial}</div>
+                <div class="nav-search-info">
+                    <span class="nav-search-username">${escapeHtml(u.username)}</span>
+                    ${statusHtml}
+                </div>
+            </a>
+            ${followHtml}
+        `;
+
+        const btn = item.querySelector('.nav-follow-btn');
+        if (btn) {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const uid    = this.dataset.uid;
+                const status = this.dataset.status;
+
+                fetch('toggle_follow.php', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ followed_id: uid })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        if (status === 'accepted' || status === 'pending') {
+                            this.textContent    = '+ Follow';
+                            this.className      = 'nav-follow-btn follow';
+                            this.dataset.status = 'none';
+                            const s = item.querySelector('.nav-search-status');
+                            if (s) s.textContent = '';
+                        } else {
+                            if (data.status === 'pending') {
+                                this.textContent    = 'Pending…';
+                                this.className      = 'nav-follow-btn pending';
+                                this.dataset.status = 'pending';
+                            } else {
+                                this.textContent    = 'Following ✓';
+                                this.className      = 'nav-follow-btn following';
+                                this.dataset.status = 'accepted';
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        navDropdown.appendChild(item);
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 </script>
 </body>

@@ -16,10 +16,13 @@
 
 <body class="calendar-body">
 <?php
-$gcStmt = $conn->prepare("SELECT gc_access_token FROM users WHERE id = ?");
-$gcStmt->execute([$_SESSION['user']['id']]);
-$gcRow = $gcStmt->fetch();
-$gcConnected = !empty($gcRow['gc_access_token']);
+$gcConnected = false;
+if (isset($_SESSION['user']['id'])) {
+    $gcStmt = $conn->prepare("SELECT gc_access_token FROM users WHERE id = ?");
+    $gcStmt->execute([$_SESSION['user']['id']]);
+    $gcRow = $gcStmt->fetch();
+    $gcConnected = !empty($gcRow['gc_access_token']);
+}
 ?>
 
 

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php'; //necessary to connect to db.
 
 require_once __DIR__ . '/../config/twig.php'; //necessary to load twig
-include 'base.php';
+//include 'base.php';
 
 $googleId = $_SESSION['google_id'] ?? null;
 if (!$googleId) {
@@ -57,6 +57,20 @@ $fetch_query = "SELECT m.*, msp.msid, u.username, u.email
 $stmt = $pdo->prepare($fetch_query);
 $stmt->execute();
 $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$module_delete_id = NULL;
+
+if (isset($_POST['module_delete'])) {
+    $module_delete_id = (int) $_POST['module_delete'];
+    $module_delete_sql = "DELETE FROM module WHERE id = ? AND cid = ?";
+    $stmt = $conn->prepare($module_delete_sql);
+    $stmt->execute([$module_delete_id, $user_id]);
+    
+    header("Location: modules_display.php");
+    exit();
+}
+include 'base.php';
 ?>
 
 <!DOCTYPE html>

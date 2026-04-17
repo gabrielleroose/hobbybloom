@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'db.php';
-require_once 'base.php';
+//require_once 'base.php';
 
 if (!isset($_SESSION['user']['id'])) {
     header("Location: login.php");
@@ -126,6 +126,8 @@ if ($currentTab === 'global') {
     $feedStmt->execute([$userId, $userId, $userId, $userId, $userId]);
 }
 $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
+
+require_once 'base.php';
 ?>
 
 <!DOCTYPE html>

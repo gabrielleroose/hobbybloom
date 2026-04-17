@@ -2,6 +2,10 @@
 session_start();
 require_once 'db.php';
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
+
 // Only logged-in users can report
 if (!isset($_SESSION['user']['id'])) {
     echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
@@ -12,7 +16,7 @@ if (!isset($_SESSION['user']['id'])) {
 $input = json_decode(file_get_contents('php://input'), true);
 
 $reporter_id = $_SESSION['user']['id'];
-$type        = $input['type'] ?? '';
+$type        = $input['type']   ?? '';
 $item_id     = $input['item_id'] ?? null;
 $reason      = trim($input['reason'] ?? '');
 
@@ -35,14 +39,20 @@ if (!$column) {
 }
 
 // Save to database
-$stmt = $conn->prepare("INSERT INTO reports (reporter_id, $column, reason) VALUES (?, ?, ?)");
-$stmt->execute([$reporter_id, $item_id, $reason]);
+try {
+    $stmt = $conn->prepare("INSERT INTO reports (reporter_id, $column, reason) VALUES (?, ?, ?)");
+    $stmt->execute([$reporter_id, $item_id, $reason]);
+} catch (Exception $e) {
+    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    exit;
+}
 
 // Detect localhost
-$isLocal = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1');
-
-// Detect localhost
-$isLocal = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1');
+$isLocal = (
+    $_SERVER['SERVER_NAME'] === 'localhost' ||
+    $_SERVER['SERVER_ADDR'] === '127.0.0.1' ||
+    str_contains($_SERVER['HTTP_HOST'] ?? '', 'localhost')
+);
 
 if ($isLocal) {
     // Just log locally
@@ -75,5 +85,20 @@ if ($isLocal) {
     ]);
 
     $response = curl_exec($ch);
+    $curlError = curl_error($ch);
     curl_close($ch);
+
+    if ($curlError) {
+        echo json_encode(['status' => 'error', 'message' => 'Email failed: ' . $curlError]);
+        exit;
+    }
+
+    $resendResponse = json_decode($response, true);
+    if (isset($resendResponse['statusCode']) && $resendResponse['statusCode'] >= 400) {
+        echo json_encode(['status' => 'error', 'message' => 'Email API error: ' . ($resendResponse['message'] ?? 'unknown')]);
+        exit;
+    }
 }
+
+echo json_encode(['status' => 'success', 'message' => 'Report submitted successfully.']);
+exit;
