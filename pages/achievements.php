@@ -21,16 +21,25 @@ $stmt->execute([$userId]);
 $profileData = $stmt->fetch(PDO::FETCH_ASSOC);
 $streak = (int)($profileData['login_streak'] ?? 0);
 
-$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ?");
+$myHobbiesStr = $profileData['hobbies'] ?? '';
+$myCircles = $myHobbiesStr ? array_map('trim', explode(',', $myHobbiesStr)) : [];
+$hobbyCount = count($myCircles); // For Renaissance Soul badge
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND status = 'accepted'");
 $stmt->execute([$userId]);
 $followingCount = (int)$stmt->fetchColumn();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM user_follows WHERE followed_id = ? AND status = 'accepted'");
+$stmt->execute([$userId]);
+$followersCount = (int)$stmt->fetchColumn();
 
 $stmt = $conn->prepare("SELECT COUNT(*) FROM circle WHERE uid = ?");
 $stmt->execute([$userId]);
 $circlesCreated = (int)$stmt->fetchColumn();
 
-$myHobbiesStr = $profileData['hobbies'] ?? '';
-$myCircles = $myHobbiesStr ? array_map('trim', explode(',', $myHobbiesStr)) : [];
+$stmt = $conn->prepare("SELECT COUNT(*) FROM circle_messages WHERE user_id = ?");
+$stmt->execute([$userId]);
+$messagesSent = (int)$stmt->fetchColumn();
 
 $achievements = [
     [
@@ -42,28 +51,20 @@ $achievements = [
         'progress' => min($modulesCompleted, 1) . ' / 1'
     ],
     [
-        'title' => 'Circle Architect',
-        'desc' => 'Build the community by creating 3 circles.',
-        'icon' => '🏗️',
-        'color' => '#98fb98',
-        'unlocked' => $circlesCreated >= 3,
-        'progress' => min($circlesCreated, 3) . ' / 3'
+        'title' => 'Community Leader',
+        'desc' => 'Create your own circle.',
+        'icon' => '👑',
+        'color' => '#9370db',
+        'unlocked' => $circlesCreated >= 1,
+        'progress' => min($circlesCreated, 1) . ' / 1'
     ],
     [
-        'title' => 'Module Master',
-        'desc' => 'Complete 5 different modules.',
-        'icon' => '🎓',
-        'color' => '#ffd700',
-        'unlocked' => $modulesCompleted >= 5,
-        'progress' => min($modulesCompleted, 5) . ' / 5'
-    ],
-    [
-        'title' => 'Firestarter',
-        'desc' => 'Reach a 7-day login streak.',
-        'icon' => '🔥',
-        'color' => '#ffb6c1',
-        'unlocked' => $streak >= 7,
-        'progress' => min($streak, 7) . ' / 7'
+        'title' => 'Renaissance Soul',
+        'desc' => 'Join 4 different circles.',
+        'icon' => '🎨',
+        'color' => '#ffebcd',
+        'unlocked' => $hobbyCount >= 4,
+        'progress' => min($hobbyCount, 4) . ' / 4'
     ],
     [
         'title' => 'Social Butterfly',
@@ -74,21 +75,62 @@ $achievements = [
         'progress' => min($followingCount, 5) . ' / 5'
     ],
     [
-        'title' => 'Community Leader',
-        'desc' => 'Create your own circle.',
-        'icon' => '👑',
-        'color' => '#9370db',
-        'unlocked' => $circlesCreated >= 1,
-        'progress' => min($circlesCreated, 1) . ' / 1'
+        'title' => 'Rising Star',
+        'desc' => 'Gain 3 followers.',
+        'icon' => '⭐',
+        'color' => '#dda0dd',
+        'unlocked' => $followersCount >= 3,
+        'progress' => min($followersCount, 3) . ' / 3'
     ],
     [
-        'title' => 'Bloom Legend',
-        'desc' => 'Unlock all primary badges.',
-        'icon' => '🌟',
-        'color' => '#1f5077',
-        'unlocked' => ($modulesCompleted >= 5 && $streak >= 7 && $followingCount >= 5 && $circlesCreated >= 3),
-        'progress' => (($modulesCompleted >= 5 ? 1 : 0) + ($streak >= 7 ? 1 : 0) + ($followingCount >= 5 ? 1 : 0) + ($circlesCreated >= 3 ? 1 : 0) + ($modulesCompleted >= 1 ? 1 : 0)) . ' / 5'
+        'title' => 'Chatterbox',
+        'desc' => 'Send 5 messages in circles.',
+        'icon' => '💬',
+        'color' => '#20b2aa',
+        'unlocked' => $messagesSent >= 5,
+        'progress' => min($messagesSent, 5) . ' / 5'
+    ],
+    [
+        'title' => 'Module Master',
+        'desc' => 'Complete 5 different modules.',
+        'icon' => '🎓',
+        'color' => '#ffd700',
+        'unlocked' => $modulesCompleted >= 5,
+        'progress' => min($modulesCompleted, 5) . ' / 5'
+    ],
+    [
+        'title' => 'Circle Architect',
+        'desc' => 'Build the community by creating 3 circles.',
+        'icon' => '🏗️',
+        'color' => '#98fb98',
+        'unlocked' => $circlesCreated >= 3,
+        'progress' => min($circlesCreated, 3) . ' / 3'
+    ],
+    [
+        'title' => 'Firestarter',
+        'desc' => 'Reach a 7-day login streak.',
+        'icon' => '🔥',
+        'color' => '#ffb6c1',
+        'unlocked' => $streak >= 7,
+        'progress' => min($streak, 7) . ' / 7'
     ]
+];
+
+$totalBadges = count($achievements);
+$unlockedBadges = 0;
+foreach ($achievements as $badge) {
+    if ($badge['unlocked']) {
+        $unlockedBadges++;
+    }
+}
+
+$achievements[] = [
+    'title' => 'Bloom Legend',
+    'desc' => 'Unlock all other ' . $totalBadges . ' badges.',
+    'icon' => '🌟',
+    'color' => '#1f5077',
+    'unlocked' => $unlockedBadges >= $totalBadges,
+    'progress' => min($unlockedBadges, $totalBadges) . ' / ' . $totalBadges
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['share_badge'])) {
