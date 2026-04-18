@@ -4,7 +4,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'db.php';
-// Include base.php at the very top so it handles the <head> and navbar
 require_once 'base.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -15,7 +14,6 @@ if (!isset($_SESSION['user']['id'])) {
 $userId = $_SESSION['user']['id'];
 $currentHobby = $_GET['hobby'] ?? 'General';
 
-// Chat message submission (This perfectly tracks for your Chatterbox badge!)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['chat_message'])) {
     $msg = trim($_POST['chat_message']);
     $ins = $conn->prepare("INSERT INTO circle_messages (hobby_name, user_id, message) VALUES (?, ?, ?)");
@@ -67,8 +65,11 @@ $memStmt->execute([$userId, "%$currentHobby%", $userId]);
 $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<script>
+    document.title = "<?= htmlspecialchars($currentHobby) ?> Circle | HobbyBloom";
+</script>
+
 <style>
-    /* Force background and flex layout for footer positioning */
     body { 
         background-color: #a3b18a !important; 
         margin: 0; 
@@ -82,7 +83,6 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     footer { margin-top: auto; }
 
-    /* Page specific styles */
     .chat-container {
         height: 450px !important;
         display: flex;
@@ -102,7 +102,6 @@ $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
     .chat-message-container.mine { flex-direction: row-reverse; }
     .chat-avatar { width: 35px; height: 35px; border-radius: 50%; margin: 0 10px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold; text-decoration: none; }
     
-    /* Using the circle's dynamic color for the user's chat bubbles */
     .chat-message-container.mine .chat-content { background: <?= htmlspecialchars($headerColor) ?>; color: white; }
     .chat-message-container:not(.mine) .chat-content { background: white; color: #333; }
     
