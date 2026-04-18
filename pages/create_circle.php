@@ -46,6 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
+<script>
+    document.title = "Create Circle | HobbyBloom";
+</script>
+
 <style>
     body {
         background-color: #BDC29D !important;
@@ -92,9 +96,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div style="margin-bottom: 25px;">
                         <label class="create-circle-label" style="font-weight: bold; color: #1f5077;">Circle / Hobby Name:</label>
                         <input class="create-circle-input" type="text" name="name" placeholder="e.g., 📸 Photography" required>
-                        <p style="font-size: 0.85rem; color: #555; margin-top: 8px; font-style: italic;">
-                            💡 <strong>Tip:</strong> Start the name with an emoji! It will be used as the icon for your circle.
-                        </p>
+                        
+                        <div style="background-color: rgba(31, 80, 119, 0.08); border-left: 4px solid #1f5077; padding: 12px 15px; margin-top: 15px; border-radius: 4px;">
+                            <p style="font-size: 0.9rem; color: #1f5077; margin: 0; line-height: 1.4;">
+                                <strong>⚠️ Action Required:</strong> You must start your circle name with an <strong>emoji</strong>! 
+                                The system uses this emoji as your group's official icon across the app.
+                            </p>
+                        </div>
                     </div>
 
                     <div style="margin-bottom: 25px;">
