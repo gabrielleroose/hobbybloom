@@ -172,7 +172,7 @@ $circles = (int)$cirCount->fetchColumn();
                     </div>
                 </div>
                 <div style="text-align: center; padding-bottom: 1.5rem; margin-top: 1rem;">
-                    <a href="my_content.php" style="text-decoration: none; color: #fff; font-weight: bold; background-color: #1f5077; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
+                    <a href="My_content.php" style="text-decoration: none; color: #fff; font-weight: bold; background-color: #1f5077; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
                         ✏️ View My Content
                     </a>
                 </div>
