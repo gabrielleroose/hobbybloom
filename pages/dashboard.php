@@ -111,6 +111,18 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute([$userId]);
 $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$modCount = $conn->prepare("SELECT COUNT(*) FROM module WHERE cid = ?");
+$modCount->execute([$userId]);
+$modules = (int)$modCount->fetchColumn();
+
+$evtCount = $conn->prepare("SELECT COUNT(*) FROM events WHERE created_by = ?");
+$evtCount->execute([$userId]);
+$events = (int)$evtCount->fetchColumn();
+
+$cirCount = $conn->prepare("SELECT COUNT(*) FROM circle WHERE uid = ?");
+$cirCount->execute([$userId]);
+$circles = (int)$cirCount->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -134,27 +146,48 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     </div>
 
     <div class="dash-display">
-        
-        <div class="dash-display-streak" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <p class="dash-heading">Streaks</p>
-                <p class="day-streak" style="padding-top: 2rem;">🔥<?= $streak ?> Days</p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; align-self: stretch;">
+
+            <div class="dash-display-streak" style="display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+                <div>
+                    <p class="dash-heading">Streaks</p>
+                    <p class="day-streak" style="padding-top: 2rem;">🔥<?= $streak ?> Days</p>
+                </div>
+                <div style="text-align: center; padding-bottom: 1.5rem;">
+                    <a href="achievements.php" style="text-decoration: none; color: #333; font-weight: bold; background-color: #ffd700; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
+                        🏆 View Trophies
+                    </a>
+                </div>
             </div>
-            
-            <div style="text-align: center; padding-bottom: 1.5rem;">
-                <a href="achievements.php" style="text-decoration: none; color: #333; font-weight: bold; background-color: #ffd700; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
-                    🏆 View Trophies
-                </a>
+
+            <div class="dash-display-streak" style="display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+                <div>
+                    <p class="dash-heading">My Content</p>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.5rem;">Your created modules, events &amp; circles.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem;">
+                        <span style="background:#e8f0f7; color:#1f5077; border-radius:20px; padding:3px 12px; font-size:0.78rem; font-weight:600;">📚 <?= $modules ?> Modules</span>
+                        <span style="background:#e8f0f7; color:#1f5077; border-radius:20px; padding:3px 12px; font-size:0.78rem; font-weight:600;">📅 <?= $events ?> Events</span>
+                        <span style="background:#e8f0f7; color:#1f5077; border-radius:20px; padding:3px 12px; font-size:0.78rem; font-weight:600;">⭕ <?= $circles ?> Circles</span>
+                    </div>
+                </div>
+                <div style="text-align: center; padding-bottom: 1.5rem; margin-top: 1rem;">
+                    <a href="my_content.php" style="text-decoration: none; color: #fff; font-weight: bold; background-color: #1f5077; border-radius: 20px; padding: 8px 20px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: inline-block;">
+                        ✏️ View My Content
+                    </a>
+                </div>
             </div>
+
         </div>
 
-        <div class="dash-calendar" >
+        <div class="dash-calendar">
             <h2 class="dash-heading schedule">Upcoming Schedule</h2>
             <div id="calendar-mini"></div>
             <div class="dash-calendar-button">
-            <a class="dash-calendar-view" href="calendar.php">View Full Calendar →</a>
+                <a class="dash-calendar-view" href="calendar.php">View Full Calendar →</a>
             </div>
         </div>
+
     </div>
 
     <div class="dash-module">
@@ -173,17 +206,15 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="horizontal-scroll">
             <h2 class="dash-heading">Recommended Modules For You</h2>
             <div class="dash-rec-circles">
-
-            <?php foreach ($recommendations as $rec): ?>
-            <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
-                <div class="story-circle">
-                    <div class="circle-img" style="background-color: #<?= substr(md5($rec['name']), 0, 6) ?>;"></div>
-                    <p class="circle-recommended-exp"><?= htmlspecialchars($rec['exp_level']) ?></p>
-                    <p class="circle-recommended-name"><?= htmlspecialchars($rec['name']) ?></p>
-                
-                </div>
-            </a>
-            <?php endforeach; ?>
+                <?php foreach ($recommendations as $rec): ?>
+                <a href="module.php?id=<?= $rec['id'] ?>" style="text-decoration: none; color: inherit;">
+                    <div class="story-circle">
+                        <div class="circle-img" style="background-color: #<?= substr(md5($rec['name']), 0, 6) ?>;"></div>
+                        <p class="circle-recommended-exp"><?= htmlspecialchars($rec['exp_level']) ?></p>
+                        <p class="circle-recommended-name"><?= htmlspecialchars($rec['name']) ?></p>
+                    </div>
+                </a>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
@@ -192,7 +223,6 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="dashboard-circles circle">
         <div class="horizontal-scroll">
             <h2 class="dash-heading">Your Circles</h2>
-
             <div class="dashboard-circles-flex">
 
                 <a href="circle_detail.php?hobby=General" style="text-decoration: none; color: inherit;">
@@ -203,7 +233,7 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                         <p>General</p>
                     </div>
                 </a>
-            
+
                 <?php if (empty($myHobbies)): ?>
                     <div style="padding: 20px; text-align: center; width: 100%;">
                         <p style="color: #1E5077; font-style: italic; margin-bottom: 10px;">You haven't joined any circles yet!</p>
@@ -225,24 +255,42 @@ $currentModule = $stmt->fetch(PDO::FETCH_ASSOC);
                 <?php endif; ?>
 
             </div>
-            
         </div>
     </div>
 
 </main>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar-mini');
+
+    var today = new Date();
+    var twoWeeks = new Date();
+    twoWeeks.setDate(today.getDate() + 14);
+
+    function formatDate(d) {
+        return d.toISOString().split('T')[0];
+    }
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'listWeek',
-        headerToolbar: false,   
+        initialView: 'listCustom',
+        views: {
+            listCustom: {
+                type: 'list',
+                duration: { days: 14 }
+            }
+        },
+        headerToolbar: false,
         height: 'auto',
-        events: 'load_events.php', 
+        visibleRange: {
+            start: formatDate(today),
+            end: formatDate(twoWeeks)
+        },
+        events: 'load_events.php',
         eventClick: function(info) {
             alert("Event: " + info.event.title + "\nDescription: " + info.event.extendedProps.description);
         }
     });
+
     calendar.render();
 });
 </script>

@@ -13,7 +13,7 @@ if (!isset($_SESSION['user']['id'])) {
 
 $user_id = $_SESSION['user']['id'];
 
-// ── Handle deletes ────────────────────────────────────────────
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['module_delete'])) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $activeTab = $_GET['tab'] ?? 'modules';
 
-// ── Fetch modules ─────────────────────────────────────────────
+
 $modStmt = $conn->prepare("
     SELECT id, name, description, rating, exp_level, num_lessons, est_comp_time, created_at
     FROM module WHERE cid = ?
@@ -50,7 +50,7 @@ $modStmt = $conn->prepare("
 $modStmt->execute([$user_id]);
 $modules = $modStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ── Fetch events ──────────────────────────────────────────────
+
 $evtStmt = $conn->prepare("
     SELECT id, title, event_date, event_time, location, description, created_at
     FROM events WHERE created_by = ?
@@ -59,7 +59,7 @@ $evtStmt = $conn->prepare("
 $evtStmt->execute([$user_id]);
 $events = $evtStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ── Fetch circles ─────────────────────────────────────────────
+
 $cirStmt = $conn->prepare("
     SELECT c.circle_id, c.name, c.description, c.color, c.category, c.created_at,
            COUNT(cm.user_id) AS member_count
@@ -97,7 +97,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .mc-subheading {
-            color: #888;
+            color: #1a1a2e;
             font-size: .95rem;
             margin-bottom: 32px;
             font-style: italic;
@@ -116,7 +116,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .07em;
-            color: #aaa;
+            color: #1a1a2e;
             background: none;
             border: none;
             border-bottom: 3px solid transparent;
@@ -313,7 +313,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
     <h1 class="mc-heading">My Content</h1>
     <p class="mc-subheading">Everything you've created, in one place.</p>
 
-    <!-- ── Tabs ── -->
+
     <div class="mc-tabs">
         <button class="mc-tab <?= $activeTab === 'modules' ? 'active' : '' ?>" data-tab="modules">
             Modules <span class="mc-tab-count"><?= count($modules) ?></span>
@@ -326,7 +326,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         </button>
     </div>
 
-    <!-- ══ MODULES PANEL ══ -->
+
     <div class="mc-panel <?= $activeTab === 'modules' ? 'active' : '' ?>" id="panel-modules">
         <?php if (empty($modules)): ?>
             <div class="mc-empty">
@@ -367,7 +367,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 
-    <!-- ══ EVENTS PANEL ══ -->
+
     <div class="mc-panel <?= $activeTab === 'events' ? 'active' : '' ?>" id="panel-events">
         <?php if (empty($events)): ?>
             <div class="mc-empty">
@@ -418,7 +418,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 
-    <!-- ══ CIRCLES PANEL ══ -->
+
     <div class="mc-panel <?= $activeTab === 'circles' ? 'active' : '' ?>" id="panel-circles">
         <?php if (empty($circles)): ?>
             <div class="mc-empty">

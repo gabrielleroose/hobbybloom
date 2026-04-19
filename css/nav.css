@@ -249,5 +249,154 @@ footer {
   line-height: .1rem;
   gap: 10px;
   font-size: var(--text-size-sm);
+}
 
+
+
+  /*---------------- NAV USER SEARCH CSS ----------------*/
+  /* ── Search Wrap ── */
+.nav-search-wrap {
+  position: relative; /* Keep this */
+  display: flex;
+  align-items: center;
+}
+
+/* ── The Input ── */
+.nav-search-input {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  padding: 6px 14px 6px 34px; 
+  transition: background 0.2s, border-color 0.2s, width 0.3s;
+  width: 160px;
+}
+
+.nav-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.nav-search-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  width: 220px; 
+}
+
+/* ── Search Icon ── */
+.nav-search-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 0.8rem;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+}
+
+/* ── Dropdown ── */
+.nav-search-dropdown {
+  position: absolute;        /* Keep this */
+  top: calc(100% + 8px);    
+  left: 0;
+  min-width: 280px;
+  background: #1a2a3a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 9999;
+  overflow: hidden;
+
+  /* Hidden by default */
+  display: none;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.nav-search-dropdown.open {
+  display: block;
+}
+
+/* ── Each Result Row ── */
+.nav-search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s;
+}
+
+.nav-search-item:last-child {
+  border-bottom: none;
+}
+
+.nav-search-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Avatar Circle ── */
+.nav-search-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ── Username & Status ── */
+.nav-search-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-search-username {
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.nav-search-status {
+  color: #6ec97f;
+  font-size: 0.72rem;
+}
+
+.nav-search-status.pending {
+  color: #f0a500;
+}
+
+/* ── Follow Buttons ── */
+.nav-follow-btn {
+  margin-left: auto;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  transition: opacity 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.nav-follow-btn:hover {
+  opacity: 0.85;
+  transform: scale(2.03);
+}
+
+.nav-follow-btn.follow      { background: #1f5077; color: #fff; }
+.nav-follow-btn.pending     { background: #555;    color: #ccc; }
+.nav-follow-btn.following   { background: #27ae60; color: #fff; }
+
+/* ── Empty State ── */
+.nav-search-empty {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
+  padding: 14px 16px;
+  text-align: center;
 }

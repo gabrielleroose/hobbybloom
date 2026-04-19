@@ -71,6 +71,7 @@ if (isset($_SESSION['user']['id'])) {
                 <a class="menu-item" href="circles.php">Circles</a>
                 <a class="menu-item" href="activity.php">Activity</a>
                 <a class="menu-item" href="calendar.php">Calendar</a>
+                <!--<a class="menu-item" href="My_content.php">My Content</a>!-->
             </div>
         </div>
     </nav>

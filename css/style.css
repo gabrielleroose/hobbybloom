@@ -1379,16 +1379,16 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 
 
 .day-streak {
-  font-size: var(--text-size-xl);
+  font-size: var(--text-size-lg);
   font-style: italic;
   text-align: right;
-  padding: 7.5rem 1.5rem 0 0;
+  padding: 1.5rem 1.5rem 0 0;
   color: #2C6CA3;
 }
 
 .dash-display-streak {
   border-radius: 2rem;
-  width: 35%;
+  width: 100%;
   font-family: sans-serif;
 
 
@@ -3374,7 +3374,7 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   /* font-weight: bold; */
 }
 
-style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
+/*style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
 
 style="background-color: #1f5077; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
 
