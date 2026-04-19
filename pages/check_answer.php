@@ -13,6 +13,7 @@ $user_id = $stmt->fetchColumn();
  
 
 
+
 $data = json_decode(file_get_contents('php://input'), true) ?? []; //reads incoming json data
 $answer_id = isset($data['answer_id']) ? (int)$data['answer_id'] : null;
 $stage_num = isset($data['stage_num']) ? (int)$data['stage_num'] : null;
@@ -21,8 +22,30 @@ $no_quiz = $data['no_quiz'] ?? false;
 
 $is_final_stage = $data['is_final_stage'] ?? false;
 
+$is_complete_sql = "
+    SELECT is_complete
+    FROM module_user_completion AS muc
+    WHERE muc.uid = :uid AND muc.mid = :mid
+";
+$stmt = $conn->prepare($is_complete_sql);
+$stmt->execute([
+    ':uid' => $user_id,
+    ':mid' => $module_id
+]);
+
+$is_complete = (int)($stmt->fetchColumn() ?? 0);
+
 
 if ($no_quiz && $module_id) {
+
+    if ($is_complete === 1) {
+        echo json_encode([
+            'correct' => true,
+            'completed' => false,
+            'already_completed' => true
+        ]);
+        exit;
+    }
 
     $init_sql = "INSERT IGNORE INTO module_user_completion (mid, uid, is_complete)
                  VALUES (?, ?, 0)";
@@ -71,6 +94,15 @@ if ($correct && $module_id) {
     $last_stage = (int) $stmt->fetchColumn();
 
     if ($stage_num == $last_stage) {
+
+        if ($is_complete === 1) {
+            echo json_encode([
+                'correct' => true,
+                'completed' => false,
+                'already_completed' => true
+            ]);
+            exit;
+        }
 
         $init_sql = "INSERT IGNORE INTO module_user_completion (mid, uid, is_complete) VALUES (?, ?, 0)";
         $init = $conn->prepare($init_sql);

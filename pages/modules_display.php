@@ -132,29 +132,32 @@ $module_completed = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($currentTab == "all") {
-        $mod_query = "SELECT m.*, msp.msid, u.username, u.email, muf.is_favorite
-                        FROM module AS m 
-                        LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
-                        JOIN users AS u on m.cid = u.id
-                        LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
-                        ORDER BY m.created_at DESC";
-            $stmt = $pdo->prepare($mod_query);
-            $stmt->execute();
-            $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} 
+    $mod_query = "SELECT m.*, msp.msid, u.username, u.email,
+                         COALESCE(muf.is_favorite, 0) AS is_favorite
+                  FROM module AS m
+                  LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+                  JOIN users AS u ON m.cid = u.id
+                  LEFT JOIN module_user_favorite AS muf
+                    ON m.id = muf.mid AND muf.uid = ?
+                  ORDER BY m.created_at DESC";
+    $stmt = $pdo->prepare($mod_query);
+    $stmt->execute([$user_id]);
+    $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 elseif ($currentTab == "completed") {
-        $mod_query = "SELECT m.*, msp.msid, u.username, u.email, muf.is_favorite
-                    FROM module AS m 
-                    LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
-                    JOIN users AS u on m.cid = u.id
-                    JOIN module_user_completion AS umc ON m.id = umc.mid
-                    LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
-                    WHERE umc.is_complete = 1 AND umc.uid = ?
-                    ORDER BY m.created_at DESC";
-        $stmt = $pdo->prepare($mod_query);
-        $stmt->execute([$user_id]);
-        $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $mod_query = "SELECT m.*, msp.msid, u.username, u.email,
+                         COALESCE(muf.is_favorite, 0) AS is_favorite
+                  FROM module AS m
+                  LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+                  JOIN users AS u ON m.cid = u.id
+                  JOIN module_user_completion AS umc ON m.id = umc.mid
+                  LEFT JOIN module_user_favorite AS muf
+                    ON m.id = muf.mid AND muf.uid = ?
+                  WHERE umc.is_complete = 1 AND umc.uid = ?
+                  ORDER BY m.created_at DESC";
+    $stmt = $pdo->prepare($mod_query);
+    $stmt->execute([$user_id, $user_id]);
+    $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 elseif ($currentTab == "favorite") {
     $mod_query = "SELECT m.*, msid, u.username, u.email, muf.is_favorite
