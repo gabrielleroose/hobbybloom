@@ -17,7 +17,11 @@ if (isset($_SESSION['user']['id'])) {
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/nav.css">    
+    <link rel="stylesheet" href="../css/nav.css">
+
+    <?php if (!empty($extraHead)) echo $extraHead; ?>
+
+    
     
     <style>
         #toast { visibility: hidden; min-width: 250px; background-color: #1f5077; color: #fff; text-align: center; border-radius: 10px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; }
