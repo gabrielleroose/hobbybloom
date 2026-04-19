@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mid = (int)$_POST['module_delete'];
         $conn->prepare("DELETE FROM module WHERE id = ? AND cid = ?")->execute([$mid, $user_id]);
         ob_end_clean();
-        header('Location: my_content.php?tab=modules&deleted=1');
+        header('Location: My_content.php?tab=modules&deleted=1');
         exit;
     }
 
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->prepare("DELETE FROM event_invites WHERE event_id = ?")->execute([$eid]);
         $conn->prepare("DELETE FROM events WHERE id = ? AND created_by = ?")->execute([$eid, $user_id]);
         ob_end_clean();
-        header('Location: my_content.php?tab=events&deleted=1');
+        header('Location: My_content.php?tab=events&deleted=1');
         exit;
     }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cid = (int)$_POST['circle_delete'];
         $conn->prepare("DELETE FROM circle WHERE circle_id = ? AND uid = ?")->execute([$cid, $user_id]);
         ob_end_clean();
-        header('Location: my_content.php?tab=circles&deleted=1');
+        header('Location: My_content.php?tab=circles&deleted=1');
         exit;
     }
 }
