@@ -1,9 +1,11 @@
 <?php
+ob_start();
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/db.php';
+
 include 'base.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -13,12 +15,12 @@ if (!isset($_SESSION['user']['id'])) {
 
 $user_id = $_SESSION['user']['id'];
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['module_delete'])) {
         $mid = (int)$_POST['module_delete'];
         $conn->prepare("DELETE FROM module WHERE id = ? AND cid = ?")->execute([$mid, $user_id]);
+        ob_end_clean();
         header('Location: my_content.php?tab=modules&deleted=1');
         exit;
     }
@@ -27,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $eid = (int)$_POST['event_delete'];
         $conn->prepare("DELETE FROM event_invites WHERE event_id = ?")->execute([$eid]);
         $conn->prepare("DELETE FROM events WHERE id = ? AND created_by = ?")->execute([$eid, $user_id]);
+        ob_end_clean();
         header('Location: my_content.php?tab=events&deleted=1');
         exit;
     }
@@ -34,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['circle_delete'])) {
         $cid = (int)$_POST['circle_delete'];
         $conn->prepare("DELETE FROM circle WHERE circle_id = ? AND uid = ?")->execute([$cid, $user_id]);
+        ob_end_clean();
         header('Location: my_content.php?tab=circles&deleted=1');
         exit;
     }
 }
 
 $activeTab = $_GET['tab'] ?? 'modules';
-
 
 $modStmt = $conn->prepare("
     SELECT id, name, description, rating, exp_level, num_lessons, est_comp_time, created_at
@@ -50,7 +53,6 @@ $modStmt = $conn->prepare("
 $modStmt->execute([$user_id]);
 $modules = $modStmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 $evtStmt = $conn->prepare("
     SELECT id, title, event_date, event_time, location, description, created_at
     FROM events WHERE created_by = ?
@@ -58,7 +60,6 @@ $evtStmt = $conn->prepare("
 ");
 $evtStmt->execute([$user_id]);
 $events = $evtStmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 $cirStmt = $conn->prepare("
     SELECT c.circle_id, c.name, c.description, c.color, c.category, c.created_at,
@@ -72,6 +73,8 @@ $cirStmt = $conn->prepare("
 $cirStmt->execute([$user_id]);
 $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,22 +85,36 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="../css/nav.css" rel="stylesheet">
     <style>
         .mc-page {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 32px 20px 60px;
-            font-family: 'Georgia', serif;
+        /* background-color: #F1F2F5; */
+        border-radius: 2rem;
+        /* box-shadow: 1px 1px #434343; */
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        justify-content: center;
+        padding: 32px 20px 60px;
+
+        /* glassmorphism */
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
         }
 
         .mc-heading {
             font-size: 2rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: #2C6CA3;
             margin-bottom: 6px;
             letter-spacing: -.5px;
         }
 
         .mc-subheading {
-            color: #1a1a2e;
+            color: #2C6CA3;
             font-size: .95rem;
             margin-bottom: 32px;
             font-style: italic;
@@ -116,7 +133,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .07em;
-            color: #1a1a2e;
+            color: #2C6CA3;
             background: none;
             border: none;
             border-bottom: 3px solid transparent;
@@ -126,11 +143,11 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             font-family: 'Georgia', serif;
         }
 
-        .mc-tab:hover { color: #1f5077; }
+        .mc-tab:hover { color: #156914; } /* make green */
 
         .mc-tab.active {
-            color: #1f5077;
-            border-bottom-color: #1f5077;
+            color: #156914;
+            border-bottom-color: #156914;
         }
 
         .mc-tab-count {
@@ -175,29 +192,29 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 4px;
-            background: #1f5077;
+            background: #2C6CA3;
         }
 
         .mc-card-title {
             font-size: 1rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: #2C6CA3;
             margin: 0;
             text-decoration: none;
             display: block;
         }
 
-        .mc-card-title:hover { color: #1f5077; }
+        .mc-card-title:hover { color: #156914; } /* make gree */
 
         .mc-card-meta {
             font-size: .78rem;
-            color: #999;
+            color: #2C6CA3;
             font-style: italic;
         }
 
         .mc-card-desc {
             font-size: .85rem;
-            color: #555;
+            color: #2C6CA3;
             line-height: 1.5;
             flex: 1;
             display: -webkit-box;
@@ -215,7 +232,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
 
         .mc-tag {
             background: #f0f6fc;
-            color: #1f5077;
+            color: #2C6CA3;
             border-radius: 20px;
             padding: 2px 10px;
             font-size: .72rem;
@@ -242,9 +259,9 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             font-family: 'Georgia', serif;
         }
 
-        .mc-btn-view       { background: #1f5077; color: #fff; }
-        .mc-btn-view:hover { background: #174060; }
-        .mc-btn-edit       { background: #f0f6fc; color: #1f5077; border: 1.5px solid #1f5077; }
+        .mc-btn-view       { background: #2C6CA3; color: #fff; }
+        .mc-btn-view:hover { background: #156914; } /* make green */
+        .mc-btn-edit       { background: #f0f6fc; color: #2C6CA3; border: 1.5px solid #2C6CA3; }
         .mc-btn-edit:hover { background: #e0edf8; }
         .mc-btn-delete     { background: #fff0f0; color: #e74c3c; border: 1.5px solid #e74c3c; }
         .mc-btn-delete:hover { background: #fde8e8; }
@@ -252,7 +269,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         .mc-empty {
             text-align: center;
             padding: 60px 20px;
-            color: #bbb;
+            color: #2C6CA3;
         }
 
         .mc-empty-icon { font-size: 3rem; margin-bottom: 12px; }
@@ -262,7 +279,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             display: inline-block;
             margin-top: 14px;
             padding: 9px 22px;
-            background: #1f5077;
+            background: #2C6CA3;
             color: #fff;
             border-radius: 8px;
             text-decoration: none;
@@ -271,7 +288,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             transition: background .15s;
         }
 
-        .mc-empty-link:hover { background: #174060; }
+        .mc-empty-link:hover { background: #156914; }
 
         .mc-toast {
             display: none;
@@ -293,7 +310,7 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
             display: inline-flex;
             flex-direction: column;
             align-items: center;
-            background: #1f5077;
+            background: #2C6CA3;
             color: #fff;
             border-radius: 8px;
             padding: 4px 10px;
@@ -347,7 +364,6 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="mc-card-tags">
                             <span class="mc-tag"><?= htmlspecialchars($mod['exp_level']) ?></span>
                             <span class="mc-tag"><?= $mod['num_lessons'] ?> lessons</span>
-                            <span class="mc-tag"><?= str_repeat('⭐', (int)$mod['rating']) ?: 'No rating' ?></span>
                         </div>
                         <div class="mc-card-actions">
                             <form method="POST" action="module.php">
