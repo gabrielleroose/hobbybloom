@@ -149,6 +149,7 @@ elseif ($currentTab == "favorite") {
 }
 
 
+
 if (empty($all_mods)) {
 
     // if not already on "all", force redirect
@@ -183,6 +184,10 @@ if (isset($_POST['module_delete'])) {
     .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
     .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
     
+    .tab-btn.active {
+    background: #1f5077;
+    color: white;
+    }
 </style>
 
 <!DOCTYPE html>

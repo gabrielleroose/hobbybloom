@@ -159,7 +159,7 @@ require_once 'base.php';
     .achievement-item { border-left: 5px solid #ffd700; background-color: #fffdf2; }
     .activity-main-content { display: flex; align-items: center; flex: 1; }
     .activity-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-decoration: none; }
-    .activity-text { color: #333; line-height: 1.4; }
+    .activity-text { color: #3tab33; line-height: 1.4; }
     .activity-text a { text-decoration: none; font-weight: 700; color: #1f5077; }
     .activity-date { color: #aaa; font-size: 0.85rem; margin-left: 15px; }
     
