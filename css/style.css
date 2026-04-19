@@ -1539,7 +1539,7 @@ h2 {
   /* color: #F1F2F5; */
   color: #1f5077;
   transition: all 0.3s ease-in-out;
-
+  flex: 0 0 auto;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 

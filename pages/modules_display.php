@@ -359,25 +359,40 @@ if (isset($_POST['module_delete'])) {
                                     </form>
                                 </div>
                         </div>
-                                <form class="begin-module-flex"  action="./module.php" method="POST">
-                                    <input type="hidden">
-                                <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
-                                </form>
-                
-
-                                <form action="modules_display.php" method="POST">
-                                    <?php if ($mod['cid'] == $user_id): ?> 
-                                        <button type="submit" class="module_display_delete_button" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
-                                    <?php endif ?>
-                                </form>
-
-                                <form action="createForm.php" method="POST">
-                                    <?php if ($mod['cid'] == $user_id): ?>
-                                        <button type="submit" class="module_display_delete_button" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
-                                    <?php endif ?>
-                                </form>
-                            </div>
+                        <style>
+                            .mod_button_container {
+                                display: flex;
+                                flex-direction: column;
+                                align-content: center;
+                                justify-content: flex-end;
+                                gap: 1.5rem;
+                            }
+                            
+                            .offset {
+                                margin-left: 5.92rem;
+                            }
+                        </style>
+                                <div class="mod_button_container">
+                                        <form class="begin-module-flex"  action="./module.php" method="POST">
+                                            <input type="hidden">
+                                        <button type="submit" class="module_display_entry_button" name="module_id" value="<?= $mod['id'] ?>">Begin Module</button>
+                                        </form>
+                    
+                                        <form action="createForm.php" method="POST">
+                                            <?php if ($mod['cid'] == $user_id): ?>
+                                                <button type="submit" class="module_display_entry_button offset" name="module_edit" value="<?= $mod['id']?>">Edit Module</button>
+                                            <?php endif ?>
+                                        </form>
+                                        
+                                        <form action="modules_display.php" method="POST">
+                                            <?php if ($mod['cid'] == $user_id): ?> 
+                                                <button type="submit" class="module_display_entry_button offset" name="module_delete" value="<?= $mod['id']?>">Delete Module</button>
+                                            <?php endif ?>
+                                        </form>
+                                </div>
                         </div>
+                </div>
+                    
                     <?php endforeach; ?>
 
                     <div class="create-button-wrapper">
