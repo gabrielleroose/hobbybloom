@@ -24,6 +24,27 @@ $stmt->execute([':gid' => $googleId]);
 
 $user_id = $stmt->fetchColumn();
 
+
+//checking to see if user has completed or favorited modules to change glass tab coloration 
+$completed_count_sql = "SELECT COUNT(*) 
+                        FROM module_user_completion
+                        WHERE uid = ? AND is_complete = 1";
+$stmt = $pdo->prepare($completed_count_sql);
+$stmt->execute([$user_id]);
+$completedCount = (int)$stmt->fetchColumn();
+
+$favorite_count_sql = "SELECT COUNT(*)
+                       FROM module_user_favorite
+                       WHERE uid = ? AND is_favorite = 1";
+$stmt = $pdo->prepare($favorite_count_sql);
+$stmt->execute([$user_id]);
+$favoriteCount = (int)$stmt->fetchColumn();
+
+$completedEmpty = $completedCount === 0;
+$favoriteEmpty = $favoriteCount === 0;
+
+//end checking to see if user has completed or favorited a module
+
 if (isset($_POST['toggle_fav'], $_POST['module_id']) && $user_id) {
 
     $module_id = (int) $_POST['module_id'];
@@ -141,10 +162,10 @@ elseif ($currentTab == "favorite") {
                   LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
                   JOIN users as u on m.cid = u.id
                   LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
-                  WHERE muf.is_favorite = 1
+                  WHERE muf.is_favorite = 1 and muf.uid = ?
                   ORDER BY m.created_at DESC;";
     $stmt = $pdo->prepare($mod_query);
-    $stmt->execute();
+    $stmt->execute([$user_id]);
     $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -154,7 +175,7 @@ if (empty($all_mods)) {
 
     // if not already on "all", force redirect
     if ($currentTab !== 'all') {
-        header("Location: modules_display.php?tab=all&empty=1");
+        header("Location: modules_display.php?tab=all");
         exit();
     }
 
@@ -179,14 +200,48 @@ if (isset($_POST['module_delete'])) {
 
 <style>
     .glass-tab-container {
-  width: 100%; display: flex; justify-content: center; margin-bottom: 2rem; position: sticky; top: 0; z-index: 10;
-}
-    .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
-    .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
-    
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    }
+
+    .glass-tabs {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 40px;
+    padding: 5px;
+    display: flex;
+    gap: 5px;
+    }
+
+    .tab-btn {
+    padding: 10px 20px;
+    border-radius: 35px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #1f5077;
+    font-size: 0.85rem;
+    }
+
     .tab-btn.active {
     background: #1f5077;
     color: white;
+    }
+
+    .tab-btn.empty-tab {
+    background: rgba(180, 180, 180, 0.35);
+    color: #7a7a7a;
+    border: 1px dashed rgba(122, 122, 122, 0.5);
+    }
+
+    .tab-btn.empty-tab:hover {
+    background: rgba(180, 180, 180, 0.5);
+    color: #5f5f5f;
     }
 </style>
 
@@ -205,11 +260,23 @@ if (isset($_POST['module_delete'])) {
     <div class="module_back_container">
         <div class="glass-tab-container">
             <div class="glass-tabs">
-                <a href="modules_display.php?tab=all" class="tab-btn <?= $currentTab === 'all' ? 'active' : '' ?>">All Modules</a>
-                <a href="modules_display.php?tab=completed" class="tab-btn <?= $currentTab === 'completed' ? 'active' : '' ?>">Completed Modules</a>
-                <a href="modules_display.php?tab=favorite" class="tab-btn <?= $currentTab === 'favorite' ? 'active' : '' ?>">Favorite Modules</a>
+                <a href="modules_display.php?tab=all"
+                class="tab-btn <?= $currentTab === 'all' ? 'active' : '' ?>">
+                All Modules
+                </a>
+
+               <a href="modules_display.php?tab=completed"
+                class="tab-btn <?= $currentTab === 'completed' ? 'active' : '' ?> <?= $completedEmpty ? 'empty-tab completed-tab' : 'completed-tab' ?>">
+                Completed Modules
+                </a>
+
+                <a href="modules_display.php?tab=favorite"
+                class="tab-btn <?= $currentTab === 'favorite' ? 'active' : '' ?> <?= $favoriteEmpty ? 'empty-tab favorite-tab' : 'favorite-tab' ?>">
+                Favorite Modules
+                </a>
             </div>
-    </div>
+        </div>
+
         <?php foreach ($all_mods as $mod): 
             $c_stmt = $pdo->prepare("
                 SELECT mc.*, u.username, up.profile_color, u.id as user_actual_id
