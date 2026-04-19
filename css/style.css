@@ -1830,7 +1830,6 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
 .module_outter_card {
   display: flex;
   flex-direction: column;
-  border: 1px solid red;
 }
 
 
@@ -1947,25 +1946,39 @@ background: linear-gradient(90deg, rgba(32, 80, 119, 1) 0%, rgba(9, 9, 121, 0.75
   font-style: italic;
 }
 
+.favorite-form {
+  align-self: flex-end;
+}
+
+.heart-button {
+background: none;
+border: none;
+padding: 0;
+margin: 0;
+align-self: flex-end;
+}
+
 /* MODULE FAVORITE BUTTON VVV */
     .heart {
-      cursor: pointer;
-      color: #F1F2F5;              /* controls stroke color */
-      fill: black;       /* default outline only */
-      transition: transform 0.3s ease;
-      transform-origin: center;
-      align-self: flex-end;
-    }
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);                 /* controls stroke color */
+  fill: transparent;          /* not filled by default */
+  stroke: currentColor;       /* outline uses color */
+  stroke-width: 2;
 
-    /* hen active, fill with  */
-    .heart.active {
-      color: red;
-      fill: red;      /* becomes solid red */
-    }
+  transition: transform 0.3s ease, fill 0.2s ease;
+  transform-origin: center;
+  
+}
 
-    .heart:hover {
-      transform: scale(1.3)
-    }
+.heart.active {
+  color: red;         /* solid red */
+  fill: currentColor;
+}
+
+.heart:hover {
+  transform: scale(1.3);
+}
 /* MODULE FAVORITE BUTTON ^^^ */
 
 
