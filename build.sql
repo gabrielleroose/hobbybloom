@@ -164,6 +164,14 @@ CREATE TABLE module_comments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE module_user_favorite (
+    mid INT NOT NULL,
+    uid INT NOT NULL,
+    is_favorite INT NOT NULL CHECK ,
+    FOREIGN KEY (mid) REFERENCES module(id),
+    FOREIGN KEY (uid) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE module_user_completion (
     id INT NOT NULL AUTO_INCREMENT,
     mid INT NOT NULL,

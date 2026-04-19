@@ -131,6 +131,8 @@ if (isset($_POST['module_delete'])) {
     <title>Browse Modules | HobbyBloom</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=favorite" />
+
 
 </head>
 <body class="module-body">
@@ -155,17 +157,18 @@ if (isset($_POST['module_delete'])) {
             $comments = $c_stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
             <div class="module_outter_card">
+                <svg id="heartIcon" class="heart" viewBox="0 0 24 24" width="50" height="50">
+                    <path fill="currentColor" stroke="currentColor" stroke-width="2"
+                            d="M12 21s-6.716-4.534-9.428-8.062C.86 10.64 1.14 7.5 3.514 5.514 
+                            5.886 3.528 9.066 4.09 12 7.09c2.934-3 6.114-3.562 8.486-1.576 
+                            2.374 1.986 2.654 5.126.942 7.424C18.716 16.466 12 21 12 21z"/>
+                </svg>
                 <div class="module_inner_card">
                     <div class="module-header">
                         <h3 class="module-name"><?= htmlspecialchars($mod['name'] ?? '')?></h3>
-
                     </div>
 
-                        
                                 <p class="mod_description"><?= htmlspecialchars($mod['description'] ?? '')?></p>
-
-                                <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
-
         
                                 <div class="mod_exp">
                                 <p>
@@ -243,3 +246,14 @@ if (isset($_POST['module_delete'])) {
 <?php include __DIR__ . '/../includes/footer.php'; ?>    
 </body>    
 </html>
+
+<script>
+    const hearts = document.querySelectorAll(".heart");
+
+        hearts.forEach(heart => {
+        heart.addEventListener("click", () => {
+        heart.classList.toggle("active");
+  });
+});
+
+</script>
