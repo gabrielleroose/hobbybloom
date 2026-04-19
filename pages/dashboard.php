@@ -108,8 +108,11 @@ if (!empty($myHobbies)) {
  
     foreach ($allModules as $mod) {
         if (in_array($mod['id'], $completedIds)) continue;
-        foreach ($myHobbies as $hobby) {
-            if (stripos($mod['name'], $hobby) !== false || stripos($mod['description'], $hobby) !== false) {
+        foreach ($myHobbies as $hobbyWithEmoji) {
+            
+            $cleanHobby = trim(preg_replace('/^[\p{So}\p{Sk}\x{200d}\x{fe0f}]+\s*/u', '', $hobbyWithEmoji));
+            
+            if (!empty($cleanHobby) && (stripos($mod['name'], $cleanHobby) !== false || stripos($mod['description'], $cleanHobby) !== false)) {
                 $recommendations[] = $mod;
                 break;
             }
@@ -154,17 +157,14 @@ $circles = (int)$cirCount->fetchColumn();
  
 <main class="main-dashboard">
  
-    <!-- ── Greeting ── -->
     <div class="my-dashboard">
         <span class="dash-greeting-label">Welcome back,</span>
         <span class="dash-greeting-name"><?= htmlspecialchars($chosenUsername ?? 'there') ?></span>
     </div>
  
-    <!-- ── Row 1: Streak + Calendar ── -->
     <div class="dash-row-top">
 
  
-        <!-- Streak -->
         <div class="dash-display-streak">
             <div class="dash-card-label">Daily Streak</div>
             <div class="dash-streak-num">🔥 <?= $streak ?></div>
@@ -172,7 +172,6 @@ $circles = (int)$cirCount->fetchColumn();
             <a href="achievements.php" class="dash-trophy-btn">🏆 View Trophies</a>
         </div>
 
-         <!-- Calendar -->
          <div class="dash-calendar">
             <div class="dash-heading schedule">Upcoming Schedule</div>
             <div id="calendar-mini"></div>
@@ -185,10 +184,8 @@ $circles = (int)$cirCount->fetchColumn();
  
     </div>
  
-    <!-- ── Row 2: My Content + Module + Recommendations ── -->
     <div class="dash-row-mid">
  
-        <!-- My Content -->
         <div class="dash-display-content">
             <div class="dash-card-label">My Content</div>
             <div class="dash-card-title" style="font-size:15px;">Created by you</div>
@@ -200,7 +197,6 @@ $circles = (int)$cirCount->fetchColumn();
             <a href="My_content.php" class="dash-content-btn">✏️ View My Content</a>
         </div>
  
-        <!-- Module -->
         <div class="dash-module">
             <?php if ($currentModule): ?>
                 <span class="dash-module-tag">In Progress</span>
@@ -215,7 +211,6 @@ $circles = (int)$cirCount->fetchColumn();
             <?php endif; ?>
         </div>
  
-        <!-- Recommended Modules -->
         <?php if (!empty($recommendations)): ?>
         <div class="dashboard-circles">
             <div class="dash-heading">Recommended For You</div>
@@ -233,7 +228,6 @@ $circles = (int)$cirCount->fetchColumn();
  
     </div>
  
-    <!-- ── Row 3: Circles ── -->
     <div class="dash-row-bottom">
         <div class="dashboard-circles">
             <div class="dash-heading">Your Circles</div>
@@ -314,4 +308,3 @@ $circles = (int)$cirCount->fetchColumn();
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 </script>
- 
