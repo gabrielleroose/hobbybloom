@@ -22,6 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($name) || empty($description)) {
         $error = "Please fill out all fields.";
+    } else if (empty(extractEmoji($name))) {
+        $error = "Oops! You forgot your icon. Please start your circle name with an emoji (e.g., 📸 Photography).";
     } else {
         try {
             $stmt = $conn->prepare("INSERT INTO circle (name, description, uid, color, category) VALUES (?, ?, ?, ?, ?)");
@@ -45,6 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+
+<script>
+    document.title = "Create Circle | HobbyBloom";
+</script>
 
 <style>
     body {
@@ -75,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <section class="create-circle-form">
             
             <?php if ($error): ?>
-                <p style="color: red; text-align: center; font-weight: bold; margin-bottom: 20px;">
+                <p style="background-color: #ffebee; color: #c62828; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px; border: 1px solid #ffcdd2;">
                     <?= htmlspecialchars($error) ?>
                 </p>
             <?php endif; ?>
@@ -92,9 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div style="margin-bottom: 25px;">
                         <label class="create-circle-label" style="font-weight: bold; color: #1f5077;">Circle / Hobby Name:</label>
                         <input class="create-circle-input" type="text" name="name" placeholder="e.g., 📸 Photography" required>
-                        <p style="font-size: 0.85rem; color: #555; margin-top: 8px; font-style: italic;">
-                            💡 <strong>Tip:</strong> Start the name with an emoji! It will be used as the icon for your circle.
-                        </p>
+                        
+                        <div style="display: flex; align-items: flex-start; gap: 12px; background-color: #f8f9fa; border: 1px solid #e2e8f0; padding: 15px; margin-top: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            <div style="font-size: 1.4rem; line-height: 1;">💡</div>
+                            <div>
+                                <strong style="color: #1f5077; display: block; margin-bottom: 4px; font-size: 0.95rem;">Emoji Required</strong>
+                                <span style="color: #64748b; font-size: 0.85rem; line-height: 1.4; display: block;">
+                                    Your circle needs an icon! Please start the name with an emoji so it displays beautifully across the app.
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
                     <div style="margin-bottom: 25px;">

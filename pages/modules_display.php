@@ -1,4 +1,5 @@
 <?php
+ob_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -22,6 +23,57 @@ $stmt = $conn->prepare($user_id_sql);
 $stmt->execute([':gid' => $googleId]);
 
 $user_id = $stmt->fetchColumn();
+
+if (isset($_POST['toggle_fav'], $_POST['module_id']) && $user_id) {
+
+    $module_id = (int) $_POST['module_id'];
+
+    // check current state
+    $stmt = $conn->prepare("
+        SELECT is_favorite 
+        FROM module_user_favorite 
+        WHERE mid = :mid AND uid = :uid
+    ");
+    $stmt->execute([
+        ':mid' => $module_id,
+        ':uid' => $user_id
+    ]);
+
+    $current = $stmt->fetchColumn();
+
+    if ($current === false) {
+        // insert as fav
+        $stmt = $conn->prepare("
+            INSERT INTO module_user_favorite (mid, uid, is_favorite)
+            VALUES (:mid, :uid, 1)
+        ");
+        $stmt->execute([
+            ':mid' => $module_id,
+            ':uid' => $user_id
+        ]);
+    } else {
+        // toggle value
+        $new = $current ? 0 : 1;
+
+        $stmt = $conn->prepare("
+            UPDATE module_user_favorite
+            SET is_favorite = :fav
+            WHERE mid = :mid AND uid = :uid
+        ");
+        $stmt->execute([
+            ':fav' => $new,
+            ':mid' => $module_id,
+            ':uid' => $user_id
+        ]);
+    }
+
+
+    header("Location: " . $_SERVER['PHP_SELF']); // redirect to clean URL, prevents re-submission
+    exit;
+}
+
+
+
 
 $currentTab = $_GET['tab'] ?? 'all';
 
@@ -59,10 +111,11 @@ $module_completed = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($currentTab == "all") {
-        $mod_query = "SELECT m.*, msp.msid, u.username, u.email
+        $mod_query = "SELECT m.*, msp.msid, u.username, u.email, muf.is_favorite
                         FROM module AS m 
                         LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
                         JOIN users AS u on m.cid = u.id
+                        LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
                         ORDER BY m.created_at DESC";
             $stmt = $pdo->prepare($mod_query);
             $stmt->execute();
@@ -70,22 +123,31 @@ if ($currentTab == "all") {
 
 } 
 elseif ($currentTab == "completed") {
-        $mod_query = "SELECT m.*, msp.msid, u.username, u.email
+        $mod_query = "SELECT m.*, msp.msid, u.username, u.email, muf.is_favorite
                     FROM module AS m 
                     LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
                     JOIN users AS u on m.cid = u.id
                     JOIN module_user_completion AS umc ON m.id = umc.mid
+                    LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
                     WHERE umc.is_complete = 1 AND umc.uid = ?
                     ORDER BY m.created_at DESC";
         $stmt = $pdo->prepare($mod_query);
         $stmt->execute([$user_id]);
         $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-else {
+elseif ($currentTab == "favorite") {
+    $mod_query = "SELECT m.*, msid, u.username, u.email, muf.is_favorite
+                  FROM module as m
+                  LEFT JOIN module_stage_progress AS msp ON msp.mid = m.id
+                  JOIN users as u on m.cid = u.id
+                  LEFT JOIN module_user_favorite AS muf ON m.id = muf.mid
+                  WHERE muf.is_favorite = 1
+                  ORDER BY m.created_at DESC;";
     $stmt = $pdo->prepare($mod_query);
     $stmt->execute();
     $all_mods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 if (empty($all_mods)) {
@@ -122,6 +184,10 @@ if (isset($_POST['module_delete'])) {
     .glass-tabs { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 40px; padding: 5px; display: flex; gap: 5px; }
     .tab-btn { padding: 10px 20px; border-radius: 35px; text-decoration: none; font-weight: 600; color: #1f5077; font-size: 0.85rem; }
     
+    .tab-btn.active {
+    background: #1f5077;
+    color: white;
+    }
 </style>
 
 <!DOCTYPE html>
@@ -131,6 +197,8 @@ if (isset($_POST['module_delete'])) {
     <title>Browse Modules | HobbyBloom</title>
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=favorite" />
+
 
 </head>
 <body class="module-body">
@@ -155,17 +223,27 @@ if (isset($_POST['module_delete'])) {
             $comments = $c_stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
             <div class="module_outter_card">
+                <form method="POST" class="favorite-form">
+                    <input type="hidden" name="toggle_fav" value="1">
+                    <input type="hidden" name="module_id" value="<?= $mod['id'] ?>">
+
+                    <button type="submit" class="heart-button">
+                        <svg class="heart <?= (int)$mod['is_favorite'] === 1 ? 'active' : '' ?>" viewBox="0 0 24 24" width="40">
+                            <path fill="currentColor" stroke="currentColor" stroke-width="2"
+                                d="M12 21s-6.716-4.534-9.428-8.062C.86 10.64 1.14 7.5 3.514 5.514 
+                                5.886 3.528 9.066 4.09 12 7.09c2.934-3 6.114-3.562 8.486-1.576 
+                                2.374 1.986 2.654 5.126.942 7.424C18.716 16.466 12 21 12 21z"/>
+                        </svg>
+                    </button>
+                </form>
+
                 <div class="module_inner_card">
                     <div class="module-header">
                         <h3 class="module-name"><?= htmlspecialchars($mod['name'] ?? '')?></h3>
-
                     </div>
 
-                        
+
                                 <p class="mod_description"><?= htmlspecialchars($mod['description'] ?? '')?></p>
-
-                                <div><?= str_repeat('⭐', (int)($mod['rating'] ?? 0)) ?></div>
-
         
                                 <div class="mod_exp">
                                 <p>
@@ -243,3 +321,13 @@ if (isset($_POST['module_delete'])) {
 <?php include __DIR__ . '/../includes/footer.php'; ?>    
 </body>    
 </html>
+
+<script>
+document.querySelectorAll(".heart-button").forEach(button => {
+  button.addEventListener("click", function () {
+    const heart = this.querySelector(".heart");
+    heart.classList.toggle("active");
+  });
+});
+</script>
+<?php ob_end_flush(); ?>

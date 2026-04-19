@@ -294,14 +294,14 @@ if (isset($_POST['module_edit'])) {
             <input type="number" id="videoCount" name="videoCount" min="0" max="5" onchange="generateVideoInputs()">
 
             <div id="videoInputs"></div><br> -->
-            <div class="create-form-video">
+            <!-- <div class="create-form-video">
                 <label class="quiz_check create-module-label quiz">
                     <input type="checkbox" id="enable_videos">
                     Only include module videos?
                 </label>
-            </div>
+            </div> -->
 
-            <div id="videos_section" style="display:none;">
+            <!-- <div id="videos_section" style="display:none;">
                 
                 <label class="quiz_check create-module-label">Number of videos:</label>
                 <input 
@@ -313,7 +313,7 @@ if (isset($_POST['module_edit'])) {
                     placeholder="Insert up to 5 videos">
 
                 <div id="videoInputs"></div>
-            </div>
+            </div> -->
 
                 <div class="create-form-quiz">
 
