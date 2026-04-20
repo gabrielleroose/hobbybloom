@@ -269,13 +269,15 @@ footer {
   color: #fff;
   font-size: 0.85rem;
   outline: none;
-  padding: 6px 14px 6px 34px; 
+  padding: 9px 4px 9px 34px; 
   transition: background 0.2s, border-color 0.2s, width 0.3s;
   width: 160px;
 }
 
 .nav-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.55);
+  /* color: rgba(255, 255, 255, 0.55); */
+  color: #000080;
+  font-size: var(--text-size-md);
 }
 
 .nav-search-input:focus {

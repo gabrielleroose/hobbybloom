@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap');
 :root {
   --text-size-xs: 0.64rem;
   --text-size-sm: 0.8rem;
@@ -524,11 +525,13 @@ footer {
 
 .search-row p {
   /* color: white; */
-  color: #2c6ca3;
-  font-size: var(--text-size-2xl);
+  color: #7a8c5a;
+  font-size: var(--text-size-lg);
   margin: 0 0 15px 0;
   font-weight: bold;
   margin-bottom: 2rem;
+  font-family: 'Playfair Display', Georgia, serif;
+
 }
 
 .search-bar {
@@ -4191,12 +4194,14 @@ select.create-circle-input {
 }
 
 .section-heading {
-  color: #2c6ca3 !important;
-  font-size: var(--text-size-2xl) !important;
+  color: #7a8c5a !important;
+  font-size: var(--text-size-lg) !important;
   font-weight: 800 !important;
   margin-bottom: 1rem !important;
   padding-left: 1.25rem;
+  font-family: 'Playfair Display', Georgia, serif;
 }
+
 
 .your-circles-wrapper,
 .circles-activity-wrapper {
