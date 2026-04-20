@@ -1,12 +1,15 @@
 <?php
 require_once __DIR__ . '/base.php';
 
+
 if (!isset($_SESSION['user']['id'])) {
     header("Location: login.php");
     exit();
 }
 
+
 $userId = $_SESSION['user']['id'];
+
 
 $stmt = $conn->prepare("SELECT first_name FROM users WHERE id = ?");
 $stmt->execute([$userId]);
@@ -15,9 +18,11 @@ if (empty($stmt->fetchColumn())) {
     exit();
 }
 
+
 $searchQuery = trim($_GET['q'] ?? '');
 $filterCategory = $_GET['category'] ?? '';
 $viewMode = $_GET['view'] ?? 'suggested';
+
 
 $dbCircleColors = [];
 $colorStmt = $conn->query("SELECT name, color FROM circle");
@@ -25,12 +30,14 @@ while ($row = $colorStmt->fetch(PDO::FETCH_ASSOC)) {
     $dbCircleColors[trim($row['name'])] = $row['color'];
 }
 
+
 $searchResults = [];
 if ($searchQuery) {
     $sStmt = $conn->prepare("SELECT * FROM circle WHERE name LIKE ? OR description LIKE ?");
     $sStmt->execute(["%$searchQuery%", "%$searchQuery%"]);
     $searchResults = $sStmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 $allCircles = [];
 if ($viewMode === 'all') {
@@ -46,6 +53,7 @@ if ($viewMode === 'all') {
     $allCircles = $allStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 $myHobbies = [];
 $stmt = $conn->prepare("SELECT hobbies FROM user_profiles WHERE user_id = ?");
 $stmt->execute([$userId]);
@@ -53,6 +61,7 @@ $profile = $stmt->fetch();
 if ($profile && $profile['hobbies']) {
     $myHobbies = array_filter(array_map('trim', explode(',', $profile['hobbies'])));
 }
+
 
 $suggestedCircles = [];
 if (!empty($myHobbies)) {
@@ -65,29 +74,33 @@ if (!empty($myHobbies)) {
     $suggestedCircles = $suggestStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 $feedItems = [];
 if (!empty($myHobbies)) {
     $placeholders = str_repeat('?,', count($myHobbies) - 1) . '?';
     $feedStmt = $conn->prepare("
-        (SELECT 'module' AS type, u.username, m.name AS target_name, '' AS message_text, l.last_visited AS activity_date, p.profile_color
-         FROM log l JOIN users u ON l.uid = u.id JOIN module m ON l.mid = m.id LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE l.complete = 1 AND m.name IN ($placeholders))
-        UNION
-        (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
-         FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
-         WHERE msg.hobby_name IN ($placeholders))
-        ORDER BY activity_date DESC LIMIT 4
-    ");
+       (SELECT 'module' AS type, u.username, m.name AS target_name, '' AS message_text, l.last_visited AS activity_date, p.profile_color
+        FROM log l JOIN users u ON l.uid = u.id JOIN module m ON l.mid = m.id LEFT JOIN user_profiles p ON u.id = p.user_id
+        WHERE l.complete = 1 AND m.name IN ($placeholders))
+       UNION
+       (SELECT 'chat' AS type, u.username, msg.hobby_name AS target_name, msg.message AS message_text, msg.created_at AS activity_date, p.profile_color
+        FROM circle_messages msg JOIN users u ON msg.user_id = u.id LEFT JOIN user_profiles p ON u.id = p.user_id
+        WHERE msg.hobby_name IN ($placeholders))
+       ORDER BY activity_date DESC LIMIT 4
+   ");
     $params = array_merge($myHobbies, $myHobbies);
     $feedStmt->execute($params);
     $feedItems = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 require_once __DIR__ . '/base.php';
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
+
 
 <head>
     <meta charset="UTF-8">
@@ -102,6 +115,7 @@ require_once __DIR__ . '/base.php';
             margin: 20px 0 35px 0;
         }
 
+
         .glass-tabs {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
@@ -113,6 +127,7 @@ require_once __DIR__ . '/base.php';
             gap: 5px;
         }
 
+
         .tab-btn {
             padding: 10px 25px;
             border-radius: 35px;
@@ -123,11 +138,13 @@ require_once __DIR__ . '/base.php';
             transition: 0.3s;
         }
 
+
         .tab-btn.active {
             background-color: #1f5077;
             color: white;
             box-shadow: 0 4px 10px rgba(31, 80, 119, 0.2);
         }
+
 
         .search-row {
             background: rgba(255, 255, 255, 0.2);
@@ -135,6 +152,7 @@ require_once __DIR__ . '/base.php';
             border-radius: 15px;
             margin-bottom: 20px;
         }
+
 
         .search-bar {
             width: 100%;
@@ -147,6 +165,8 @@ require_once __DIR__ . '/base.php';
         }
 
 
+
+
         .filter-chip {
             padding: 6px 18px;
             border-radius: 20px;
@@ -157,6 +177,7 @@ require_once __DIR__ . '/base.php';
             border: 1px solid rgba(31, 80, 119, 0.1);
         }
 
+
         .filter-chip.active {
             background: #1f5077;
             color: white;
@@ -165,7 +186,9 @@ require_once __DIR__ . '/base.php';
     </style>
 </head>
 
+
 <body class="circles-body">
+
 
     <div class="hub-top-nav">
         <div class="glass-tabs">
@@ -174,18 +197,20 @@ require_once __DIR__ . '/base.php';
         </div>
     </div>
 
+
     <div class="circle-page-container">
         <aside class="search-row">
             <p>Circles Hub</p>
             <form method="GET" action="circles.php">
                 <input type="hidden" name="view" value="<?= htmlspecialchars($viewMode) ?>">
                 <input type="text" name="q" class="search-bar" placeholder="Search..." value="<?= htmlspecialchars($searchQuery) ?>">
-                <div class="search-hub" >
-                <button class="search-hub-btn" type="submit">Search Circles</button>
+                <div class="search-hub">
+                    <button class="search-hub-btn" type="submit">Search Circles</button>
                 </div>
             </form>
             <a href="create_circle.php" class="create-new-circle-btn" style="margin-top: 15px; display: block; text-align: center; padding: 10px 20px; text-decoration: none; background: rgba(31, 80, 119, 0.1); border: 1px solid #1f5077; color: #1f5077; border-radius: 25px; font-weight: 600;">+ Create Circle</a>
         </aside>
+
 
         <main class="page-container-inside">
             <?php if ($searchQuery): ?>
@@ -209,6 +234,7 @@ require_once __DIR__ . '/base.php';
                 </section>
                 <hr style="border: 0; border-top: 1px solid rgba(31, 80, 119, 0.1); margin: 30px 0;">
             <?php endif; ?>
+
 
             <?php if ($viewMode === 'all'): ?>
                 <section class="results-section">
@@ -252,6 +278,7 @@ require_once __DIR__ . '/base.php';
                         </div>
                     </section>
 
+
                     <section class="circles-activity-wrapper">
                         <h2 class="section-heading">Recent Highlights</h2>
                         <div class="activity-column">
@@ -279,26 +306,30 @@ require_once __DIR__ . '/base.php';
                 </div>
             <?php endif; ?>
 
+
         </main>
     </div>
 
+
     <?php if ($viewMode !== 'all' && !$searchQuery): ?>
-    <section class="suggested-circles-wrapper">
-        <h2 class="section-heading">Suggested For You</h2>
-        <div class="suggested-grid">
-            <?php foreach ($suggestedCircles as $circle): ?>
-                <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
-                    <div class="circle-icon" style="background-color: <?= $circle['color'] ?>; margin-bottom: 10px;">
-                        <?= extractEmoji($circle['name']) ?>
-                    </div>
-                    <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
-                    <p><?= htmlspecialchars($circle['description']) ?></p>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </section>
-<?php endif; ?>
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+        <section class="suggested-circles-wrapper">
+            <h2 class="section-heading">Suggested For You</h2>
+            <div class="suggested-grid">
+                <?php foreach ($suggestedCircles as $circle): ?>
+                    <a href="circle_detail.php?hobby=<?= urlencode($circle['name']) ?>" class="suggested-card" style="border-top: 5px solid <?= $circle['color'] ?>;">
+                        <div class="circle-icon" style="background-color: <?= $circle['color'] ?>; margin-bottom: 10px;">
+                            <?= extractEmoji($circle['name']) ?>
+                        </div>
+                        <strong style="color: <?= $circle['color'] ?>;"><?= htmlspecialchars($circle['name']) ?></strong>
+                        <p><?= htmlspecialchars($circle['description']) ?></p>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    <?php endif; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
+
 
 </body>
+
 </html>
