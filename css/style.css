@@ -2367,202 +2367,400 @@ h2 {
 /* ************************************* ACCOUNT STYLES ************************************* */
 
 .account-body {
-  background-color: #bdc29d;
-  /* width: 80%; */
-  /* margin: 0 auto; */
+  background-color: #BDC29D;
+  min-height: 100vh;
+  font-family: 'DM Sans', system-ui, sans-serif;
 }
-
+ 
+/* ---------- Outer container ---------- */
 .account-main-container {
-  border-radius: 2rem;
-  padding: 1.5rem 3rem 3rem 3rem;
-  width: 80%;
+  max-width: 900px;
+  width: 100%;
   margin: 0 auto;
-
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
+  padding: 2rem 1.75rem 4rem;
+  /* remove old glassmorphism wrapper */
+  background: none;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
 }
-
+ 
+/* ---------- Settings card ---------- */
 .account-settings {
-  border: 3px solid orange;
-  width: 70%;
-  margin: 0 auto;
-
-  font-family: sans-serif;
-
-  border-radius: 2rem;
-  padding: 1rem 3rem 3rem 3rem;
-
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 2rem 2.25rem 2.5rem;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+  /* remove old orange border */
+  border: 1px solid rgba(255, 255, 255, 0.72);
 }
-
+ 
+/* ---------- Header ---------- */
+.ac-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+ 
+.ac-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a8c5a;
+}
+ 
+.ac-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 500;
+  color: #2C3E1A;
+  margin: 0;
+}
+ 
+/* Override bare h1 from old styles */
 .account-settings h1 {
-  color: #1e5077;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 500;
+  color: #2C3E1A;
+  margin: 0;
 }
-
-.account-username {
-  margin-bottom: 2rem;
+ 
+/* ---------- Success message ---------- */
+.ac-success {
+  background: rgba(99, 153, 34, 0.12);
+  border: 1px solid rgba(99, 153, 34, 0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3B6D11;
+  text-align: center;
+}
+ 
+/* ---------- Form layout ---------- */
+.ac-form {
   display: flex;
   flex-direction: column;
-  width: 40%;
-  color: #153853;
-  font-weight: bold;
-  font-size: var(--text-size-lg);
+  gap: 16px;
 }
-
-.account-username label {
-  color: #1e5077;
-  margin-top: 2rem;
+ 
+.ac-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-
+ 
+.ac-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+ 
+/* ---------- Section labels ---------- */
+.ac-section-label,
 .account-label {
-  /* color: #F1F2F5; */
-  color: #1e5077;
-  font-weight: bold;
-  font-size: var(--text-size-lg);
-  font-family: sans-serif;
-  margin-bottom: 2rem;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+  color: #5a6b3a !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  margin: 0 !important;
+  font-style: normal !important;
 }
-
-.username-input {
-  padding: 1rem;
-  border-radius: 2rem;
-  margin-top: 0.5rem;
-
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-  color: #153853;
-  font-size: var(--text-size-md);
+ 
+.ac-hint {
+  font-size: 10px;
+  color: #7a8c5a;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
 }
-
-.account-privacy {
-  margin-bottom: 20px;
-}
-
+ 
+/* ---------- Inputs ---------- */
+.username-input,
+.account-input,
 .account-privacy-input {
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-  width: 60%;
-  padding: 1rem;
-  margin-top: 5px;
-  border-radius: 2rem;
-  color: #1e5077;
+  background: #EAEBDF;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #2C3E1A;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
 }
-
+ 
+.username-input::placeholder,
+.account-input::placeholder {
+  color: #a8b490;
+}
+ 
+.username-input:focus,
+.account-input:focus,
+.account-privacy-input:focus {
+  border-color: rgba(44, 108, 163, 0.4);
+  box-shadow: 0 0 0 3px rgba(44, 108, 163, 0.08);
+}
+ 
+.account-privacy-input {
+  cursor: pointer;
+}
+ 
 .account-input.age {
-  width: 20%;
+  width: 100%;
 }
-
+ 
 .account-input.hometown {
-  width: 60%;
+  width: 100%;
 }
-
-.account-input {
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-
-  width: 60%;
-
-  padding: 1rem;
-  border-radius: 2rem;
-  margin-top: 0.75rem;
-  color: #1e5077;
+ 
+/* ---------- Colour picker ---------- */
+.ac-color-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-
-.account-delete {
-  margin: 0 auto;
-  background-color: rgba(255, 0, 0, 0.1);
-  padding: 1.5rem;
-  border-radius: 2rem;
-  border: 1px solid red;
-  margin-top: 1rem;
+ 
+.ac-color-input {
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  outline: none;
 }
-
+ 
+.ac-color-hint {
+  font-size: 11px;
+  color: #7a8c5a;
+}
+ 
+/* ---------- Account username wrapper (old class kept) ---------- */
+.account-username {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  width: 100%;
+}
+ 
+.account-username label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #5a6b3a;
+  margin: 0;
+}
+ 
+/* ---------- Save button ---------- */
 .account-save {
   display: flex;
   justify-content: center;
+  margin-top: 4px;
 }
-
+ 
 .account-save-button {
-  background-color: #1e5077;
-  color: #f1f2f5;
-  width: 30%;
-  padding: 0.75rem;
-  border-radius: 2rem;
-  cursor: pointer;
-  margin-top: 3rem;
-  font-size: var(--text-size-md);
-}
-
-.account-delete h3 {
-  color: #ff4d4d;
-  margin-top: 0;
-  font-size: var(--text-size-lg);
-}
-
-.account-delete p {
-  color: black;
-  font-size: var(--text-size-md);
-}
-
-.account-delete button {
-  background-color: #ff4d4d;
-  color: #f1f2f5;
+  background: #2C6CA3;
+  color: #fff;
   border: none;
-  font-weight: bold;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 30px;
+  padding: 11px 36px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
   cursor: pointer;
-  margin-top: 1rem;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
+ 
+.account-save-button:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+ 
+/* ---------- Divider ---------- */
+.ac-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.45);
+  border: none;
+  margin: 6px 0;
+}
+ 
+/* ---------- Followers / Following ---------- */
+.ac-follow-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+ 
+.ac-follow-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+ 
+.ac-follow-col-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+ 
+.ac-manage-btn {
+  background: #F4C84A;
+  color: #5a3d00;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.15s ease;
+}
+ 
+.ac-manage-btn:hover {
+  opacity: 0.85;
+}
+ 
+.ac-follow-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+ 
+.ac-follow-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+}
+ 
+.ac-follow-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #1f5077;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+ 
+.ac-follow-name:hover {
+  opacity: 0.75;
+}
+ 
+.ac-follow-empty {
+  font-size: 12px;
+  color: #7a8c5a;
+  font-style: italic;
+  padding: 8px 0;
+}
+ 
+.ac-unfollow-btn {
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: opacity 0.15s ease;
+  padding: 0;
+}
+ 
+.ac-unfollow-btn:hover {
+  opacity: 0.75;
+}
+ 
+/* ---------- Danger zone ---------- */
+.account-delete {
+  background: rgba(192, 57, 43, 0.07);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+ 
+.account-delete h3 {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c0392b;
+  margin: 0;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+ 
+.account-delete p {
+  font-size: 12px;
+  color: #5a6b3a;
+  margin: 0;
+}
+ 
+.account-delete button {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 9px 24px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 4px;
+  transition: opacity 0.15s ease;
+}
+ 
+.account-delete button:hover {
+  opacity: 0.85;
+}
+ 
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .account-main-container {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .account-settings {
+    padding: 1.5rem 1.25rem 2rem;
+  }
+  .ac-row {
+    grid-template-columns: 1fr;
+  }
+  .ac-follow-cols {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+ 
 
 /* ************************************* SHARE STYLES ************************************* */
 /* ************************************* SHARE STYLES ************************************* */
