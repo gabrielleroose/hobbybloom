@@ -4408,3 +4408,7 @@ select.create-circle-input {
 .fc-day-sun .fc-daygrid-day-number {
   color: #e74c3c;
 }
+
+.activity-main-content{
+  padding-right: 1rem;
+}
