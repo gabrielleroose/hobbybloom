@@ -26,7 +26,6 @@ if (empty($onboardingCheck)) {
     exit();
 }
  
-
 $extraHead = '
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
@@ -34,7 +33,6 @@ $extraHead = '
 <link href="../css/dashboard.css" rel="stylesheet">
 ';
  
-
 require_once __DIR__ . '/base.php';
  
 $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
@@ -167,8 +165,15 @@ $circles = (int)$cirCount->fetchColumn();
  
         <div class="dash-display-streak">
             <div class="dash-card-label">Daily Streak</div>
-            <div class="dash-streak-num">🔥 <?= $streak ?></div>
-            <p class="dash-streak-sub">day<?= $streak !== 1 ? 's' : '' ?> in a row</p>
+            
+            <div class="dash-streak-center">
+                <div class="dash-streak-num">
+                    <span class="dash-flame">🔥</span>
+                    <span><?= $streak ?></span>
+                </div>
+                <p class="dash-streak-sub">day<?= $streak !== 1 ? 's' : '' ?> in a row</p>
+            </div>
+
             <a href="achievements.php" class="dash-trophy-btn">🏆 View Trophies</a>
         </div>
 
