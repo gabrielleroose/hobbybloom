@@ -213,7 +213,7 @@ $circles = (int)$cirCount->fetchColumn();
  
         <?php if (!empty($recommendations)): ?>
         <div class="dashboard-circles">
-            <div class="dash-heading">Recommended For You</div>
+            <div class="dash-heading">Recommended Modules For You</div>
             <div class="dash-rec-circles">
                 <?php foreach ($recommendations as $rec): ?>
                     <a href="module.php?id=<?= $rec['id'] ?>" class="story-circle">
