@@ -36,10 +36,14 @@ $myHobbiesStr = $stmt->fetchColumn();
 $myHobbiesArr = $myHobbiesStr ? explode(', ', $myHobbiesStr) : [];
 $isMember = in_array($currentHobby, $myHobbiesArr);
 
+$cleanHobby = trim(preg_replace('/^[\p{So}\p{Sk}\x{200d}\x{fe0f}]+\s*/u', '', $currentHobby));
+
 $circleModules = [];
-$stmt = $conn->prepare("SELECT id, name, description, exp_level FROM module WHERE name LIKE ? OR description LIKE ?");
-$stmt->execute(["%$currentHobby%", "%$currentHobby%"]);
-$circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if (!empty($cleanHobby)) {
+    $stmt = $conn->prepare("SELECT id, name, description, exp_level FROM module WHERE name LIKE ? OR description LIKE ?");
+    $stmt->execute(["%$cleanHobby%", "%$cleanHobby%"]);
+    $circleModules = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 $msgStmt = $conn->prepare("
     SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color
