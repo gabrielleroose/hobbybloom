@@ -2592,6 +2592,8 @@ h2 {
   background: #c0392b;
 }
 
+/* CALENDAR??????? */
+
 /* ── Selected invitees chips ── */
 .selected-invitees {
   display: flex;
@@ -3950,123 +3952,225 @@ h2 {
 /* ************************************* CREATE CIRCLE STYLES ************************************* */
 
 .create-circle-body {
-  background-color: #bdc29d;
-}
-
-.create-circle-main-container {
-  border-radius: 2rem;
-  padding: 1rem 3rem 3rem 3rem;
-  width: 80%;
-  margin: 0 auto;
-
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.2);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-}
-
-.create-circle-top {
-  text-align: center;
-  font-family: sans-serif;
-}
-
-.create-circle-top p {
-  font-size: var(--text-size-lg);
-  color: #1e5077;
-}
-
-.create-circle-form {
-  /* border: 3px solid red; */
-  margin: 0 auto;
-  width: 80%;
+  background-color: #BDC29D;
+  font-family: 'DM Sans', system-ui, sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
-
-.create-circle-form form {
+ 
+/* ---------- Page wrapper ---------- */
+.cc-page-wrap {
+  flex: 1;
+  padding: 2rem 1.75rem 4rem;
+}
+ 
+.cc-wrap {
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 16px;
+}
+ 
+/* ---------- Heading ---------- */
+.cc-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+}
+ 
+/* cm-eyebrow already defined in createForm styles — shared */
+ 
+.cc-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 500;
+  color: #2C3E1A;
+  margin: 0;
+}
+ 
+.cc-subtitle {
+  font-size: 13px;
+  color: #7a8c5a;
+  margin: 0;
+}
+ 
+/* ---------- Form card ---------- */
+.cc-card {
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.8rem 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+ 
+.cc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  margin: 0 auto;
-  /* border: 3px solid orange; */
 }
-
-.create-circle-form form div {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+ 
+/* ---------- Labels (shared with createForm pattern) ---------- */
 .create-circle-label {
-  /* color: #F1F2F5; */
-  color: #1e5077;
-  font-weight: bold;
-  font-size: var(--text-size-lg);
-  font-family: sans-serif;
-  margin-bottom: 2rem;
-
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+  color: #5a6b3a !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  margin: 0 !important;
+  font-style: normal !important;
   display: none;
 }
-
+ 
+.create-circle-label.cm-show,
 .create-circle-label.theme {
+  display: block !important;
+}
+ 
+/* ---------- Inputs ---------- */
+.create-circle-input {
+  background: #EAEBDF !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: #2C3E1A !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  outline: none;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+ 
+.create-circle-input::placeholder {
+  color: #a8b490 !important;
+  font-size: 13px !important;
+}
+ 
+.create-circle-input:focus {
+  border-color: rgba(44, 108, 163, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(44, 108, 163, 0.08) !important;
+}
+ 
+select.create-circle-input {
+  cursor: pointer;
+}
+ 
+/* ---------- Emoji hint box ---------- */
+.cc-hint-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 8px;
+}
+ 
+.cc-hint-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+ 
+.cc-hint-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #2C3E1A;
+  margin-bottom: 3px;
+}
+ 
+.cc-hint-text {
+  font-size: 11px;
+  color: #7a8c5a;
+  line-height: 1.45;
   display: block;
 }
-
-.circle-theme-color {
+ 
+/* ---------- Colour picker (reuses ac-color-row from account styles) ---------- */
+/* ac-color-row and ac-color-input are already defined in account styles */
+ 
+/* ---------- Submit ---------- */
+.cc-submit-wrap {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  margin-top: 4px;
+}
+ 
+.cc-submit-btn {
+  background: #2C6CA3;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 11px 40px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+ 
+.cc-submit-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+ 
+/* ---------- Success state ---------- */
+.cc-success-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+ 
+.cc-go-btn {
+  background: #2C6CA3;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 11px 28px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+ 
+.cc-go-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+ 
+/* ---------- Messages (shared with createForm) ---------- */
+/* cm-message, cm-message-error, cm-message-success already defined */
+ 
+/* ---------- Responsive ---------- */
+@media (max-width: 560px) {
+  .cc-page-wrap {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .cc-card {
+    padding: 1.4rem 1.25rem 1.75rem;
+  }
 }
 
-.create-circle-input {
-  /* border: 5px solid orange; */
 
-  width: 80% !important;
-  margin-bottom: 2rem;
 
-  /* color: #153853; */
-  /* color: #F1F2F5; */
-  color: #1e5077;
-  font-size: var(--text-size-md);
-  font-family: sans-serif;
 
-  padding: 1.5rem;
-  border-radius: 2rem;
 
-  /* glassmorphism */
-  background: rgba(255, 255, 255, 0.5);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-
-  transition: transform 0.3s ease-in-out;
-}
-
-.create-circle-input::placeholder {
-  /* color: #F1F2F5; */
-  color: #1e5077;
-  font-size: var(--text-size-lg);
-  /* font-weight: bold; */
-}
-
-/*style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
-
-style="background-color: #1f5077; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
 
 
 /* Circles Layout Overhaul */
