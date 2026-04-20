@@ -76,7 +76,7 @@ try {
                 INSERT INTO module_stage_videos (msid, mid, video_url, lesson_number)
                 VALUES (?, ?, ?, ?)
                  ");
-$stmt->execute([$msid, $mid, $video_url, $stage_num]);
+            $stmt->execute([$msid, $module_id, $video_url, $stage_num]);
             }
 
             // insert question
