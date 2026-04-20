@@ -7,8 +7,8 @@ ini_set('display_errors', 1);
 require_once 'db.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/twig.php';
-require_once __DIR__ . '/../services/get_transcript.php';
-require_once __DIR__ . '/../services/ai.php';
+// require_once __DIR__ . '/../services/get_transcript.php';
+// require_once __DIR__ . '/../services/ai.php';
 // get user's google_id
 $googleId = $_SESSION['google_id'] ?? null;
 
@@ -72,8 +72,11 @@ try {
             // insert video if exists
             $video_url = $stage_data['video_url'] ?? null;
             if (!empty($video_url)) {
-                $stmt = $conn->prepare("INSERT INTO module_stage_videos (msid, video_url, lesson_number) VALUES (?, ?, ?)");
-                $stmt->execute([$msid, $video_url, $stage_num]);
+                $stmt = $conn->prepare("
+                INSERT INTO module_stage_videos (msid, mid, video_url, lesson_number)
+                VALUES (?, ?, ?, ?)
+                 ");
+$stmt->execute([$msid, $mid, $video_url, $stage_num]);
             }
 
             // insert question
@@ -116,40 +119,40 @@ try {
 
     $mid = $conn->lastInsertId();
     
-    foreach ($unique_module_videos as $index=>$unique_url) {
+    // foreach ($unique_module_videos as $index=>$unique_url) {
 
-        if ($unique_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $unique_url, $matches)) {
-            $video_id = $matches[2];
-            $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', $matches[2]);
+    //     if ($unique_url && preg_match('/(youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]+)/', $unique_url, $matches)) {
+    //         $video_id = $matches[2];
+    //         $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', $matches[2]);
 
-            $transcript_json = getTranscript($video_id); //FOR TRANSCRIPT PROCESSING DO NOT TOUCH PLEASE THANKS
+    //         $transcript_json = getTranscript($video_id); //FOR TRANSCRIPT PROCESSING DO NOT TOUCH PLEASE THANKS
 
-            $transcript_data = json_decode($transcript_json, true); //cleans data
+    //         $transcript_data = json_decode($transcript_json, true); //cleans data
 
-            $transcript_text = ""; //initiates variable outside of loop to consolidate transcript
+    //         $transcript_text = ""; //initiates variable outside of loop to consolidate transcript
 
-            $questions_json = generateQuestions($transcript_text, 1);
-            $questions_array = json_decode($questions_json, true);
+    //         $questions_json = generateQuestions($transcript_text, 1);
+    //         $questions_array = json_decode($questions_json, true);
 
-            if (is_array($transcript_data)) {
-                foreach ($transcript_data as $item) {
-                    $transcript_text .= " " . $item['text'];
-                }
-            }
+    //         if (is_array($transcript_data)) {
+    //             foreach ($transcript_data as $item) {
+    //                 $transcript_text .= " " . $item['text'];
+    //             }
+    //         }
 
-            echo "<pre>";
-            print_r($questions_array);
-            exit;
+    //         echo "<pre>";
+    //         print_r($questions_array);
+    //         exit;
             
-            $embed = "https://www.youtube.com/embed/" . $video_id;
-            $insert_video_url_sql = "INSERT INTO module_stage_videos (video_url, mid) VALUES (?, ?)";
+    //         $embed = "https://www.youtube.com/embed/" . $video_id;
+    //         $insert_video_url_sql = "INSERT INTO module_stage_videos (video_url, mid) VALUES (?, ?)";
 
-            $stmt = $conn->prepare($insert_video_url_sql);
-            $stmt = $stmt->execute([$embed, $mid]);
+    //         $stmt = $conn->prepare($insert_video_url_sql);
+    //         $stmt = $stmt->execute([$embed, $mid]);
 
 
-                        }
-            }
+    //                     }
+    //         }
 
 
     if (!empty($_POST['stages'])) {
@@ -171,13 +174,11 @@ try {
 
             if (!empty($video_url)) {
 
-                $video_sql = "
-                    INSERT INTO module_stage_videos (msid, video_url, lesson_number)
-                    VALUES (?, ?, ?)
-                ";
-
-                $stmt = $conn->prepare($video_sql);
-                $stmt->execute([$msid, $video_url, $stage_num]);
+               $stmt = $conn->prepare("
+                INSERT INTO module_stage_videos (msid, mid, video_url, lesson_number)
+                VALUES (?, ?, ?, ?)
+                        ");
+                $stmt->execute([$msid, $mid, $video_url, $stage_num]);
 
             }
 

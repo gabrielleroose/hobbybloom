@@ -24,7 +24,6 @@ if (!isset($_SESSION['user'])) {
  
     <form id="userForm" action="save_onboarding.php" method="post">
  
-        <!-- ── Step 1 ── -->
         <div id="step-1-wrapper">
  
             <div id="step-1" class="container mt-5">
@@ -81,7 +80,6 @@ if (!isset($_SESSION['user'])) {
  
         </div>
  
-        <!-- ── Step 2 ── -->
         <div id="step-2" class="container mt-5 d-none-custom">
  
             <div class="index-inner-box">
@@ -105,20 +103,24 @@ if (!isset($_SESSION['user'])) {
                 </div>
  
                 <div class="hobby-grid">
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Cooking</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Knitting</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Lego</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Sewing</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Painting</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Hiking</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Reading</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Gardening</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Baking</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Meditation</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Music</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Movies</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Gaming</div>
-                    <div class="hobby-btn" onclick="toggleHobby(this)">Yoga</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🍳 Cooking</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🧶 Knitting</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🧱 Lego</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🧵 Sewing</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🎨 Painting</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🥾 Hiking</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">📚 Reading</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🪴 Gardening</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🥖 Baking</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🧘 Meditation</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🎵 Music</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🎬 Movies</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🎮 Gaming</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🧘 Yoga</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🌍 Travel</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">👽 Star Wars</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">🏴‍☠️ One Piece</div>
+                    <div class="hobby-btn" onclick="toggleHobby(this)">✍️ Writing</div>
                 </div>
  
                 <button type="button" class="finish-arrow-btn" onclick="submitFullForm()">Finish →</button>
