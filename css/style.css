@@ -1,4 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+/* =====================================================
+   OVERFLOW FIX — prevents containers from escaping viewport
+   ===================================================== */
+
+/* Make every element include its padding and border inside
+   its declared width, instead of adding them on top. */
+   *,
+   *::before,
+   *::after {
+     box-sizing: border-box;
+   }
+   
+   /* Safety net: never let anything push the page wider than the screen */
+   html,
+   body {
+     max-width: 100%;
+     overflow-x: hidden;
+   }
+   
+   /* Cap any container that uses percentage widths so border and
+      padding can't push it past the viewport */
+   .team-main-container,
+   .profile-main-container,
+   .activity-page-container,
+   .search-row,
+   .outter-box,
+   .other {
+     max-width: 100%;
+   }
+
 :root {
   --text-size-xs: 0.64rem;
   --text-size-sm: 0.8rem;
@@ -4411,4 +4442,1132 @@ select.create-circle-input {
 
 .activity-main-content{
   padding-right: 1rem;
+}
+
+/* =====================================================
+   MOBILE-FRIENDLY ENHANCEMENTS (appended)
+   Adds tablet (<=768px) and phone (<=480px) breakpoints
+   covering every page of HobbyBloom. Existing desktop and
+   preexisting mobile rules above are NOT modified.
+   ===================================================== */
+
+/* =====================================================
+   TABLET & SMALL LAPTOP  —  max-width: 768px
+   ===================================================== */
+@media (max-width: 768px) {
+
+  /* ---------- Index / Onboarding ---------- */
+  .index-main-container {
+    margin: 1rem auto;
+    padding: 0 1rem 2rem;
+  }
+
+  .index-inner-box,
+  .index-form {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .index-inner-box h1 {
+    font-size: 1.4rem;
+  }
+
+  .index-form-title {
+    font-size: 1.15rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .index-name-info {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .index-next-button,
+  .finish-arrow-btn {
+    width: 100%;
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hobby-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  /* ---------- Team page ---------- */
+  .team-main-container {
+    width: 94%;
+    padding: 1rem 1rem 2rem 1rem;
+  }
+
+  .outter-box {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-width: 10px;
+    border-radius: 20px;
+  }
+
+  .other {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 2rem;
+    border-width: 10px;
+    font-size: 22px;
+    border-radius: 20px;
+    padding: 1rem;
+  }
+
+  .inner-box {
+    font-size: 22px;
+    padding: 15px;
+    border-width: 6px;
+  }
+
+  .subtext {
+    font-size: 16px;
+  }
+
+  .box {
+    border-width: 10px;
+    border-radius: 20px;
+  }
+
+  .team-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .form-title {
+    font-size: var(--text-size-xl);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ---------- Circles list page ---------- */
+  .circle-page-container {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  .search-row {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem 1rem;
+    max-height: none;
+    position: static;
+  }
+
+  .search-row p {
+    font-size: var(--text-size-md);
+    margin-bottom: 1rem;
+  }
+
+  .search-bar {
+    margin-bottom: 1rem;
+  }
+
+  .search-hub {
+    margin-bottom: 1.5rem;
+  }
+
+  .search-hub-btn {
+    width: 100%;
+  }
+
+  .create-new-circle-btn,
+  .search-circle-btn {
+    width: 100%;
+    margin-left: 0;
+    padding: 0.8rem 0;
+    box-sizing: border-box;
+  }
+
+  .page-container-inside {
+    padding-left: 0 !important;
+  }
+
+  .circles-flex,
+  .activity-flex,
+  .suggested-flex {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 1rem;
+  }
+
+  .suggested-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .filter-row {
+    padding-left: 1rem;
+    gap: 6px;
+  }
+
+  .highlight-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .section-heading {
+    padding-left: 1rem;
+  }
+
+  /* ---------- Circle detail ---------- */
+  .cd-wrap {
+    padding: 1rem 0.75rem 2.5rem;
+  }
+
+  .cd-hero {
+    padding: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .cd-hero-title {
+    font-size: 22px;
+  }
+
+  .cd-hero-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cd-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cd-card {
+    padding: 1.2rem 1rem;
+  }
+
+  /* ---------- Chat / messages ---------- */
+  .chat-list {
+    gap: 12px;
+  }
+
+  .chat-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .chat-name {
+    font-size: 14px;
+  }
+
+  .chat-preview {
+    font-size: 13px;
+  }
+
+  /* ---------- Module display page ---------- */
+  .module_back_container {
+    padding: 1rem 0.75rem 3rem;
+  }
+
+  .module-page-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .module-page-header h1 {
+    font-size: var(--text-size-xl);
+  }
+
+  .glass-tab-container {
+    padding: 0.5rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .glass-tabs {
+    flex-wrap: nowrap;
+    min-width: min-content;
+  }
+
+  .tab-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Note: .module_grid already collapses at 700px in original CSS */
+
+  .module_outter_card {
+    padding: 1.25rem 1rem;
+  }
+
+  .video-thumbnail {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .video-thumbnail.big,
+  .video-thumbnail.small {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  /* ---------- Begin module / stages ---------- */
+  .begin-module-container {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .bm-stage-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .stage_title {
+    font-size: var(--text-size-xl);
+  }
+
+  .module-single-video iframe,
+  .begin-module-container iframe {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .bm-nav-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .bm-btn-group {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .module_answer {
+    padding: 12px;
+  }
+
+  .submit-stage {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* ---------- Create module / createForm ---------- */
+  .create-module-main {
+    padding: 1rem;
+  }
+
+  .create-module-inner {
+    padding: 1.25rem 1rem;
+  }
+
+  .cm-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .cm-stage-card {
+    padding: 1.1rem 1rem;
+  }
+
+  .cm-checkbox-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .create-module-heading h2 {
+    font-size: var(--text-size-xl);
+  }
+
+  /* ---------- Activity page ---------- */
+  .activity-page-container {
+    width: 94%;
+    padding: 0 0.5rem;
+  }
+
+  .activity-card {
+    padding: 16px;
+  }
+
+  .activity-card h2 {
+    font-size: 20px;
+  }
+
+  .percentage-text {
+    font-size: 20px;
+  }
+
+  .progress-row {
+    gap: 10px;
+  }
+
+  /* ---------- Calendar page ---------- */
+  #calendar {
+    width: 100%;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+  }
+
+  #eventModal {
+    width: 92vw;
+    padding: 20px 18px 18px;
+    max-height: 88vh;
+  }
+
+  #eventModal h3 {
+    font-size: 1.1rem;
+  }
+
+  .invite-tabs {
+    flex-wrap: wrap;
+  }
+
+  .modal-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn {
+    flex: 1 1 auto;
+  }
+
+  /* FullCalendar adjustments */
+  .fc-toolbar-title {
+    font-size: 18px;
+  }
+
+  .fc-button {
+    font-size: 12px;
+    padding: 4px 8px !important;
+  }
+
+  .fc-daygrid-day-number {
+    font-size: 12px;
+    padding: 3px 5px;
+  }
+
+  .fc-col-header-cell-cushion {
+    font-size: 11px;
+  }
+
+  .fc-event-title {
+    font-size: 10px;
+  }
+
+  /* ---------- Account page ---------- */
+  .account-main-container {
+    padding: 1rem 0.75rem 3rem;
+  }
+
+  .account-settings {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  .ac-title {
+    font-size: var(--text-size-xl);
+  }
+
+  .ac-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .ac-follow-cols {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .ac-follow-item {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 0;
+  }
+
+  /* ---------- Profile page ---------- */
+  .profile-main-container {
+    width: 94%;
+    padding: 1rem 1rem 2rem 1rem;
+    flex-direction: column;
+  }
+
+  .profile-div {
+    padding: 0.75rem;
+  }
+
+  /* ---------- Share page ---------- */
+  .s-outter-layer {
+    margin: 40px 1rem;
+    padding: 18px;
+  }
+
+  .s-inner-layer {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .share-header {
+    font-size: 22px;
+  }
+
+  .s-content {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+
+  .s-content strong {
+    font-size: 16px;
+  }
+
+  /* ---------- Create circle page ---------- */
+  .cc-page-wrap {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .cc-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .cc-title {
+    font-size: var(--text-size-xl);
+  }
+
+  /* ---------- Achievements / info card ---------- */
+  .info-card {
+    padding: 1rem;
+  }
+
+  .card-row-between {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ---------- Comments ---------- */
+  .comment-input-form {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .comment-input-field {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .comment-btn {
+    width: 100%;
+  }
+
+  /* ---------- Main step card ---------- */
+  .main-step-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .step-title {
+    font-size: var(--text-size-lg);
+  }
+
+  .creator-profile {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ---------- Invite / user search ---------- */
+  .user-search-wrap input {
+    font-size: 0.9rem;
+  }
+
+  .user-dropdown {
+    width: 100%;
+  }
+
+  .following-item,
+  .circle-item-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .selected-invitees {
+    flex-wrap: wrap;
+  }
+
+  .invitee-chip {
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   PHONE  —  max-width: 480px
+   ===================================================== */
+@media (max-width: 480px) {
+
+  /* ---------- Index / Onboarding ---------- */
+  .index-main-container {
+    margin: 0.5rem auto;
+    padding: 0 0.75rem 2rem;
+  }
+
+  .index-inner-box,
+  .index-form {
+    padding: 1.25rem 1rem;
+    border-radius: 14px;
+  }
+
+  .index-inner-box h1 {
+    font-size: 1.25rem;
+  }
+
+  .index-form-title {
+    font-size: 1.05rem;
+  }
+
+  .hobby-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .hobby-btn {
+    padding: 10px 6px;
+    font-size: 11px;
+  }
+
+  .ob-back-btn {
+    font-size: 11px;
+    padding: 7px 13px;
+  }
+
+  /* ---------- Team page ---------- */
+  .outter-box,
+  .other {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-width: 6px;
+    font-size: 18px;
+    padding: 0.75rem;
+  }
+
+  .inner-box {
+    font-size: 18px;
+    padding: 12px;
+    border-width: 4px;
+  }
+
+  .subtext {
+    font-size: 14px;
+  }
+
+  .team-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .team-main-container {
+    width: 96%;
+    padding: 0.75rem 0.5rem 1.5rem 0.5rem;
+  }
+
+  .form-title {
+    font-size: var(--text-size-lg);
+  }
+
+  /* ---------- Circles list ---------- */
+  .search-row {
+    padding: 1rem 0.75rem;
+  }
+
+  .search-row p {
+    font-size: 1rem;
+  }
+
+  .suggested-grid {
+    grid-template-columns: 1fr;
+    padding: 0.75rem;
+  }
+
+  .circles-circle {
+    font-size: 0.85rem;
+  }
+
+  .filter-row {
+    padding-left: 0.5rem;
+  }
+
+  .card-body p {
+    font-size: 0.85rem;
+  }
+
+  .card-body small {
+    font-size: 0.75rem;
+  }
+
+  .card-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+
+  /* ---------- Circle detail ---------- */
+  .cd-wrap {
+    padding: 0.75rem 0.5rem 2rem;
+  }
+
+  .cd-hero {
+    padding: 1rem 0.85rem;
+  }
+
+  .cd-hero-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .cd-hero-title {
+    font-size: 19px;
+  }
+
+  .cd-hero-desc {
+    font-size: 12px;
+  }
+
+  .cd-card {
+    padding: 1rem 0.85rem;
+  }
+
+  .cd-join-btn,
+  .cd-action-btn {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+
+  .cd-chat-box {
+    max-height: 280px;
+  }
+
+  .cd-msg-av {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .cd-msg-bubble {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .cd-chat-input {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .cd-send-btn {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .cd-member-av {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .cd-member-name {
+    font-size: 13px;
+  }
+
+  .cd-mod-card {
+    padding: 0.9rem;
+  }
+
+  .cd-mod-title {
+    font-size: 14px;
+  }
+
+  /* ---------- Chat / feed ---------- */
+  .chat-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .chat-icon-link {
+    font-size: 24px;
+  }
+
+  .feed-card {
+    padding: 0.75rem;
+  }
+
+  .feed-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .feed-image-placeholder {
+    height: 180px;
+  }
+
+  /* ---------- Module display ---------- */
+  .module_back_container {
+    padding: 0.75rem 0.5rem 2rem;
+  }
+
+  .module-page-header h1 {
+    font-size: var(--text-size-lg);
+  }
+
+  .tab-btn {
+    padding: 7px 11px;
+    font-size: 10px;
+  }
+
+  .module_outter_card {
+    padding: 1rem 0.85rem;
+  }
+
+  .module-name {
+    font-size: 14px;
+  }
+
+  .mod_description {
+    font-size: 12px;
+  }
+
+  .module-pill {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  .module-author {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .creator-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .heart-button .heart {
+    font-size: 20px;
+  }
+
+  .comments-scroll-box {
+    max-height: 260px;
+  }
+
+  .comment-item {
+    padding: 0.6rem 0.75rem;
+    font-size: 12px;
+  }
+
+  .create-module-button {
+    font-size: 12px;
+    padding: 9px 16px;
+  }
+
+  /* ---------- Begin module ---------- */
+  .begin-module-container {
+    padding: 1rem 0.5rem 2.5rem;
+  }
+
+  .bm-stage-card {
+    padding: 1rem 0.85rem;
+  }
+
+  .stage_title {
+    font-size: var(--text-size-lg);
+  }
+
+  .bm-stage-eyebrow {
+    font-size: 10px;
+  }
+
+  .bm-question-label {
+    font-size: 12px;
+  }
+
+  .module-question p {
+    font-size: 13px;
+  }
+
+  .module_answer label {
+    font-size: 13px;
+  }
+
+  .submit-stage {
+    font-size: 13px;
+    padding: 10px 18px;
+  }
+
+  .bm-stage-pill {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* ---------- Create module ---------- */
+  .create-module-main {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .create-module-inner {
+    padding: 1rem 0.85rem;
+  }
+
+  .create-module-heading h2 {
+    font-size: var(--text-size-lg);
+  }
+
+  .create-module-input,
+  .create-module-input-exp {
+    font-size: 12px;
+  }
+
+  /* ---------- Activity ---------- */
+  .activity-page-container {
+    width: 96%;
+  }
+
+  .activity-card {
+    padding: 14px;
+  }
+
+  .activity-card h2 {
+    font-size: 18px;
+  }
+
+  .percentage-text {
+    font-size: 18px;
+  }
+
+  .progress-bar-track {
+    height: 16px;
+  }
+
+  .calendar-box {
+    height: 160px;
+  }
+
+  .completed-item {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .module-title {
+    font-size: 14px;
+  }
+
+  .module-meta {
+    font-size: 11px;
+  }
+
+  .activity-main-content {
+    padding-right: 0.5rem;
+  }
+
+  /* ---------- Calendar ---------- */
+  #calendar {
+    padding: 0 0.25rem;
+  }
+
+  #eventModal {
+    width: 94vw;
+    padding: 16px 14px 14px;
+    border-radius: 10px;
+  }
+
+  #eventModal h3 {
+    font-size: 1rem;
+  }
+
+  #eventModal label {
+    font-size: 0.7rem;
+  }
+
+  #eventModal input,
+  #eventModal textarea {
+    font-size: 0.88rem;
+  }
+
+  .invite-tab {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .following-item,
+  .circle-item-header {
+    font-size: 13px;
+  }
+
+  .circle-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+
+  .invitee-chip {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .fc-toolbar-title {
+    font-size: 16px;
+  }
+
+  .fc-toolbar.fc-header-toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .fc-button {
+    font-size: 11px;
+    padding: 3px 6px !important;
+  }
+
+  .fc-daygrid-day-number {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+
+  .fc-col-header-cell-cushion {
+    font-size: 10px;
+  }
+
+  .fc-event-title {
+    font-size: 9px;
+  }
+
+  .fc-event-time {
+    display: none;
+  }
+
+  /* ---------- Account ---------- */
+  .account-main-container {
+    padding: 0.75rem 0.5rem 2.5rem;
+  }
+
+  .account-settings {
+    padding: 1rem 0.85rem 1.25rem;
+    border-radius: 14px;
+  }
+
+  .ac-title {
+    font-size: var(--text-size-lg);
+  }
+
+  .username-input,
+  .account-input,
+  .account-privacy-input {
+    font-size: 12px;
+  }
+
+  .account-save-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ac-follow-item {
+    font-size: 12px;
+  }
+
+  .ac-follow-name {
+    font-size: 12px;
+  }
+
+  .ac-unfollow-btn {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  .ac-manage-btn {
+    font-size: 10px;
+  }
+
+  .account-delete {
+    padding: 1rem;
+  }
+
+  .account-delete button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* ---------- Profile ---------- */
+  .profile-main-container {
+    width: 96%;
+    padding: 0.75rem 0.5rem 1.5rem 0.5rem;
+    border-radius: 16px;
+  }
+
+  .profile-div h3 {
+    font-size: var(--text-size-md);
+  }
+
+  /* ---------- Share ---------- */
+  .s-outter-layer {
+    margin: 20px 0.5rem;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .s-inner-layer {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .share-header {
+    font-size: 19px;
+  }
+
+  .s-content {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .s-content strong {
+    font-size: 14px;
+  }
+
+  /* ---------- Create circle ---------- */
+  .cc-card {
+    padding: 1.25rem 1rem;
+    border-radius: 14px;
+  }
+
+  .cc-title {
+    font-size: var(--text-size-lg);
+  }
+
+  .create-circle-input {
+    font-size: 12px !important;
+  }
+
+  .cc-submit-btn,
+  .cc-go-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cc-hint-text,
+  .cc-hint-title {
+    font-size: 10px;
+  }
+
+  /* ---------- Google Calendar buttons ---------- */
+  .gc-btn {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* ---------- General: disable aggressive hover scaling on touch ---------- */
+  .team-main-container:hover,
+  .search-row:hover,
+  .create-new-circle-btn:hover,
+  .search-circle-btn:hover,
+  .suggested-card:hover,
+  .module_outter_card:hover,
+  .circle-icon:hover {
+    transform: none;
+  }
 }

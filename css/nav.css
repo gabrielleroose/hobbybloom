@@ -402,3 +402,122 @@ footer {
   padding: 14px 16px;
   text-align: center;
 }
+
+
+/* =====================================================
+   MOBILE-FRIENDLY ENHANCEMENTS (appended)
+   Adds responsive behavior at <=768px and <=480px.
+   All desktop/tablet styles above remain untouched.
+   ===================================================== */
+
+/* ---------- Tablet & below ---------- */
+@media (max-width: 768px) {
+  nav {
+    padding-bottom: 1rem;
+  }
+
+  .branding {
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .branding p {
+    font-size: var(--text-size-2xl);
+    flex: 1 1 auto;
+  }
+
+  .branding-spacer {
+    display: none;
+  }
+
+  .branding-info {
+    flex: 1 1 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--text-size-md);
+  }
+
+  .nav-search-wrap {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+
+  .nav-search-input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .nav-search-input:focus {
+    width: 100%;
+  }
+
+  .nav-search-dropdown {
+    min-width: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .menu-box {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+
+  .menu-item {
+    padding: 0.75rem 0.75rem;
+    font-size: var(--text-size-sm);
+  }
+
+  .footer-container {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 1rem;
+  }
+
+  .footer-container-logo {
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  footer {
+    margin-top: 2rem;
+    padding: 1.5rem 0 0.5rem 0;
+  }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 480px) {
+  .branding p {
+    font-size: var(--text-size-xl);
+  }
+
+  .menu-item {
+    padding: 0.6rem 0.5rem;
+    font-size: var(--text-size-xs);
+  }
+
+  .nav-search-input {
+    font-size: 0.85rem;
+    padding: 8px 4px 8px 30px;
+  }
+
+  .nav-search-icon {
+    left: 8px;
+  }
+
+  /* Prevent menu-item hover from scaling offscreen on small devices */
+  .menu-item:hover {
+    transform: none;
+  }
+
+  .nav-follow-btn:hover {
+    transform: scale(1.05);
+  }
+}

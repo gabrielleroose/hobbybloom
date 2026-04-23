@@ -762,3 +762,148 @@
     font-size: 24px;
   }
 }
+
+/* =====================================================
+   MOBILE-FRIENDLY ENHANCEMENTS (appended)
+   Refines the existing responsive behavior for small phones.
+   Existing breakpoints at 860px and 560px remain untouched.
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .main-dashboard {
+    padding: 1.5rem 1rem 3rem;
+    gap: 12px;
+  }
+
+  .my-dashboard {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0.25rem 0 0.5rem;
+  }
+
+  .dash-card,
+  .dash-display-streak,
+  .dash-calendar,
+  .dash-display-content,
+  .dash-module,
+  .dashboard-circles {
+    padding: 1.3rem 1.2rem;
+  }
+
+  .dash-streak-num {
+    font-size: 52px;
+    gap: 10px;
+  }
+
+  .dash-flame {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-dashboard {
+    padding: 1rem 0.75rem 2.5rem;
+    gap: 10px;
+  }
+
+  .dash-greeting-label {
+    font-size: 11px;
+  }
+
+  .dash-greeting-name {
+    font-size: 22px;
+  }
+
+  .dash-card,
+  .dash-display-streak,
+  .dash-calendar,
+  .dash-display-content,
+  .dash-module,
+  .dashboard-circles {
+    padding: 1.1rem 1rem;
+    min-height: auto;
+  }
+
+  .dash-display-streak,
+  .dash-calendar {
+    min-height: 180px;
+  }
+
+  .dash-display-content,
+  .dash-module {
+    min-height: auto;
+  }
+
+  .dash-streak-num {
+    font-size: 44px;
+    gap: 8px;
+  }
+
+  .dash-flame {
+    font-size: 48px;
+  }
+
+  .dash-card-title,
+  .dash-module-name {
+    font-size: 15px;
+  }
+
+  .dash-trophy-btn,
+  .dash-content-btn,
+  .resume-btn,
+  .light-btn {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+
+  .dash-pill {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+
+  .dash-cal-event {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 7px 8px;
+  }
+
+  .dash-cal-event-name {
+    font-size: 11px;
+    flex: 1 1 100%;
+  }
+
+  .dash-cal-event-date {
+    font-size: 10px;
+  }
+
+  .circle-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .story-circle {
+    min-width: 74px;
+    padding: 8px 10px;
+  }
+
+  .circle-img {
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+  }
+
+  .day-streak {
+    font-size: 42px;
+  }
+
+  /* Disable hover transforms that can cause jitter on touch */
+  .dash-card:hover,
+  .dash-display-streak:hover,
+  .dash-calendar:hover,
+  .dash-display-content:hover,
+  .dash-module:hover,
+  .dashboard-circles:hover {
+    transform: none;
+  }
+}
