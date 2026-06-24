@@ -1,9 +1,0 @@
-{
-    frankenphp
-    admin off
-}
-
-:{$PORT} {
-    root * /app/pages
-    php_server
-}
