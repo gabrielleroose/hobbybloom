@@ -1,17 +1,17 @@
-
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$host = "db.luddy.indiana.edu";
-$user = "i494f25_team18";
-$password = "berms2227penes";
-$database = "i494f25_team18";
-$charset = "utf8mb4";
+$host     = getenv('MYSQLHOST');
+$user     = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
+$database = getenv('MYSQLDATABASE');
+$port     = getenv('MYSQLPORT') ?: '3306';
+$charset  = "utf8mb4";
 
-$dsn = "mysql:host=$host;dbname=$database;charset=$charset";
+$dsn = "mysql:host=$host;port=$port;dbname=$database;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -24,10 +24,7 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-
 function extractEmoji($string) {
     preg_match('/^(\X)/u', $string, $matches);
     return $matches[1] ?? '';
 }
-
-?>
