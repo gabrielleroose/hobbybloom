@@ -55,11 +55,7 @@ if (isset($_POST['toggle_fav'], $_POST['module_id']) && $user_id) {
  
 $currentTab = $_GET['tab'] ?? 'all';
  
-try {
-    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-} catch (PDOException $e) {
-    die("database connection failed: " . $e->getMessage());
-}
+
  
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     $mid         = $_POST['module_id'];
