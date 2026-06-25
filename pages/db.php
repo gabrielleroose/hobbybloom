@@ -4,11 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$host     = getenv('MYSQLHOST');
-$user     = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
-$database = getenv('MYSQLDATABASE');
-$port     = getenv('MYSQLPORT') ?: '3306';
+$url      = parse_url(getenv('MYSQL_URL'));
+$host     = $url['host'];
+$user     = $url['user'];
+$password = $url['pass'];
+$database = ltrim($url['path'], '/');
+$port     = $url['port'] ?? 3306;
 $charset  = "utf8mb4";
 
 $dsn = "mysql:host=$host;port=$port;dbname=$database;charset=$charset";
