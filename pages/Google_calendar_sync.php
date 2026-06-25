@@ -9,8 +9,8 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 
-define('GOOGLE_CLIENT_ID',     '1011869688630-kl05vvf13cg6u6d1tlo9rnj0l4kj7rvn.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', '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'); 
+define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID'));
+define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET')); 
 
 $user_id = $_SESSION['user']['id'];
 
