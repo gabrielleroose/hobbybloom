@@ -21,7 +21,7 @@ if (isset($_SESSION['user'])) {
         <p style="color: #666; margin-bottom: 30px;">Sign in to start your journey</p>
 
         <div id="g_id_onload"
-             data-client_id="268931984946-slb4joliqufsIsotd5iet5qir3jnrp9g.apps.googleusercontent.com"
+             data-client_id="268931984946-slb4joliqufslsotd5iet5qir3jnrp9g.apps.googleusercontent.com"
              data-callback="handleCredentialResponse"
              data-auto_prompt="false">
         </div>
