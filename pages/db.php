@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $host     = getenv('MYSQLHOST');
 $user     = getenv('MYSQLUSER');
 $password = getenv('MYSQLPASSWORD');
-$database = getenv('MYSQLDATABASE');
+$database = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE');
 $port     = getenv('MYSQLPORT') ?: '3306';
 $charset  = "utf8mb4";
 
