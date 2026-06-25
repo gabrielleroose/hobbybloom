@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>About Us</title>
-  <link href="../css/style.css" rel="stylesheet">
-  <link href="../css/nav.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <link href="/css/nav.css" rel="stylesheet">
 </head>
 <body class="team-body">
 

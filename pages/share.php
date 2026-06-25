@@ -87,8 +87,8 @@ foreach ($mid_ids as $mid_id) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Share</title>
 
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
 </head>
 
 <body class="share-body">

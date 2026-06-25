@@ -58,8 +58,8 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Follow Requests | HobbyBloom</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
 </head>
 <body class="account-body">
     <div class="account-main-container">

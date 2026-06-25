@@ -105,8 +105,8 @@ require_once __DIR__ . '/base.php';
 <head>
     <meta charset="UTF-8">
     <title>Circles Hub | HobbyBloom</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
     <style>
         .hub-top-nav {
             width: 100%;

@@ -16,8 +16,8 @@ if (isset($_SESSION['user']['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/nav.css">
 
     <?php if (!empty($extraHead)) echo $extraHead; ?>
 

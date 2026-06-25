@@ -96,8 +96,8 @@ $canViewContent = ($profileUser['is_private'] == 0 || $followStatus === 'accepte
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($profileUser['username']) ?>'s Profile</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
 </head>
 <body class="profile-body">
     <div class="profile-main-container">

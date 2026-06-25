@@ -151,8 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['share_badge'])) {
 <head>
     <meta charset="UTF-8">
     <title>My Achievements | HobbyBloom</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
     <style>
         .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
         .badge-card { background-color: white; border-radius: 15px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; }

@@ -10,7 +10,7 @@ if (isset($_SESSION['user'])) {
 <head>
     <meta charset="UTF-8">
     <title>Login - HobbyBloom</title>
-    <link href="../css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5;">

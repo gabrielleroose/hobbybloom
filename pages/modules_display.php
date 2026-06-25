@@ -141,8 +141,8 @@ if (isset($_POST['module_delete'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Modules | HobbyBloom</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/nav.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/nav.css" rel="stylesheet">
 </head>
 <body class="module-body">
  
