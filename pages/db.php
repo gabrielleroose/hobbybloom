@@ -22,7 +22,8 @@ $options = [
 try {
     $conn = new PDO($dsn, $user, $password, $options);
 } catch (\PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    error_log("Database connection failed: " . $e->getMessage());
+    die("Database connection failed.");
 }
 
 function extractEmoji($string) {

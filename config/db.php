@@ -16,7 +16,8 @@ try {
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    error_log("Database connection failed: " . $e->getMessage());
+    die("Database connection failed.");
 }
 
 $loader = new \Twig\Loader\FilesystemLoader(paths: __DIR__ . '/../templates');

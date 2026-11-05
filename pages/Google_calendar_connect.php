@@ -8,13 +8,7 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 
-define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID'));
-define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET')); 
-$isLocal = in_array($_SERVER['HTTP_HOST'], ['localhost:8000', 'localhost:3000']);
-define('GOOGLE_REDIRECT_URI', $isLocal 
-    ? 'http://localhost:8000/pages/Google_calendar_callback.php'
-    : 'https://cgi.luddy.indiana.edu/~team18/pages/Google_calendar_callback.php'
-);
+require_once __DIR__ . '/../config/google.php';
 
 
 $state = bin2hex(random_bytes(16));

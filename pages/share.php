@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1); //debugging/error messages
-error_reporting(E_ALL);
 
 
 
@@ -30,7 +27,8 @@ try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
     } catch (PDOException $e) {
-        die("database connection failed: " . $e->getMessage());
+        error_log("share.php DB error: " . $e->getMessage());
+        die("Database connection failed.");
     }
 
 //basic PHP SQL syntax. remember, use of PDO's for security. 

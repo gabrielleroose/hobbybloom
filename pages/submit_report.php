@@ -2,8 +2,6 @@
 session_start();
 require_once 'db.php';
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 // Only logged-in users can report
@@ -43,28 +41,27 @@ try {
     $stmt = $conn->prepare("INSERT INTO reports (reporter_id, $column, reason) VALUES (?, ?, ?)");
     $stmt->execute([$reporter_id, $item_id, $reason]);
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    error_log('Report database error: ' . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => 'Could not save your report. Please try again.']);
     exit;
 }
 
 // Detect localhost
 $isLocal = (
     $_SERVER['SERVER_NAME'] === 'localhost' ||
-    $_SERVER['SERVER_ADDR'] === '127.0.0.1' ||
+    ($_SERVER['SERVER_ADDR'] ?? '') === '127.0.0.1' ||
     str_contains($_SERVER['HTTP_HOST'] ?? '', 'localhost')
 );
 
 if ($isLocal) {
-    // Just log locally
-    $logFile = __DIR__ . '/report_test_log.txt';
-    file_put_contents(
-        $logFile,
-        date('Y-m-d H:i:s') . " | Type: $type | Item ID: $item_id | Reporter: $reporter_id | Reason: $reason\n",
-        FILE_APPEND
-    );
+    // Local dev: write to the server log instead of sending email
+    error_log("[report] Type: $type | Item ID: $item_id | Reporter: $reporter_id | Reason: $reason");
+} elseif (!getenv('RESEND_API_KEY')) {
+    // Report is already saved in the database; just skip the email
+    error_log('RESEND_API_KEY not set; report saved but no email sent.');
 } else {
-    // Send email via Resend API
-    $resendApiKey = 're_AXDEs5CV_96FJaGoerTsu44AMtk912AJ8';
+    // Send email via Resend API (key lives in Railway env vars, never in code)
+    $resendApiKey = getenv('RESEND_API_KEY');
 
     $emailBody = "A new report has been submitted.\n\nType: $type\nItem ID: $item_id\nReporter ID: $reporter_id\nReason:\n$reason";
 

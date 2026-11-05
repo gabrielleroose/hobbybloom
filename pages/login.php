@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config/google.php';
 if (isset($_SESSION['user'])) {
     header("Location: index.php");
     exit();
@@ -21,7 +22,7 @@ if (isset($_SESSION['user'])) {
         <p style="color: #666; margin-bottom: 30px;">Sign in to start your journey</p>
 
         <div id="g_id_onload"
-             data-client_id="268931984946-slb4joliqufslsotd5iet5qir3jnrp9g.apps.googleusercontent.com"
+             data-client_id="<?= htmlspecialchars(GOOGLE_SIGNIN_CLIENT_ID) ?>"
              data-callback="handleCredentialResponse"
              data-auto_prompt="false">
         </div>

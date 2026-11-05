@@ -9,8 +9,7 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 
-define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID'));
-define('GOOGLE_CLIENT_SECRET', getenv('GOOGLE_CLIENT_SECRET')); 
+require_once __DIR__ . '/../config/google.php';
 
 $user_id = $_SESSION['user']['id'];
 
