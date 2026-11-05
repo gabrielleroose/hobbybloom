@@ -83,6 +83,18 @@ if (isset($_SESSION['user']['id'])) {
     </nav>
 </header>
 
+<?php if (function_exists('is_demo_user') && is_demo_user()): ?>
+<div class="demo-banner" role="status">
+    <span>👋 You're exploring a <strong>demo account</strong>. Changes are turned off.</span>
+    <a href="logout.php">Sign in with Google to create your own &rarr;</a>
+</div>
+<style>
+    .demo-banner { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; align-items: center; padding: 10px 16px; background: #eef0e4; color: #153853; font-size: 0.95rem; border-bottom: 1px solid #dfe2d6; text-align: center; }
+    .demo-banner a { color: #1E5077; font-weight: 700; text-decoration: none; }
+    .demo-banner a:hover { text-decoration: underline; }
+</style>
+<?php endif; ?>
+
 <div id="toast">Notification Message</div>
 
 <script>
@@ -98,6 +110,9 @@ if (isset($_SESSION['user']['id'])) {
         if (type === '1') showToast("Changes saved successfully! ✅");
         if (type === 'joined') showToast("Event added to your calendar! 📅");
         if (type === 'followed') showToast("New connection added! 🤝");
+    }
+    if (urlParams.has('demo_blocked')) {
+        showToast("Demo mode: changes are turned off. Sign in to make your own account.");
     }
     const navInput    = document.getElementById('navUserSearch');
     const navDropdown = document.getElementById('navSearchDropdown');

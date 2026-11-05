@@ -46,7 +46,7 @@ if (!empty($cleanHobby)) {
 }
  
 $msgStmt = $conn->prepare("
-    SELECT DISTINCT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, p.profile_color
+    SELECT cm.id, cm.message, cm.created_at, u.id AS user_id, u.username, ANY_VALUE(p.profile_color) AS profile_color
     FROM circle_messages cm
     JOIN users u ON cm.user_id = u.id
     LEFT JOIN user_profiles p ON u.id = p.user_id
@@ -58,7 +58,7 @@ $msgStmt->execute([$currentHobby]);
 $chatMessages = $msgStmt->fetchAll(PDO::FETCH_ASSOC);
  
 $memStmt = $conn->prepare("
-    SELECT u.id, u.username, p.profile_color,
+    SELECT u.id, u.username, ANY_VALUE(p.profile_color) AS profile_color,
            (SELECT status FROM user_follows WHERE follower_id = ? AND followed_id = u.id LIMIT 1) as follow_status
     FROM users u
     JOIN user_profiles p ON u.id = p.user_id

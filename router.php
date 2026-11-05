@@ -14,7 +14,7 @@ if (preg_match('/\.(css|js|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf)$/i', $u
 $pagesDir = realpath(__DIR__ . '/pages');
 
 if ($uri === '/' || $uri === '') {
-    require $pagesDir . '/index.php';
+    require $pagesDir . '/landing.php';
     return true;
 }
 
