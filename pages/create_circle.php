@@ -46,16 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Circle | HobbyBloom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body class="create-circle-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Create Circle | HobbyBloom';
+$bodyClass = 'create-circle-body';
+require __DIR__ . '/../includes/header.php';
+?>
  
 <div class="cc-page-wrap">
 <div class="cc-wrap">

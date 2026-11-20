@@ -75,14 +75,11 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Content | HobbyBloom</title>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'My Content | HobbyBloom';
+$bodyClass = 'module-body';
+ob_start(); ?>
     <style>
         .mc-page {
         /* background-color: #F1F2F5; */
@@ -323,8 +320,9 @@ $circles = $cirStmt->fetchAll(PDO::FETCH_ASSOC);
         .event-date-badge .month { text-transform: uppercase; font-size: .65rem; opacity: .8; }
         .event-date-badge .day   { font-size: 1.1rem; line-height: 1; }
     </style>
-</head>
-<body class="module-body">
+<?php $extraHead = ($extraHead ?? '') . ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 
 <div class="mc-page">
     <h1 class="mc-heading">My Content</h1>

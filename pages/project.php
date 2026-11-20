@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>About the Project</title>
-  <link href="/css/style.css" rel="stylesheet">
-  <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body>
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'About the Project';
+require __DIR__ . '/../includes/header.php';
+?>
 
-<?php include 'base.php'; ?>
 
 <div class="outter-box">
   <div class="inner-box">

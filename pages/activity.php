@@ -128,10 +128,12 @@ if ($currentTab === 'global') {
 $activities = $feedStmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once 'base.php';
+$pageTitle = 'Activity | HobbyBloom';
+ob_start();
 ?>
 
 <style>
-    body { 
+    body {
         background-color: #BDC29D;
         margin: 0;
         display: flex;
@@ -175,6 +177,10 @@ require_once 'base.php';
         margin-top: auto;
     }
 </style>
+<?php
+$extraHead = ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 
 <div class="activity-page-container">
     

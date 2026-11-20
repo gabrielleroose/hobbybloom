@@ -42,16 +42,12 @@ $followingStmt->execute([$userId]);
 $following = $followingStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
  
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Account | HobbyBloom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body class="account-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'My Account | HobbyBloom';
+$bodyClass = 'account-body';
+require __DIR__ . '/../includes/header.php';
+?>
  
 <div class="account-main-container">
 <div class="account-settings">

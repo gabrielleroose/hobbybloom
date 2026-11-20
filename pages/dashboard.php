@@ -1,11 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
- 
 require_once __DIR__ . '/db.php';
-echo '<script>document.body.classList.add("body-dashboard");</script>';
- 
+
 if (!isset($conn)) {
     die("Database connection variable (\$conn) is missing. Check your db.php file.");
 }
@@ -142,15 +137,12 @@ $cirCount->execute([$userId]);
 $circles = (int)$cirCount->fetchColumn();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-
-<body class="dashboard-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Dashboard';
+$bodyClass = 'dashboard-body';
+require __DIR__ . '/../includes/header.php';
+?>
     
  
 <main class="main-dashboard">
@@ -268,9 +260,7 @@ $circles = (int)$cirCount->fetchColumn();
     </div>
  
 </main>
-</body>
-</html>
- 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar-mini');
@@ -304,6 +294,8 @@ $circles = (int)$cirCount->fetchColumn();
 </script>
  
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+</body>
+</html>
 
  
 <script>

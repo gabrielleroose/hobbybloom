@@ -7,18 +7,17 @@ if (!isset($_SESSION['user'])) {
 }
 ?>
  
-<!DOCTYPE HTML>
-<html>
-<head> 
-    <title>Getting Started | HobbyBloom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet"> 
-    <link href="/css/nav.css" rel="stylesheet">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Getting Started | HobbyBloom';
+$bodyClass = 'index-body';
+ob_start(); ?>
     <style>
         .d-none-custom { display: none !important; }
     </style>
-</head>
-<body class="index-body"> 
+<?php $extraHead = ($extraHead ?? '') . ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
  
 <div class="index-main-container">
  

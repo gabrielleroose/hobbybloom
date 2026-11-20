@@ -98,15 +98,11 @@ require_once __DIR__ . '/base.php';
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-
-
-<head>
-    <meta charset="UTF-8">
-    <title>Circles Hub | HobbyBloom</title>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Circles Hub | HobbyBloom';
+$bodyClass = 'circles-body';
+ob_start(); ?>
     <style>
         .hub-top-nav {
             width: 100%;
@@ -184,10 +180,9 @@ require_once __DIR__ . '/base.php';
             border-color: #1f5077;
         }
     </style>
-</head>
-
-
-<body class="circles-body">
+<?php $extraHead = ($extraHead ?? '') . ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 
 
     <div class="hub-top-nav">

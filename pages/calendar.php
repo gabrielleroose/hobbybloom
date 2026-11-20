@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
-
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-
-    <?php include 'base.php'; ?>
-
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Calendar';
+$bodyClass = 'calendar-body';
+ob_start(); ?>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-</head>
-
-<body class="calendar-body">
+<?php $extraHead = ($extraHead ?? '') . ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 <?php
 $gcConnected = false;
 if (isset($_SESSION['user']['id'])) {

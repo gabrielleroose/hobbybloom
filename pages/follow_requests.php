@@ -53,15 +53,12 @@ $stmt->execute([$myId]);
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Follow Requests | HobbyBloom</title>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body class="account-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Follow Requests | HobbyBloom';
+$bodyClass = 'account-body';
+require __DIR__ . '/../includes/header.php';
+?>
     <div class="account-main-container">
         <div style="background-color: #1f5077; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px;">
             <h1 style="color: white; margin: 0;">Follow Requests</h1>

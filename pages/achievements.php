@@ -146,13 +146,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['share_badge'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Achievements | HobbyBloom</title>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'My Achievements | HobbyBloom';
+$bodyStyle = 'background-color: #BDC29D;';
+ob_start(); ?>
     <style>
         .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
         .badge-card { background-color: white; border-radius: 15px; padding: 25px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -175,8 +173,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['share_badge'])) {
         .share-btn { background: #1f5077; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%; }
         .share-btn:hover { background: #2c6ca3; }
     </style>
-</head>
-<body style="background-color: #BDC29D;">
+<?php $extraHead = ($extraHead ?? '') . ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 
     <div class="account-main-container" style="margin-top: 50px; padding-bottom: 50px;">
         

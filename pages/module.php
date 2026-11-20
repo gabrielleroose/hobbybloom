@@ -10,17 +10,13 @@ require_once __DIR__ . '/base.php';
  
 $googleId = $_SESSION['google_id'] ?? null;
 ?>
-<!DOCTYPE html>
-<html lang="en" class="begin-module-html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Begin Module | HobbyBloom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body class="begin-module-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Begin Module | HobbyBloom';
+$bodyClass = 'begin-module-body';
+$htmlClass = 'begin-module-html';
+require __DIR__ . '/../includes/header.php';
+?>
  
 <div class="begin-module-page">
 <div class="begin-module-container">

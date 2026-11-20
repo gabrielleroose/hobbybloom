@@ -78,18 +78,12 @@ foreach ($mid_ids as $mid_id) {
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share</title>
-
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-
-<body class="share-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = 'Share';
+$bodyClass = 'share-body';
+require __DIR__ . '/../includes/header.php';
+?>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

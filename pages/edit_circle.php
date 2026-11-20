@@ -58,11 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['action'])) {
         }
     }
 }
+$pageTitle = 'Edit Circle | HobbyBloom';
+ob_start();
 ?>
 
 <style>
     body {
-        background-color: #BDC29D !important; 
+        background-color: #BDC29D !important;
         margin: 0;
         display: flex;
         flex-direction: column;
@@ -78,6 +80,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['action'])) {
         margin-top: auto;
     }
 </style>
+<?php
+$extraHead = ob_get_clean();
+require __DIR__ . '/../includes/header.php';
+?>
 
 <div class="edit-circle-wrapper">
     <div style="background-color: <?= htmlspecialchars($circle['color']) ?>; padding: 30px; border-radius: 15px; text-align: center; margin: 0 auto 30px auto; max-width: 600px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">

@@ -68,16 +68,12 @@ $memStmt = $conn->prepare("
 $memStmt->execute([$userId, "%$currentHobby%", $userId]);
 $members = $memStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title><?= htmlspecialchars($currentHobby) ?> Circle | HobbyBloom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/nav.css" rel="stylesheet">
-</head>
-<body class="circle-detail-body">
+<?php
+require_once __DIR__ . '/base.php';
+$pageTitle = $currentHobby . ' Circle | HobbyBloom';
+$bodyClass = 'circle-detail-body';
+require __DIR__ . '/../includes/header.php';
+?>
  
 <div class="cd-page-wrap">
 <div class="cd-wrap">
