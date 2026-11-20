@@ -1,0 +1,155 @@
+/* =====================================================================
+   HobbyBloom v5 design system (Direction B: sage background)
+   ---------------------------------------------------------------------
+   Every class here starts with "v5-" so it never changes a page that
+   hasn't been redesigned yet. Pages opt in by loading this file.
+   Colors were checked for 4.5:1 text contrast on the surfaces they sit on.
+   ===================================================================== */
+
+:root {
+  /* Surfaces */
+  --hb-sage: #bdc29d;          /* page background */
+  --hb-sage-line: #a9af86;     /* borders that sit on sage */
+  --hb-cream: #fbfaf6;         /* cards */
+  --hb-cream-line: #d6d9c6;    /* card borders */
+  --hb-tile: #e6e8da;          /* soft fills inside cards */
+
+  /* Brand */
+  --hb-navy: #1e5077;          /* buttons, links, actions */
+  --hb-navy-deep: #153853;     /* headings */
+  --hb-sky: #e3edf5;           /* light navy fill for labels */
+
+  /* Text */
+  --hb-ink: #1d2730;           /* body text on cream */
+  --hb-text-on-sage: #2c3640;  /* body text directly on sage */
+  --hb-muted: #47525c;         /* secondary text on cream */
+  --hb-olive-on-sage: #3b4320; /* small caps labels on sage */
+  --hb-olive: #5d6834;         /* small caps labels on cream */
+
+  /* Shape and type */
+  --hb-radius: 20px;
+  --hb-radius-sm: 14px;
+  --hb-font-display: 'Playfair Display', Georgia, serif;
+  --hb-font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Page shell ---------- */
+
+.v5-main {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+  font-family: var(--hb-font-body);
+  color: var(--hb-ink);
+  line-height: 1.55;
+}
+
+.v5-main *,
+.v5-main *::before,
+.v5-main *::after {
+  box-sizing: border-box;
+}
+
+.v5-page-header {
+  margin-bottom: 32px;
+}
+
+.v5-eyebrow {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hb-olive-on-sage);
+}
+
+.v5-title {
+  margin: 0 0 12px;
+  font-family: var(--hb-font-display);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--hb-navy-deep);
+}
+
+.v5-lead {
+  max-width: 46em;
+  margin: 0;
+  font-size: 1.075rem;
+  color: var(--hb-text-on-sage);
+}
+
+/* ---------- Cards ---------- */
+
+.v5-card {
+  background: var(--hb-cream);
+  border: 1px solid var(--hb-cream-line);
+  border-radius: var(--hb-radius);
+  padding: 24px;
+}
+
+.v5-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+  gap: 20px;
+}
+
+/* ---------- Labels ---------- */
+
+.v5-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--hb-sky);
+  color: var(--hb-navy);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ---------- Team page ---------- */
+
+.v5-member {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.v5-member-photo {
+  flex: none;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(21, 56, 83, 0.15);
+}
+
+.v5-member-name {
+  margin: 0 0 6px;
+  font-family: var(--hb-font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--hb-navy-deep);
+}
+
+.v5-member-bio {
+  margin: 12px 0 0;
+  font-size: 15px;
+  color: var(--hb-muted);
+}
+
+@media (max-width: 520px) {
+  .v5-main {
+    padding: 28px 16px 48px;
+  }
+
+  .v5-member {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
